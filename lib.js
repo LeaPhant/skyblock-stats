@@ -1618,8 +1618,8 @@ module.exports = {
         // Stats shouldn't go into negative
         for(let stat in output.stats)
             output.stats[stat] = Math.max(0, output.stats[stat]);
-
-        let killsDeaths = [];
+		
+		let killsDeaths = [];
 
         for(let stat in profile.stats){
             if(stat.startsWith("kills_"))
@@ -1644,6 +1644,7 @@ module.exports = {
 
         output.kills = killsDeaths.filter(a => a.type == 'kills').sort((a, b) => b.amount - a.amount);
         output.deaths = killsDeaths.filter(a => a.type == 'deaths').sort((a, b) => b.amount - a.amount);
+
 
         return output;
     }

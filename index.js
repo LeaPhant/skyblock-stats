@@ -73,13 +73,12 @@ async function uuidToUsername(uuid){
                 .push({ uuid: data.id, username: data.name, date: +new Date() })
                 .write();
         }).catch(err => {
-            if(user)
+			 if(user)
                 db
                 .get('usernames')
                 .find({ uuid: user.uuid })
                 .assign({ date: +new Date()  })
                 .write();
-
             console.error(err);
         });
 
@@ -98,7 +97,7 @@ async function uuidToUsername(uuid){
 }
 
 const app = express();
-const port = 32464;
+const port = 80;
 
 app.set('view engine', 'ejs');
 app.use(express.static('public', { maxAge: CACHE_DURATION }));

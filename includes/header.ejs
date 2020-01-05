@@ -56,3 +56,42 @@
     if(!Modernizr.testAllProps('transform', 'translateY(10px)'))
         document.documentElement.classList.add('no-transform');
 </script>
+<script>
+const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+
+if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+	</script>
+	
+	<div class="theme-switch-wrapper">
+    <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider round"></div>
+  </label>
+  <em>Enable Blue Theme</em>
+</div>	
+	
+<script>
+const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+const currentTheme = localStorage.getItem('theme');
+
+if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+  
+    if (currentTheme === 'blue-theme') {
+        toggleSwitch.checked = true;
+    }
+}
+
+function switchTheme(e) {
+    if (e.target.checked) {
+        document.documentElement.setAttribute('data-theme', 'blue-theme');
+        localStorage.setItem('theme', 'blue-theme');
+    }
+    else {        document.documentElement.setAttribute('data-theme', 'pink-theme');
+          localStorage.setItem('theme', 'pink-theme');
+    }    
+}
+
+toggleSwitch.addEventListener('change', switchTheme, false);
+</script>
