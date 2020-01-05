@@ -1,6 +1,24 @@
+:root {
+  --maincolor: #F94EA3;
+  --maincolorhover: #f78dc2;
+  --darkmaincolor: #A6145D;
+  --darkermaincolor: #780e43;
+  --bg-image: url(../img/bg.webp);
+  --bg-image-no-webp: url(../img/bg.jpg);
+}
+
+[data-theme="blue-theme"]{
+  --maincolor: #0099ff;
+  --maincolorhover: #00aaff;
+  --darkmaincolor: #0073ff;
+  --darkermaincolor: #0073ff;
+  --bg-image: url(../img/bg2.webp);
+  --bg-image-no-webp: url(../img/bg2.jpg);
+} 
+
 html{
     background-color: rgb(20,20,20);
-    background: url(../img/bg.webp) no-repeat center center fixed;
+    background: var(--bg-image) no-repeat center center fixed;
     background-size: cover;
     font-family: 'Montserrat', sans-serif;
     color: white;
@@ -8,16 +26,16 @@ html{
 }
 
 html.no-webp{
-    background-image: url(../img/bg.jpg);
+    background-image: var(--bg-image-no-webp);
 }
 
 a{
-    color: #F94EA3;
+    color: var(--maincolor);
     transition: color .2s;
 }
 
 a:hover{
-    color: #f78dc2;
+    color: var(--maincolorhover);
 }
 
 header{
@@ -26,7 +44,7 @@ header{
     left: 0;
     right: 0;
     height: 45px;
-    background-color: #A6145D;
+    background-color: var(--darkmaincolor);
     z-index: 1000;
     line-height: 45px;
 }
@@ -38,7 +56,7 @@ header::after{
     left: 0;
     right: 0;
     height: 3px;
-    background-color: #780e43;
+    background-color: var(--darkermaincolor);
 }
 
 #not_supported{
@@ -78,7 +96,7 @@ header::after{
     font-weight: 600;
     font-size: 13px;
     background-color: rgba(255,255,255,0.7);
-    color: #A6145D;
+    color: var(--darkmaincolor);
     padding: 5px;
     padding-left: 10px;
     padding-right: 10px;
@@ -121,7 +139,7 @@ header::after{
     content: "SOON";
     background-color: rgba(255,255,255,0.7);
     border-radius: 999px;
-    color: #A6145D;
+    color: var(--darkmaincolor);
     padding: 4px;
     padding-left: 6px;
     padding-right: 6px;
@@ -220,7 +238,7 @@ html.no-webp #bg_blur{
 .skill-icon{
     width: 36px;
     height: 36px;
-    background-color: #A6145D;
+    background-color: var(--darkmaincolor);
     border-radius: 50%;
     position: relative;
     z-index: 10;
@@ -258,7 +276,7 @@ html.no-webp #bg_blur{
     left: -18px;
     width: 18px;
     bottom: 0;
-    background-color: #850f4a;
+    background-color: var(--darkermaincolor);
 }
 
 .skill-bar{
@@ -277,7 +295,7 @@ html.no-webp #bg_blur{
     top: 0;
     left: 0;
     bottom: 0;
-    background-color: #850f4a;
+    background-color: var(--darkermaincolor);
     border-top-right-radius: 7px;
     border-bottom-right-radius: 7px;
 }
@@ -498,7 +516,7 @@ html.no-transform #info_box.opened{
 #stats_for_player, #stats_for_profile{
     position: relative;
     display: inline-block;
-    color: #F94EA3;
+    color: var(--maincolor);
     font-weight: 600;
     cursor: pointer;
 }
@@ -693,7 +711,7 @@ html.no-clip-path #other_players, html.no-clip-path #other_profiles{
     width: 400px;
     height: 40px;
     line-height: 40px;
-    background-color: #A6145D;
+    background-color: var(--darkmaincolor);
     text-transform: uppercase;
     font-weight: 600;
     text-align: center;
@@ -711,7 +729,7 @@ html.no-clip-path #other_players, html.no-clip-path #other_profiles{
     height: 0;
     border-style: solid;
     border-width: 40px 40px 0 0;
-    border-color: #780e43 transparent transparent transparent;
+    border-color: var(--darkermaincolor) transparent transparent transparent;
 }
 
 
@@ -724,7 +742,7 @@ html.no-clip-path #other_players, html.no-clip-path #other_profiles{
     height: 0;
     border-style: solid;
     border-width: 40px 40px 0 0;
-    border-color: #a6145d transparent transparent transparent;
+    border-color: var(--darkmaincolor) transparent transparent transparent;
     z-index: 2;
 }
 
@@ -933,7 +951,7 @@ html.no-clip-path #other_players, html.no-clip-path #other_profiles{
     margin: 30px;
     padding: 20px;
     position: relative;
-    margin-bottom: 0px;
+	margin-bottom: 0px;
 }
 
 #inventory_header{
@@ -942,7 +960,7 @@ html.no-clip-path #other_players, html.no-clip-path #other_profiles{
     left: 0;
     right: 0;
     height: 50px;
-    background-color: #A6145D;
+    background-color: var(--darkmaincolor);
 }
 
 #inventory_header .inventory-tab{
@@ -1187,7 +1205,7 @@ html.no-webp #enter_player_box_wrapper{
     text-align: right;
     display: inline-block;
     padding: 15px;
-    background-color: #A6145D;
+    background-color: var(--darkmaincolor);
     color: white;
     text-transform: uppercase;
     font-weight: bold;
@@ -1198,7 +1216,7 @@ html.no-webp #enter_player_box_wrapper{
 }
 
 #goto_target_username:hover{
-    background-color: #c92879;
+    background-color: var(--darkmaincolor);
 }
 
 #error_box_wrapper{
@@ -1233,7 +1251,7 @@ html.no-webp #error_box_wrapper{
 
 #error_title{
     font-weight: 600;
-    background-color: #A6145D;
+    background-color: var(--darkmaincolor);
     color: white;
     text-transform: uppercase;
     height: 100%;
@@ -1525,8 +1543,8 @@ html.no-webp #error_box_wrapper{
         text-align: center;
         margin-top: 45px;
     }
-
-    .kills-deaths-container > div {
+	
+	.kills-deaths-container > div {
         min-width: 0;
         width: calc(100vw / 2 - 85px);
     }
@@ -1558,8 +1576,7 @@ html.no-webp #error_box_wrapper{
         white-space: nowrap;
         overflow-x: scroll;
     }
-
-    .kills-deaths-container > div {
+	.kills-deaths-container > div {
         width: calc(100vw - 100px);
     }
 
@@ -1658,6 +1675,74 @@ html.no-webp #error_box_wrapper{
         margin-left: 0;
         margin-top: 115px;
     }
+}
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+
+  em {
+    margin-left: 10px;
+    font-size: 1rem;
+  }
+}
+.theme-switch {
+  display: inline-block;
+  height: 34px;
+  position: fixed;
+  width: 60px;
+  z-index: 1000;
+  top: 5px;
+  right: 10px;
+}
+
+.theme-switch input {
+  display:none;
+  z-index: 1000;
+}
+
+.slider {
+  background-color: #780e43;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+  z-index: 1000;
+}
+
+.slider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: .4s;
+  width: 26px;
+  z-index: 1000;
+}
+
+input:checked + .slider {
+  background-color: #0051ff;
+  z-index: 1000;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+  z-index: 1000;
+}
+
+.slider.round {
+  border-radius: 34px;
+  z-index: 1000;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+  z-index: 1000;
 }
 
 @media (max-width: 400px){
