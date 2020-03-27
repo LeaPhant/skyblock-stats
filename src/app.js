@@ -68,6 +68,8 @@ async function main(){
             patreon: patreonEntry.amount || 0
         };
 
+        output.packs = lib.getPacks();
+
         return output;
     }
 

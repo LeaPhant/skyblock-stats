@@ -16,6 +16,7 @@
     <% if(page == 'stats'){ %>
         <div id="search_user"><input placeholder="Enter username" type="text" id="inp_search_user"></input><a href="#" id="btn_search_user"></a></div>
     <% } %>
+    <div id="packs_button">Packs</div>
 </header>
 <div id="info_box">
     <div onclick="toggleInfo()" id="info_close"></div>
@@ -36,6 +37,15 @@
             <li>Background Shaders: <a rel="nofollow" href="https://sildurs-shaders.github.io/" target="_blank">Sildur's Vibrant Shaders</a> by <span class="name">Sildur</span>.</li>
         </ul>
     </div>
+</div>
+<div id="packs_box" class="packs-opened">
+    <% for(const pack of extra.packs.filter(a => !a.hidden).sort((a, b) => b.priority - a.priority)){ %>
+        <div class="resource-pack">
+            <img class="pack-icon" src="<%= pack.basePath + '/pack.png' %>">
+            <a class="pack-name" href="<%= pack.url %>" target="_blank"><%= pack.name %></a><br>
+            <div class="pack-author">by <span><%= pack.author %></span></div>
+        </div>
+    <% } %>
 </div>
 <script src="/resources/js/modernizr.js"></script>
 <script>

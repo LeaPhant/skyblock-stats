@@ -355,23 +355,30 @@ async function init(){
     }
 }
 
+const outputPacks = [];
 const readyPromise = init();
 
 readyPromise.then(() => {
     module.exports.ready = true;
+
+    for(const pack of resourcePacks)
+        outputPacks.push(Object.assign({
+            basePath: '/' + path.relative(path.resolve(__dirname, '..', 'public'), pack.basePath)
+        }, pack.config));
 });
 
 module.exports = {
     ready: false,
-    getTexture: async item => {
+    packs: outputPacks,
+    getTextures: async item => {
         if(!module.exports.ready)
             await readyPromise;
 
-        let outputTexture = { weight: -9999 };
+        let outputTextures = [];
 
         for(const pack of resourcePacks){
-            if('weight' in outputTexture)
-                outputTexture.weight = -9999;
+            let outputTexture = { weight: -9999 };
+            let anyMatch = false;
 
             for(const texture of pack.textures){
                 if(texture.id != item.id)
@@ -405,64 +412,73 @@ module.exports = {
                 }
 
                 if(matches == texture.match.length){
+                    anyMatch = true;
+
                     if(texture.weight < outputTexture.weight)
                         continue;
 
                     if(texture.weight == outputTexture.weight && texture.file < outputTexture.file)
                         continue;
 
-                    outputTexture = Object.assign({ pack }, texture);
+                    outputTexture = Object.assign({ packId: pack.config.id, priority: pack.config.priority }, texture);
                 }
             }
+
+            if(anyMatch)
+                outputTextures.push(Object.assign({}, outputTexture));
         }
 
-        if(!('path' in outputTexture))
-            return null;
+        for(const outputTexture of outputTextures){
+            if(!('path' in outputTexture))
+                continue;
 
-        if('leather' in outputTexture && objectPath.has(item, 'tag.ExtraAttributes.color')){
-            const color = item.tag.ExtraAttributes.color.split(":");
+            if('leather' in outputTexture && objectPath.has(item, 'tag.ExtraAttributes.color')){
+                const color = item.tag.ExtraAttributes.color.split(":");
 
-            const leatherBasePath = path.resolve(path.dirname(outputTexture.path), 'leatherCache');
-            const leatherPath = path.resolve(leatherBasePath, path.basename(outputTexture.path, '.png') + '_' + color.join('_') + '.png');
+                const leatherBasePath = path.resolve(path.dirname(outputTexture.path), 'leatherCache');
+                const leatherPath = path.resolve(leatherBasePath, path.basename(outputTexture.path, '.png') + '_' + color.join('_') + '.png');
 
-            await fs.ensureDir(leatherBasePath);
+                await fs.ensureDir(leatherBasePath);
 
-            try{
-                await fs.access(leatherPath, fs.F_OK);
-                throw "";
-            }catch(e){
-                const canvas = createCanvas(128, 128);
-                const ctx = canvas.getContext('2d');
+                try{
+                    await fs.access(leatherPath, fs.F_OK);
+                    throw "";
+                }catch(e){
+                    const canvas = createCanvas(128, 128);
+                    const ctx = canvas.getContext('2d');
 
-                const armorBase = await loadImage(outputTexture.leather.base);
-                const armorOverlay = await loadImage(outputTexture.leather.overlay);
+                    const armorBase = await loadImage(outputTexture.leather.base);
+                    const armorOverlay = await loadImage(outputTexture.leather.overlay);
 
-                ctx.drawImage(armorBase, 0, 0);
+                    ctx.drawImage(armorBase, 0, 0);
 
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-                for(let i = 0; i < imageData.data.length; i += 4){
-                    const r = imageData.data[i];
-                    const alpha = r / 255;
+                    for(let i = 0; i < imageData.data.length; i += 4){
+                        const r = imageData.data[i];
+                        const alpha = r / 255;
 
-                    imageData.data[i] = color[0] * alpha;
-                    imageData.data[i + 1] = color[1] * alpha;
-                    imageData.data[i + 2] = color[2] * alpha;
+                        imageData.data[i] = color[0] * alpha;
+                        imageData.data[i + 1] = color[1] * alpha;
+                        imageData.data[i + 2] = color[2] * alpha;
+                    }
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.putImageData(imageData, 0, 0);
+
+                    ctx.drawImage(armorOverlay, 0, 0);
+
+                    await fs.writeFile(leatherPath, canvas.toBuffer('image/png'));
                 }
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.putImageData(imageData, 0, 0);
-
-                ctx.drawImage(armorOverlay, 0, 0);
-
-                await fs.writeFile(leatherPath, canvas.toBuffer('image/png'));
+                outputTexture.path = leatherPath;
             }
 
-            outputTexture.path = leatherPath;
+            outputTexture.path = path.relative(path.resolve(__dirname, '..', 'public'), outputTexture.path);
         }
 
-        outputTexture.path = path.relative(path.resolve(__dirname, '..', 'public'), outputTexture.path);
+        outputTextures = outputTextures.sort((a, b) => b.priority - a.priority);
 
-        return outputTexture;
+        return outputTextures;
     }
 }
