@@ -1,6 +1,8 @@
 {
+    "id": "SKYBLOCK_STATS",
     "name": "SkyBlock Stats",
     "author": "LeaPhant",
+    "hidden": true,
     "url": "#",
     "priority": 999
 }
