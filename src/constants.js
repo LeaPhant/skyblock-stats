@@ -1866,13 +1866,13 @@ module.exports = {
 
         'VIP_PLUS': {
             color: 'a',
-            tag: 'JRY',
+            tag: 'JER',
             plus: '+',
         },
 
         'VIP': {
             color: 'a',
-            tag: 'JRY'
+            tag: 'JER'
         },
 
         'PIG+++': {
