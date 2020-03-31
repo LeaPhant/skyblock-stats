@@ -1819,7 +1819,7 @@ module.exports = {
 
         'ADMIN': {
             color: 'c',
-            tag: 'ADMIN'
+            tag: 'SR JERRY'
         },
 
         'BUILD TEAM': {
@@ -1829,17 +1829,17 @@ module.exports = {
 
         'MODERATOR': {
             color: '2',
-            tag: 'MOD'
+            tag: 'JERRY'
         },
 
         'HELPER': {
             color: '9',
-            tag: 'HELPER'
+            tag: 'JERRY'
         },
 
         'JR HELPER': {
             color: '9',
-            tag: 'JR HELPER'
+            tag: 'JERRY'
         },
 
         'YOUTUBER': {
@@ -1849,30 +1849,30 @@ module.exports = {
 
         'SUPERSTAR': {
             color: '6',
-            tag: 'MVP',
+            tag: 'JRY',
             plus: '++'
         },
 
         'MVP_PLUS': {
             color: 'b',
-            tag: 'MVP',
+            tag: 'JRY',
             plus: '+'
         },
 
         'MVP': {
             color: 'b',
-            tag: 'MVP'
+            tag: 'JRY'
         },
 
         'VIP_PLUS': {
             color: 'a',
-            tag: 'VIP',
+            tag: 'JRY',
             plus: '+',
         },
 
         'VIP': {
             color: 'a',
-            tag: 'VIP'
+            tag: 'JRY'
         },
 
         'PIG+++': {
