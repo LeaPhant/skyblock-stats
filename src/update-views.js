@@ -14,29 +14,22 @@ async function main(){
 
     async function updateViews(){
         for(const uuid of await db.collection('views').distinct('uuid')){
-            const profiles = await db.collection('views').distinct('profile_id', { uuid });
             const { username } = await db.collection('usernames').findOne({ uuid });
 
-            for(const profile_id of profiles){
-                const profileViews = await db.collection('views').find({ uuid, profile_id }).toArray();
+            const profileViews = await db.collection('views').find({ uuid }).toArray();
 
-                const viewsTotal = profileViews.length;
-                const viewsWeekly = profileViews.filter(a => a.time > Date.now() - 7 * 24 * 60 * 60 * 1000).length;
-                const viewsDaily = profileViews.filter(a => a.time > Date.now() - 1 * 24 * 60 * 60 * 1000).length;
+            const viewsTotal = profileViews.length;
 
-                await db
-                .collection('profileViews')
-                .replaceOne(
-                    { uuid, profile_id },
-                    { uuid, profile_id, username, total: viewsTotal, daily: viewsDaily, weekly: viewsWeekly },
-                    { upsert: true }
-                );
-            }
-
-            await new Promise(r => setTimeout(r, 25));
+            await db
+            .collection('profileViews')
+            .replaceOne(
+                { uuid },
+                { uuid, username, total: viewsTotal },
+                { upsert: true }
+            );
         }
 
-        updateViews();
+        console.log('done updating views');
     }
 
     updateViews();
