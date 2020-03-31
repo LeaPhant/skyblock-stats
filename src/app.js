@@ -23,6 +23,7 @@ async function main(){
     const { MongoClient } = require('mongodb');
     const helper = require('./helper');
     const constants = require('./constants');
+    const seedrandom = require('seedrandom');
 
     const mongo = new MongoClient(dbUrl, { useUnifiedTopology: true });
     await mongo.connect();
@@ -71,6 +72,7 @@ async function main(){
         const topProfiles = await db.collection('profileViews').find().sort({ total: -1 }).limit(10).toArray();
 
         output.top_profiles = topProfiles;
+
         output.zoo = constants.zoo;
 
         return output;
@@ -82,22 +84,22 @@ async function main(){
         let paramPlayer = req.params.player.toLowerCase().replace(/\-/g, '');
         let paramProfile = req.params.profile ? req.params.profile.toLowerCase() : null;
 
-        let char;
+        let animal;
 
-        for(const zooChar in constants.zoo)
-            if(constants.zoo[zooChar].toLowerCase() == paramPlayer)
-                char = zooChar;
-        if(char){
+        for(const zooAnimal in constants.zoo)
+            if(paramPlayer.toLowerCase() == constants.zoo[zooAnimal].toLowerCase())
+                animal = parseInt(zooAnimal);
+
+        if(animal){
             let zooProfile = await db
-            .collection('profiles')
+            .collection('usernames')
             .aggregate([
-                { $match: { uuid: { $regex: new RegExp(`^${char}`) } } },
+                { $match: { animal: animal } },
                 { $sample: { size: 1 } }
             ])
             .next();
 
             paramPlayer = zooProfile.uuid;
-            paramProfile = zooProfile.profile_id;
         }
 
         let playerUsername = paramPlayer;
@@ -156,6 +158,7 @@ async function main(){
                     player: playerUsername,
                     extra: await getExtra(),
                     helper,
+                    seedrandom,
                     page: 'index'
                 });
 
@@ -168,6 +171,7 @@ async function main(){
                     player: playerUsername,
                     extra: await getExtra(),
                     helper,
+                    seedrandom,
                     page: 'index'
                 });
 
@@ -180,6 +184,7 @@ async function main(){
                     player: playerUsername,
                     extra: await getExtra(),
                     helper,
+                    seedrandom,
                     page: 'index'
                 });
 
@@ -192,6 +197,7 @@ async function main(){
                     player: playerUsername,
                     extra: await getExtra(),
                     helper,
+                    seedrandom,
                     page: 'index'
                 });
 
@@ -223,6 +229,7 @@ async function main(){
                         player: playerUsername,
                         extra: await getExtra(),
                         helper,
+                        seedrandom,
                         page: 'index'
                     });
 
@@ -295,6 +302,7 @@ async function main(){
                             player: playerUsername,
                             extra: await getExtra(),
                             helper,
+                            seedrandom,
                             page: 'index'
                         });
 
@@ -313,6 +321,7 @@ async function main(){
                     player: playerUsername,
                     extra: await getExtra(),
                     helper,
+                    seedrandom,
                     page: 'index'
                 });
 
@@ -342,6 +351,7 @@ async function main(){
                     player: playerUsername,
                     extra: await getExtra(),
                     helper,
+                    seedrandom,
                     page: 'index'
                 });
 
@@ -406,6 +416,10 @@ async function main(){
             calculated.minion_slots = lib.getMinionSlots(calculated.minions);
             calculated.pets = await lib.getPets(userProfile);
             calculated.collections = await lib.getCollections(userProfile);
+
+            const randomAnimal = new seedrandom(data.player.uuid);
+
+            calculated.animal = Math.floor(randomAnimal() * Math.floor(Object.keys(constants.zoo).length));
 
             calculated.fishing = {
                 total: userProfile.stats.items_fished || 0,
@@ -489,6 +503,7 @@ async function main(){
                 player: playerUsername,
                 extra: await getExtra(),
                 helper,
+                seedrandom,
                 page: 'index'
             });
 
@@ -562,7 +577,7 @@ async function main(){
     });
 
     app.get('/', async (req, res, next) => {
-        res.render('index', { error: null, player: null, extra: await getExtra(), helper, page: 'index' });
+        res.render('index', { error: null, player: null, extra: await getExtra(), helper, seedrandom, page: 'index' });
     });
 
     app.get('*', async (req, res, next) => {

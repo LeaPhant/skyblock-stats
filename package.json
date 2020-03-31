@@ -45,6 +45,7 @@
     "prismarine-nbt": "^1.2.1",
     "relaxed-json": "^1.0.3",
     "remove": "^0.1.5",
+    "seedrandom": "^3.0.5",
     "sharp": "^0.23.4",
     "upng-js": "^2.1.0"
   }

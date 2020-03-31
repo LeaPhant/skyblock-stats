@@ -41,16 +41,22 @@
             </div>
         </div>
         <div id="top_profiles_box_wrapper">
-            <% for(const [index, profile] of extra.top_profiles.entries()){ %>
+            <% for(const [index, profile] of extra.top_profiles.entries()){
+                const randomAnimal = new seedrandom(profile.uuid);
+
+                const animal = Math.floor(randomAnimal() * Math.floor(Object.keys(extra.zoo).length));
+
+                %>
                 <a href="/stats/<%= profile.uuid %>" class="top-profile">
-                    <img src="/resources/img/zoo/face/<%= profile.uuid.charAt(0) %>.png" class="profile-avatar">
-                    <div class="profile-name"><%= extra.zoo[profile.uuid.charAt(0)] %></div><br>
+                    <img src="/resources/img/zoo/face/<%= animal %>.png" class="profile-avatar">
+                    <div class="profile-name"><%= extra.zoo[animal] %></div><br>
                     <div class="profile-views">Views: <%= helper.formatNumber(profile.total) %></div>
                     <div class="profile-rank">#<%= index + 1 %></div>
                 </a>
             <% } %>
         </div>
         <script src="/resources/js/js.cookie.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
         <script>
             let targetUsername = document.getElementById("inp_enter_username");
 
@@ -85,14 +91,17 @@
                             reachedEnd = true;
 
                         json.forEach(function(profile, index){
+                            let randomAnimal = new Math.seedrandom(profile.uuid);
+                            let animal =  Math.floor(randomAnimal() * Math.floor(Object.keys(extra.zoo).length));
+
                             let profileElement = document.createElement('a');
                             let profileAvatar = document.createElement('img');
                             let profileName = document.createElement('div');
                             let profileViews = document.createElement('div');
                             let profileRank = document.createElement('div');
 
-                            profileAvatar.src = '/resources/img/zoo/face/' + profile.uuid.charAt(0) + '.png';
-                            profileName.innerHTML = extra.zoo[profile.uuid.charAt(0)];
+                            profileAvatar.src = '/resources/img/zoo/face/' + animal + '.png';
+                            profileName.innerHTML = extra.zoo[animal];
                             profileViews.innerHTML = 'Views: ' + formatNumber(profile.total);
                             profileRank.innerHTML = '#' + (currentOffset + index + 1);
 
