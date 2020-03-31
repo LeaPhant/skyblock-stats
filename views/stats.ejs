@@ -858,11 +858,11 @@ twitterDescription += '. Click to view more stats!'
 <html>
 <head>
     <%- include('../includes/resources') %>
-    <title><%- calculated.display_name %> | SkyBlock Stats</title>
-    <link rel="shortcut icon" href="https://visage.surgeplay.com/face/32/<%- calculated.uuid %>" type="image/png">
+    <title><%- constants.zoo[calculated.uuid.charAt(0)] %> | SkyBlock Zoo</title>
+    <link rel="shortcut icon" href="/resources/img/zoo/face/<%- calculated.uuid.charAt(0) %>.png" type="image/png">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="<%- calculated.display_name %>">
-    <meta property="og:title" content="<%- calculated.display_name %> | SkyBlock Stats">
+    <meta property="og:title" content="<%- constants.zoo[calculated.uuid.charAt(0)] %>">
+    <meta property="og:title" content="<%- constants.zoo[calculated.uuid.charAt(0)] %> | SkyBlock Zoo">
     <meta property="og:image" content="https://visage.surgeplay.com/face/256/<%- calculated.uuid %>">
     <meta property="twitter:image" content="https://visage.surgeplay.com/face/256/<%- calculated.uuid %>">
     <meta property="og:description" content="<%= description %>">
@@ -883,13 +883,13 @@ twitterDescription += '. Click to view more stats!'
         <div class="backpack-contents"></div>
     </div>
     <div id="stats_display">
-        <div id="player_model" style="background-image: url(https://visage.surgeplay.com/full/832/<%= calculated.uuid %>)"></div>
+        <div id="player_model" style="background-image: url(/resources/img/zoo/full/<%= calculated.uuid.charAt(0) %>.png)"></div>
     </div>
     <div id="wrapper" data-sticky-container>
         <div id="player_profile"><span class="text-stats-for">Stats for</span>
             <div tabindex="1" id="stats_for_player">
                 <%- calculated.rank_prefix %>
-                <%= calculated.display_name %>
+                <%= constants.zoo[calculated.uuid.charAt(0)] %>
                 <div id="other_players">
                     <% calculated.members.forEach(member => { %>
                         <a class="goto" href="/stats/<%= member.uuid %>/<%= calculated.profile.profile_id %>"><%= member.display_name %></a>
@@ -953,7 +953,7 @@ twitterDescription += '. Click to view more stats!'
                 <div class='tippy-explanation'>Increased by leveling your Enchanting and Alchemy skills and completing songs on Melody's Harp.</div>
                 <span class='stat-name'>Bonus Intelligence: </span><span class='stat-value'>+<%= stats.intelligence - calculated.base_stats.intelligence %></span>
                 <div class='tippy-explanation'>Additional bonuses from Armor, held items and Accessories.</div>"><span class="stat-name">Intelligence </span><span class="stat-value"><%= stats.intelligence %></span></span></div>
-                <div id="player_model_mobile" style="background-image: url(https://visage.surgeplay.com/full/832/<%= calculated.uuid %>)"></div>
+                <div id="player_model_mobile" style="background-image: url(/resources/img/zoo/full/<%= calculated.uuid.charAt(0) %>.png)"></div>
                 <div id="additional_stats_container">
                     <% if(calculated.current_area){ %>
                     <div class="additional-stat"><span class="stat-name">Current Island: </span><span class="stat-value"><%= calculated.current_area %></span></div>

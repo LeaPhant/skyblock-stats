@@ -71,6 +71,7 @@ async function main(){
         const topProfiles = await db.collection('profileViews').find().sort({ total: -1 }).limit(10).toArray();
 
         output.top_profiles = topProfiles;
+        output.zoo = constants.zoo;
 
         return output;
     }
@@ -80,6 +81,24 @@ async function main(){
 
         let paramPlayer = req.params.player.toLowerCase().replace(/\-/g, '');
         let paramProfile = req.params.profile ? req.params.profile.toLowerCase() : null;
+
+        let char;
+
+        for(const zooChar in constants.zoo)
+            if(constants.zoo[zooChar].toLowerCase() == paramPlayer)
+                char = zooChar;
+        if(char){
+            let zooProfile = await db
+            .collection('profiles')
+            .aggregate([
+                { $match: { uuid: { $regex: new RegExp(`^${char}`) } } },
+                { $sample: { size: 1 } }
+            ])
+            .next();
+
+            paramPlayer = zooProfile.uuid;
+            paramProfile = zooProfile.profile_id;
+        }
 
         let playerUsername = paramPlayer;
 

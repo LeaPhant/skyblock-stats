@@ -387,7 +387,7 @@ module.exports = {
         generator_ghast: "Minion Ghast",
         generator_magma_cube: "Minion Magma Cube",
         generator_slime: "Minion Slime",
-        brood_mother_spider: "Brood Mother"       
+        brood_mother_spider: "Brood Mother"
     },
 
     area_names: {
@@ -1882,5 +1882,22 @@ module.exports = {
         },
 
         'NONE': null
+    },
+
+    zoo: {
+        '0': 'Giraffe',
+        '1': 'Elephant',
+        '2': 'Panda',
+        '3': 'Duck',
+        '4': 'Koala',
+        '5': 'Dog',
+        '6': 'Fox',
+        '7': 'Bear',
+        '8': 'Penguin',
+        'b': 'Pig',
+        'c': 'Fish',
+        'd': 'Tiger',
+        'e': 'Parrot',
+        'f': 'Sloth'
     }
 };
