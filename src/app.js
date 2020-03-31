@@ -92,7 +92,7 @@ async function main(){
 
         if(animal){
             let zooProfile = await db
-            .collection('usernames')
+            .collection('profiles')
             .aggregate([
                 { $match: { animal: animal } },
                 { $sample: { size: 1 } }
@@ -100,6 +100,7 @@ async function main(){
             .next();
 
             paramPlayer = zooProfile.uuid;
+            paramProfile = zooProfile.profile_id;
         }
 
         let playerUsername = paramPlayer;

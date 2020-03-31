@@ -12,12 +12,12 @@ async function main(){
 
     const db = mongo.db(dbName);
 
-    db.collection('usernames').find().forEach(async doc => {
+    db.collection('profiles').find().forEach(async doc => {
         const randomAnimal = new seedrandom(doc.uuid);
 
         const animal = Math.floor(randomAnimal() * Math.floor(Object.keys(constants.zoo).length));
 
-        await db.collection('usernames').updateOne(
+        await db.collection('profiles').updateOne(
             { _id: doc._id },
             { $set: { animal } }
         );
