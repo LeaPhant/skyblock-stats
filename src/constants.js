@@ -1875,9 +1875,9 @@ module.exports = {
             tag: 'JER'
         },
 
-        'PIG+++': {
+        'JERRY+++': {
             color: 'd',
-            tag: 'PIG',
+            tag: 'JERRY',
             plus: '+++'
         },
 
