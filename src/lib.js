@@ -108,12 +108,7 @@ function getSlayerLevel(slayer, slayerName){
 
     const maxLevel = Math.max(...Object.keys(constants.slayer_xp[slayerName]));
 
-    for(const level_name in claimed_levels){
-        const level = parseInt(level_name.split("_").pop());
-
-        if(level > currentLevel)
-            currentLevel = level;
-    }
+    const currentLevel = Object.keys(claimed_levels).length;
 
     if(currentLevel < maxLevel){
         const nextLevel = constants.slayer_xp[slayerName][currentLevel + 1];
