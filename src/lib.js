@@ -102,7 +102,6 @@ function getLevelByXp(xp, runecrafting){
 function getSlayerLevel(slayer, slayerName){
     let { xp, claimed_levels } = slayer;
 
-    let currentLevel = 0;
     let progress = 0;
     let xpForNext = 0;
 
