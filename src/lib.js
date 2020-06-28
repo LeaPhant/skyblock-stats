@@ -1036,7 +1036,6 @@ module.exports = {
 
         let skillLevels;
         let totalSkillXp = 0;
-        let average_level = 0;
 
         // Apply skill bonuses
         if('experience_skill_taming' in userProfile
@@ -1049,7 +1048,6 @@ module.exports = {
         || 'experience_skill_alchemy' in userProfile
         || 'experience_skill_carpentry' in userProfile
         || 'experience_skill_runecrafting' in userProfile){
-            let average_level_no_progress = 0;
 
             skillLevels = {
                 taming: getLevelByXp(userProfile.experience_skill_taming),
@@ -1066,19 +1064,20 @@ module.exports = {
 
             for(let skill in skillLevels){
                 if(skill != 'runecrafting' && skill != 'carpentry'){
-                    average_level += skillLevels[skill].level + skillLevels[skill].progress;
-                    average_level_no_progress += skillLevels[skill].level;
-
                     totalSkillXp += skillLevels[skill].xp;
                 }
             }
 
-            output.average_level = (average_level / (Object.keys(skillLevels).length - 2));
-            output.average_level_no_progress = (average_level_no_progress / (Object.keys(skillLevels).length - 2));
+            let skills_level = getLevelByXp(totalSkillXp / (Object.keys(skillLevels).length - 2));
+
+            output.average_level = skills_level.level + skills_level.progress;
+            output.average_level_no_progress = skills_level.level;
             output.total_skill_xp = totalSkillXp;
 
             output.levels = Object.assign({}, skillLevels);
         }else{
+            let average_level = 0;
+
             skillLevels = {
                 taming: -1,
                 farming: hypixelProfile.achievements.skyblock_harvester || 0,
