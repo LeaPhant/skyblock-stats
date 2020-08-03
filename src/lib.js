@@ -368,7 +368,7 @@ async function getItems(base64, customTextures = false, packs, cacheOnly = false
             }
         }
 
-        let lore_raw;
+        let lore_raw = [];
 
         const enchantments = helper.getPath(item, 'tag', 'ExtraAttributes', 'enchantments') || {};
         const hasEnchantments = Object.keys(enchantments).length > 0;
@@ -444,7 +444,7 @@ async function getItems(base64, customTextures = false, packs, cacheOnly = false
 
                 item.lore += "<br>" + helper.renderLore(`§7By: §c<a href="/stats/${spawnedFor}">${spawnedForUser.display_name}</a>`);
             }
- 
+
             if(helper.hasPath(item, 'tag', 'ExtraAttributes', 'baseStatBoostPercentage')){
 
                 const boost = item.tag.ExtraAttributes.baseStatBoostPercentage;
@@ -470,6 +470,8 @@ async function getItems(base64, customTextures = false, packs, cacheOnly = false
             // Get item type (like "bow") and rarity (like "legendary") from last line of lore
             let rarity_type = lore[lore.length - 1];
 
+            let rarity_type_color = lore_raw[lore_raw.length - 1].charAt(1);
+
             if(rarity_type.startsWith('a '))
                 rarity_type = rarity_type.substring(2).substring(0, rarity_type.length - 4);
 
@@ -481,6 +483,9 @@ async function getItems(base64, customTextures = false, packs, cacheOnly = false
                 item_type = rarity_type[1].trim();
 
             item.rarity = rarity.toLowerCase();
+
+            if(rarity_type_color in constants.rarity_colors)
+                item.rarity = constants.rarity_colors[rarity_type_color];
 
             if(item_type)
                 item.type = item_type.toLowerCase();
