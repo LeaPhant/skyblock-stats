@@ -11,7 +11,7 @@ This project allows you to share your <a href="https://hypixel.net//">Hypixel</a
 
 <h2 align="center">Contributing</h1>
 
-You are free to report bugs or contribute to this project. Just open <a href="../../issues">Issues</a> or <a href="../../pulls">Pull Requests</a> and I will look into them, although changes to the design are pretty unlikely to be accepted.
+Contributions are unlikely to be accepted as I am no longer actively maintaining this project. Critical bugs might still be fixed when reported in the <a href="../../issues">Issues</a> section.
 
 <h3>Prerequisites</h3>
 
