@@ -1,0 +1,52 @@
+proxy_cache_path /data/nginx/cache keys_zone=sbstats:10000m;
+limit_req_zone $binary_remote_addr zone=limit_api:100m rate=150r/m;
+
+upstream sbstats {
+	server 127.0.0.1:32464 weight=5;
+}
+
+server {
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	server_name sky.lea.moe;
+
+	gzip on;
+	gzip_vary on;
+
+	ssl_certificate /etc/letsencrypt/live/lea.moe/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/lea.moe/privkey.pem;
+
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $host;
+    proxy_pass http://sbstats;
+
+    # cache frontpage, only renew once a minute
+	location =/ {
+		proxy_cache sbstats;
+		proxy_cache_valid 200 1m;
+	}
+
+    # cache all static resources indefinitely
+    location ~ ^/(head|item|resources|resourcepacks|leather)/ {
+        proxy_cache sbstats;
+    }
+
+    # rate limit api
+    location /api {
+        limit_req zone=limit_api burst=30 nodelay;
+    }
+
+    location / {
+        proxy_buffering off;
+    }
+}
+
+# redirect all unencrypted traffic
+server {
+    listen 80;
+    listen [::]:80;
+    server_name sky.lea.moe;
+
+    return 301 https://$host$request_uri;
+}
