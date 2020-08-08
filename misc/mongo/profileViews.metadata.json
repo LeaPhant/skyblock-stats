@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"sbstats.profileViews"}],"uuid":"67befc1ce6c542cdb6013633b4f6aeed"}
