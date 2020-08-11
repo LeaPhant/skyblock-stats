@@ -1,6 +1,10 @@
 const helper = require('./helper');
 const lib = require('./lib');
 const cors = require('cors');
+const constants = require('./constants');
+
+const Redis = require("ioredis");
+const redisClient = new Redis();
 
 function handleError(e, res){
     console.error(e);
@@ -12,6 +16,7 @@ function handleError(e, res){
 
 module.exports = (app, db) => {
     const productInfo = {};
+    const leaderboards = [];
 
     const init = new Promise(async (resolve, reject) => {
         const bazaarProducts = await db
@@ -31,6 +36,15 @@ module.exports = (app, db) => {
                 productInfo[product.productId] = info[0];
         }
 
+        const keys = await redisClient.keys('lb_*');
+
+        for(const key of keys){
+            const lb = constants.leaderboard(key);
+
+            if(lb.mappedBy == 'uuid')
+                leaderboards.push(lb);
+        }
+
         resolve();
     });
 
@@ -47,6 +61,68 @@ module.exports = (app, db) => {
         }
 
         next();
+    });
+
+    app.all('/api/v2/leaderboards', cors(), async (req, res) => {
+        res.json(leaderboards);
+    });
+
+    app.all('/api/v2/leaderboard/:lbName', cors(), async (req, res) => {
+        const count = Math.min(100, req.query.count || 20)
+
+        let page, startIndex, endIndex;
+
+        const lb = constants.leaderboard(`lb_${req.params.lbName}`);
+
+        const output = { 
+            positions: []
+        };
+
+        if(req.query.find){
+            const uuid = (await helper.resolveUsernameOrUuid(req.query.find, db, true)).uuid;
+
+            const rank = lb.sortedBy > 0 ?
+            await redisClient.zrank(`lb_${lb.key}`, uuid) :
+            await redisClient.zrevrank(`lb_${lb.key}`, uuid);
+
+            output.self = { rank: rank + 1 };
+
+            page = Math.floor(rank / count) + 1;
+            startIndex = (page - 1) * count;
+            endIndex = startIndex - 1 + count;
+        }else{
+            page = Math.max(1, req.query.page || 1);
+            startIndex = (page - 1) * count;
+            endIndex = startIndex - 1 + count;
+        }
+
+        output.page = page;
+
+        let results = lb.sortedBy > 0 ?
+            await redisClient.zrange(`lb_${lb.key}`, startIndex, endIndex, 'WITHSCORES') :
+            await redisClient.zrevrange(`lb_${lb.key}`, startIndex, endIndex, 'WITHSCORES');
+
+        if(results.length == 0){
+            res.status(404).json({ error: "leaderboard not found" });
+            return;
+        }
+
+        for(let i = 0; i < results.length; i += 2){
+            const lbPosition = {
+                rank: i / 2 + startIndex + 1,
+                amount: lb.format(results[i + 1]),
+                raw: results[i + 1],
+                uuid: results[i],
+                username: (await helper.resolveUsernameOrUuid(results[i], db, true)).display_name
+            };
+
+            if('self' in output && output.self.rank == lbPosition.rank)
+                output.self = lbPosition;
+
+            output.positions.push(lbPosition);
+        }
+
+        res.json(output);
     });
 
     app.all('/api/v2/bazaar', cors(), async (req, res) => {
