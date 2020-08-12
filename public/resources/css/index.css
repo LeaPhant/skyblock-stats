@@ -1443,16 +1443,18 @@ a.additional-player-stat:hover{
     padding-top: 55px;
     position: relative;
     display: inline-block;
-    text-align: center;
     max-width: 500px;
     border-radius: 10px;
     overflow: hidden;
+    font-weight: 500;
 }
 
 .info-container span{
     display: inline-block;
+    text-align: center;
     margin-top: 10px;
     font-weight: 500;
+    width: 100%;
 }
 
 .info-header{
