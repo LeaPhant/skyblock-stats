@@ -1,7 +1,8 @@
 module.exports = {
     // prevent specific players from appearing in leaderboards
     blocked_players: [
-        "20934ef9488c465180a78f861586b4cf" // Minikloon (Admin)
+        "20934ef9488c465180a78f861586b4cf", // Minikloon (Admin)
+        "f025c1c7f55a4ea0b8d93f47d17dfe0f", // Plancke (Admin)
     ],
 
     item_types: [
