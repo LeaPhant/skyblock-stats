@@ -162,7 +162,9 @@ module.exports = (app, db) => {
             page = Math.max(1, req.query.page || 1);
         }
 
-        page = Math.min(page, Math.floor(lbCount / count) + 1);
+        const maxPage = Math.floor(lbCount / count) + (lbCount % count == 0 ? 0 : 1);
+
+        page = Math.min(page, maxPage);
 
         output.page = page;
 
