@@ -207,14 +207,16 @@ module.exports = (app, db) => {
 
             const selfPosition = guildScores[selfRank];
 
-            output.self = {
-                rank: selfRank + 1,
-                amount: lb.format(selfPosition.score),
-                raw: selfPosition.score,
-                uuid: selfPosition.uuid,
-                username: (await helper.resolveUsernameOrUuid(selfPosition.uuid, db, true)).display_name,
-                guild: guildObj.name
-            };
+            if(selfPosition){
+                output.self = {
+                    rank: selfRank + 1,
+                    amount: lb.format(selfPosition.score),
+                    raw: selfPosition.score,
+                    uuid: selfPosition.uuid,
+                    username: (await helper.resolveUsernameOrUuid(selfPosition.uuid, db, true)).display_name,
+                    guild: guildObj.name
+                };
+            }
 
             for(let i = startIndex; i < endIndex; i++){
                 if(i > guildScores.length - 1)
