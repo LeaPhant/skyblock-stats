@@ -144,9 +144,90 @@ module.exports = (app, db) => {
             positions: []
         };
 
-        if(req.query.find){
-            const uuid = (await helper.resolveUsernameOrUuid(req.query.find, db, true)).uuid;
+        let uuid;
 
+        if(req.query.find || req.query.guild)
+            uuid = (await helper.resolveUsernameOrUuid(req.query.guild || req.query.find, db, true)).uuid;
+
+        if(req.query.guild){
+            page = Math.max(1, req.query.page || 1);
+            
+            const guildMemberObj = await db
+            .collection('guildMembers')
+            .findOne({ uuid });
+
+            if(guildMemberObj == null){
+                res.status(404).json({ error: `User not in a guild` });
+                return;
+            }
+
+            const guildObj = await db
+            .collection('guilds')
+            .findOne({ gid: guildMemberObj.gid });
+
+            const guildMembers = await db
+            .collection('guildMembers')
+            .find({ gid: guildMemberObj.gid })
+            .toArray();
+
+            const getGuildScores = redisClient.pipeline();
+
+            for(const member of guildMembers)
+                getGuildScores.zscore(`lb_${lb.key}`, member.uuid);
+
+            let guildScores = [];
+
+            for(const [index, result] of (await getGuildScores.exec()).entries()){
+                if(result[1] == null)
+                    continue;
+
+                guildScores.push({ uuid: guildMembers[index].uuid, score: Number(result[1]) });
+            }
+
+            if(lb.sortedBy > 0)
+                guildScores = guildScores.sort((a, b) => a.score - b.score);
+            else
+                guildScores = guildScores.sort((a, b) => b.score - a.score);
+
+            const maxPage = Math.floor(guildScores.length / count) + (guildScores.length % count == 0 ? 0 : 1);
+
+            page = Math.min(page, maxPage);
+
+            startIndex = (page - 1) * count;
+            endIndex = startIndex + count;
+
+            output.page = page;
+
+            const selfRank = guildScores.map(a => { return a.uuid; }).indexOf(uuid);
+
+            for(let i = startIndex; i < endIndex; i++){
+                if(i > guildScores.length - 1)
+                    break;
+
+                const position = guildScores[i];
+
+                const lbPosition = {
+                    rank: i + 1,
+                    amount: lb.format(position.score),
+                    raw: position.score,
+                    uuid: position.uuid,
+                    username: (await helper.resolveUsernameOrUuid(position.uuid, db, true)).display_name
+                };
+
+                output.positions.push(lbPosition);
+
+                if(i == selfRank)
+                    output.self = lbPosition;
+            }
+
+            if(output.self)
+                output.self.guild = guildObj.name;
+
+            res.json(output);
+            return;
+        }
+
+        if(req.query.find){
             if(!req.cacheOnly)
                 await lib.getProfile(db, uuid, null, { cacheOnly: false });
 
