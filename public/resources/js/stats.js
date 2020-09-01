@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function(){
             handleEnchanted(itemIcon);
             */
 
-        itemLore.innerHTML = item.lore;
+        itemLore.innerHTML = item.lore || '';
 
         try{
             if(item.lore != null)
