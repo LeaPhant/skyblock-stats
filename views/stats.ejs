@@ -594,7 +594,9 @@ twitterDescription += '. Click to view more stats!'
                     <div class="additional-stat"><span data-tippy-content="Joined on <%= moment(calculated.first_join.unix).format('D MMMM YYYY HH:mm') %>"><span class="stat-name">Joined: </span><span class="stat-value"><%= calculated.first_join.text %></span></span></div>
                     <div class="additional-stat"><span class="stat-name">Purse: </span><span class="stat-value"><%= helper.formatNumber(calculated.purse, true) %> Coin<%= Math.floor(calculated.purse) == 1 ? '': 's' %></span></div>
                     <% if('bank' in calculated){ %>
-                        <div class="additional-stat"><span class="stat-name">Bank Account: </span><span class="stat-value"><%= helper.formatNumber(calculated.bank, true) %> Coin<%= Math.floor(calculated.bank) == 1 ? '': 's' %></span></div>
+                        <div data-tippy-content="<span class='stat-name'>Bank Balance: </span><span class='stat-value'><%= Math.round(calculated.bank).toLocaleString() %> Coins</span><br><br>
+                        <span class='stat-name'>Booster Cookie Sell Price: </span><span class='stat-value'><%= Math.round(extra.cookie.sellPrice).toLocaleString() %> Coins</span>
+                        <span class='stat-name'>Booster Cookie USD Price: </span><span class='stat-value'>$2.75</span>" class="additional-stat"><span class="stat-name">Bank Account: </span><span class="stat-value">$<%= (calculated.bank / extra.cookie.sellPrice * 2.75).toFixed(2) %></span></div>
                     <% } %>
                     <% if('levels' in calculated){ %>
                         <div class="additional-stat"><span data-tippy-content="

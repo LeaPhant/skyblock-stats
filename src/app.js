@@ -80,8 +80,12 @@ async function main(){
         const kofiEntry = await db.collection('donations').findOne({type: 'kofi'});
         const patreonEntry = await db.collection('donations').findOne({type: 'patreon'});
 
+        const cookieEntry = await db.collection('bazaar').findOne({ productId: 'BOOSTER_COOKIE' });
+
         if(kofiEntry == null || patreonEntry == null)
             return output;
+
+        output.cookie = cookieEntry;
 
         output.donations = {
             kofi: kofiEntry.amount || 0,
