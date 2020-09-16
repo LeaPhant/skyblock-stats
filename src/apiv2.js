@@ -19,7 +19,7 @@ module.exports = (app, db) => {
     const productInfo = {};
     const leaderboards = [];
 
-    const init = new Promise(async (resolve, reject) => {
+    const initFunction = async () => {
         const bazaarProducts = await db
         .collection('bazaar')
         .find()
@@ -37,6 +37,8 @@ module.exports = (app, db) => {
                 productInfo[product.productId] = info[0];
         }
 
+        leaderboards.length = 0;
+
         const keys = await redisClient.keys('lb_*');
 
         for(const key of keys){
@@ -46,8 +48,10 @@ module.exports = (app, db) => {
                 leaderboards.push(lb);
         }
 
-        resolve();
-    });
+        return;
+    }
+
+    const init = initFunction();
 
     app.use('/api/v2/*', async (req, res, next) => {
         req.cacheOnly = true;
@@ -347,4 +351,6 @@ module.exports = (app, db) => {
             handleError(e, res);
         }
     });
+
+    setInterval(initFunction, 1000 * 60);
 };
