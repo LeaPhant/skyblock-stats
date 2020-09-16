@@ -38,7 +38,7 @@ async function main(){
             console.error(e);
         }
 
-        setTimeout(updateItems, 1000 * 60 * 60 * 12);
+        setTimeout(updateItems, 1000 * 60 * 5);
     }
 
     updateItems();
