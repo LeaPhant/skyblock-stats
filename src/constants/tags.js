@@ -57,6 +57,7 @@ module.exports = {
         ENCHANTED_OAK_LOG: "eoak",
         ENCHANTED_CLAY_BALL: "eclay",
         REVENANT_VISCERA: "rev",
+        REVENANT_FLESH: "rev",
         ENCHANTED_HAY_BLOCK: "ehay",
         ENCHANTED_PAPER: "epaper",
         ENCHANTED_BONE: "ebone",
