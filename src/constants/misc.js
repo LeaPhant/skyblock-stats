@@ -95,7 +95,9 @@ module.exports = {
         'Feather Falling 10',
         'Feather Falling X',
         'Infinite Quiver 10',
-        'Infinite Quiver X'
+        'Infinite Quiver X',
+        'Expertise 10',
+        'Expertise X'
     ],
 
     // Player stats on a completely new profile
@@ -796,6 +798,72 @@ module.exports = {
                 }, {
                     rarity: 'legendary',
                     name: 'Hilt of True Ice'
+                }
+            ]
+        }, {
+            name: 'Nurse Shark',
+            id: 'nurse_shark',
+            rarity: 'special',
+            fishingLevel: 5,
+            level: 6,
+            drops: [
+                {
+                    rarity: 'uncommon',
+                    name: 'Nurse Shark Tooth'
+                }, {
+                    rarity: 'rare',
+                    name: 'Shark Fin'
+                }
+            ]
+        }, {
+            name: 'Blue Shark',
+            id: 'blue_shark',
+            rarity: 'special',
+            fishingLevel: 10,
+            level: 20,
+            drops: [
+                {
+                    rarity: 'rare',
+                    name: 'Blue Shark Tooth'
+                }, {
+                    rarity: 'rare',
+                    name: 'Shark Fin'
+                }
+            ]
+        }, {
+            name: 'Tiger Shark',
+            id: 'tiger_shark',
+            rarity: 'special',
+            fishingLevel: 18,
+            level: 50,
+            drops: [
+                {
+                    rarity: 'epic',
+                    name: 'Tiger Shark Tooth'
+                }, {
+                    rarity: 'epic',
+                    name: 'Megalodon Pet'
+                }, {
+                    rarity: 'rare',
+                    name: 'Shark Fin'
+                }
+            ]
+        }, {
+            name: 'Great White Shark',
+            id: 'great_white_shark',
+            rarity: 'special',
+            fishingLevel: 24,
+            level: 180,
+            drops: [
+                {
+                    rarity: 'legendary',
+                    name: 'Great White Shark Tooth'
+                }, {
+                    rarity: 'legendary',
+                    name: 'Megalodon Pet'
+                }, {
+                    rarity: 'rare',
+                    name: 'Shark Fin'
                 }
             ]
         }
