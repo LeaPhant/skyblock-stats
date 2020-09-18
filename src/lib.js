@@ -404,6 +404,18 @@ async function getItems(base64, customTextures = false, packs, cacheOnly = false
                 }
             }
 
+            if('expertise' in enchantments && helper.hasPath(item, 'tag', 'ExtraAttributes', 'expertise_kills')){
+                const { expertise } = enchantments;
+                const { expertise_kills } = item.tag.ExtraAttributes;
+
+                itemLore.push('', `§7Expertise Kills: §c${expertise_kills.toLocaleString()}`);
+
+                if(expertise < 10)
+                    itemLore.push(`§8${(constants.expertise_kills[expertise] - expertise_kills).toLocaleString()} kills to tier up!`);
+
+                itemLore.push(`§b+${2 * expertise}% Fishing XP §3+${+(0.6 * expertise).toFixed(1)}% ScC`);
+            }
+
             if(helper.hasPath(item, 'tag', 'ExtraAttributes', 'timestamp')){
                 const { timestamp } = item.tag.ExtraAttributes;
 

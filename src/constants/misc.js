@@ -5,6 +5,19 @@ module.exports = {
         "f025c1c7f55a4ea0b8d93f47d17dfe0f", // Plancke (Admin)
     ],
 
+    expertise_kills: [
+        0,
+        50,
+        100,
+        250,
+        500,
+        1000,
+        2500,
+        5500,
+        10000,
+        15000
+    ],
+
     item_types: [
         'sword',
         'bow',
