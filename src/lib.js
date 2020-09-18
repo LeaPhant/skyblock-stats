@@ -1800,7 +1800,7 @@ module.exports = {
             if(pet.heldItem == 'PET_ITEM_TIER_BOOST')
                 pet.rarity = petTiers[Math.min(petTiers.length - 1, petTiers.indexOf(pet.rarity) + 1)];
 
-            pet.level = getPetLevel(pet);
+            pet.level = constants.pet_level(pet.tier, pet.exp);
             pet.stats = {};
 
             const petData = constants.pet_data[pet.type] || {

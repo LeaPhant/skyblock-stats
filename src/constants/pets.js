@@ -129,6 +129,49 @@ module.exports = {
         1886700
     ],
 
+    pet_level: (tier, exp) => {
+        const rarityOffset = module.exports.pet_rarity_offset[tier.toLowerCase()];
+        const levels = module.exports.pet_levels.slice(rarityOffset, rarityOffset + 99);
+
+        const xpMaxLevel = levels.reduce((a, b) => a + b, 0)
+        let xpTotal = 0;
+        let level = 1;
+
+        let xpForNext = Infinity;
+
+        for(let i = 0; i < 100; i++){
+            xpTotal += levels[i];
+
+            if(xpTotal > exp){
+                xpTotal -= levels[i];
+                break;
+            }else{
+                level++;
+            }
+        }
+
+        let xpCurrent = Math.floor(exp - xpTotal);
+        let progress;
+
+        if(level < 100){
+            xpForNext = Math.ceil(levels[level - 1]);
+            progress = Math.max(0, Math.min(xpCurrent / xpForNext, 1));
+        }else{
+            level = 100;
+            xpCurrent = exp - levels[99];
+            xpForNext = 0;
+            progress = 1;
+        }
+
+        return {
+            level,
+            xpCurrent,
+            xpForNext,
+            progress,
+            xpMaxLevel
+        };
+    },
+
     pet_data: {
         "BAT": {
             head: "/head/382fc3f71b41769376a9e92fe3adbaac3772b999b219c9d6b4680ba9983e527",
