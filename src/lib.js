@@ -108,8 +108,19 @@ function getXpByLevel(level, runecrafting){
     return output;
 }
 
-function getLevelByXp(xp, runecrafting){
-    let xp_table = runecrafting ? constants.runecrafting_xp : constants.leveling_xp;
+function getLevelByXp(xp, type = 'regular'){
+    let xp_table;
+
+    switch(type){
+        case 'runecrafting':
+            xp_table = constants.runecrafting_xp;
+            break;
+        case 'dungeon':
+            xp_table = constants.dungeon_xp;
+            break;
+        default:
+            xp_table = constants.leveling_xp; 
+    }
 
     if(isNaN(xp)){
         return {
@@ -1153,7 +1164,7 @@ module.exports = {
                 enchanting: getLevelByXp(userProfile.experience_skill_enchanting || 0),
                 alchemy: getLevelByXp(userProfile.experience_skill_alchemy || 0),
                 carpentry: getLevelByXp(userProfile.experience_skill_carpentry || 0),
-                runecrafting: getLevelByXp(userProfile.experience_skill_runecrafting || 0, true),
+                runecrafting: getLevelByXp(userProfile.experience_skill_runecrafting || 0, 'runecrafting'),
             };
 
             for(let skill in skillLevels){
@@ -2424,6 +2435,12 @@ module.exports = {
 
         if(playerKills >= 100)
             values['player_kills_k/d'] = playerKills / playerDeaths;
+
+        for(const dungeonType of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types'))
+            values[`dungeons_${dungeonType}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, 'experience');
+
+        for(const dungeonClass of getAllKeys(memberProfiles, 'data', 'dungeons', 'player_classes'))
+            values[`dungeons_${dungeonClass}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'player_classes', dungeonClass, 'experience');
 
         const multi = redisClient.pipeline();
 

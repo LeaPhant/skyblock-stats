@@ -119,6 +119,54 @@ const skillFormatRunecrafting = xp => {
     return `Level ${levelObj.level} + ${levelObj.xpCurrent.toLocaleString()} XP`;
 };
 
+const skillFormatDungeon = xp => {
+    const xp_table = leveling.dungeon_xp;
+
+    let levelObj = {
+        xp: 0,
+        level: 0,
+        xpCurrent: 0,
+        xpForNext: xp_table[1],
+        progress: 0
+    };
+
+    let xpTotal = 0;
+    let level = 0;
+
+    let xpForNext = Infinity;
+
+    let maxLevel = Object.keys(xp_table).sort((a, b) => Number(a) - Number(b)).map(a => Number(a)).pop();
+
+    for(let x = 1; x <= maxLevel; x++){
+        xpTotal += xp_table[x];
+
+        if(xpTotal > xp){
+            xpTotal -= xp_table[x];
+            break;
+        }else{
+            level = x;
+        }
+    }
+
+    let xpCurrent = Math.floor(xp - xpTotal);
+
+    if(level < maxLevel)
+        xpForNext = Math.ceil(xp_table[level + 1]);
+
+    let progress = Math.max(0, Math.min(xpCurrent / xpForNext, 1));
+
+    levelObj = {
+        xp,
+        level,
+        maxLevel,
+        xpCurrent,
+        xpForNext,
+        progress
+    };
+
+    return `Level ${levelObj.level} + ${levelObj.xpCurrent.toLocaleString()} XP`;
+};
+
 const overrides = {
     bank: {
         mappedBy: 'profile_id'
@@ -173,6 +221,9 @@ module.exports = {
 
             options['format'] = skill == 'runecrafting' ? skillFormatRunecrafting : skillFormat;
         }
+
+        if(lbName.startsWith('dungeons_') && lbName.endsWith('_xp'))
+            options['format'] = skillFormatDungeon;
 
         if(lbName.includes('_slayer_boss_kills_')){
             const tier = Number(lbName.split("_").pop()) + 1;
