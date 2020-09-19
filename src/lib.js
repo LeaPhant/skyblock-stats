@@ -2052,7 +2052,7 @@ module.exports = {
         return output;
     },
 
-    getProfile: async (db, paramPlayer, paramProfile, options = { cacheOnly: false }) => {
+    getProfile: async (db, paramPlayer, paramProfile, options = { cacheOnly: false, waitForLb: false }) => {
         if(paramPlayer.length != 32){
             try{
                 const { uuid } = await helper.resolveUsernameOrUuid(paramPlayer, db);
@@ -2286,8 +2286,16 @@ module.exports = {
                 }
             }
 
-            module.exports.updateLeaderboardPositions(db, paramPlayer, allSkyBlockProfiles).catch(console.error);
-
+            if(options.waitForLb){
+                try{
+                    await module.exports.updateLeaderboardPositions(db, paramPlayer, allSkyBlockProfiles);
+                }catch(e){
+                    console.error(e);
+                }
+            }else{
+                module.exports.updateLeaderboardPositions(db, paramPlayer, allSkyBlockProfiles).catch(console.error);
+            }
+            
             db
             .collection('profileStore')
             .updateOne(

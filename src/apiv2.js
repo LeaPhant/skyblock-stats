@@ -84,7 +84,7 @@ module.exports = (app, db) => {
         const { uuid } = userObject;
 
         if(req.cacheOnly == false)
-            await lib.getProfile(db, uuid);
+            await lib.getProfile(db, uuid, null, { cacheOnly: false, waitForLb: true });
         
         const getRanks = redisClient.pipeline();
 
