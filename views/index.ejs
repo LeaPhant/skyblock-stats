@@ -29,6 +29,27 @@
             top: 45px;
         }
     }
+
+    .skycrypt-banner{
+        position: relative;
+        display: inline-block;
+        background: url(resources/img/bg_blur.webp?v2) no-repeat center center fixed;
+        background-size: cover;
+        width: 100%;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        padding: 20px 20px 20px 90px;
+        box-sizing: border-box;
+        text-decoration: none;
+        overflow: hidden;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .external-app-icon{
+        width: 90px;
+    }
     </style>
 </head>
     <body>
@@ -48,6 +69,11 @@
         </div>
         <% if('top_profiles' in extra){ %>
         <div id="top_profiles_box_wrapper">
+            <a href="https://sky.shiiyu.moe" target="_blank" rel="nofollow" class="external-app skycrypt-banner">
+                <div class="external-app-icon" style="background-image: url(resources/img/logo_skycrypt.png)"></div>
+                <div class="external-app-name">SkyCrypt <span class="grey-text">– sky.shiiyu.moe</span></div>
+                <div class="external-app-description">Continued version of sky.lea.moe made by friends with Custom Themes, Pet Abilities, Dungeon Stats, and more!</div>
+            </a>
             <% for(const [index, profile] of extra.top_profiles.entries()){
                 const lastUpdated = profile.profileInfo.last_save;
                 let lastUpdatedText = "";
