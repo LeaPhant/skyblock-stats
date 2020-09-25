@@ -458,9 +458,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
         if(skinViewer){
             if(playerModel.offsetWidth / playerModel.offsetHeight < 0.6)
-                skinViewer.setSize(playerModel.offsetWidth, playerModel.offsetWidth * 2);
+                skinViewer.setSize(playerModel.offsetWidth * 2, playerModel.offsetWidth * 4);
             else
-                skinViewer.setSize(playerModel.offsetHeight / 2, playerModel.offsetHeight);
+                skinViewer.setSize(playerModel.offsetHeight, playerModel.offsetHeight * 2);
         }
 
         navBarSticky = new Sticky('#nav_bar');
