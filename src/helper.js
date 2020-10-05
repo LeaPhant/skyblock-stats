@@ -78,6 +78,8 @@ module.exports = {
         return "";
     },
 
+    floorName: floor => floor == '0' ? 'entrance' : `floor_${floor}`,
+
     resolveUsernameOrUuid: async (uuid, db, cacheOnly = false) => {
         let output;
         let user = null;
