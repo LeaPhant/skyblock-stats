@@ -2444,8 +2444,28 @@ module.exports = {
         if(playerKills >= 100)
             values['player_kills_k/d'] = playerKills / playerDeaths;
 
-        for(const dungeonType of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types'))
+        values['dungeons_secrets'] = hypixelProfile.achievements.skyblock_treasure_hunter || 0;
+
+        const dungeonStats = [
+            'times_played', 'tier_completions', 'fastest_time', 
+            'best_score', 'mobs_killed', 'most_mobs_killed', 
+            'most_healing', 'watcher_kills', 'fastest_time_s', 
+            'fastest_time_s_plus', 'most_damage_mage', 'most_damage_healer', 
+            'most_damage_tank', 'most_damage_berserk', 'most_damage_archer'
+        ];
+
+        const statOverrides = { fastest_time_s_plus: 'fastest_time_s+', tier_completions: 'completions' };
+
+        const statName = stat => statOverrides.hasOwnProperty(stat) ? statOverrides[stat] : stat;
+
+        for(const dungeonType of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types')){
             values[`dungeons_${dungeonType}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, 'experience');
+
+            for(const stat of dungeonStats)
+                for(const floor of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat))
+                    values[`dungeons_${dungeonType}_${helper.floorName(floor)}_${statName(stat)}`] = 
+                    getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat, floor);
+        }
 
         for(const dungeonClass of getAllKeys(memberProfiles, 'data', 'dungeons', 'player_classes'))
             values[`dungeons_${dungeonClass}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'player_classes', dungeonClass, 'experience');
