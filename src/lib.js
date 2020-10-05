@@ -2507,7 +2507,7 @@ module.exports = {
 async function init(){
     const response = await axios('https://api.hypixel.net/resources/skyblock/collections');
 
-    if(!helper.hasPath(response, 'data', 'collections'))
+    if(!response.data.hasOwnProperty('collections'))
         return;
 
     for(const type in response.data.collections){
