@@ -2470,6 +2470,22 @@ module.exports = {
         for(const dungeonClass of getAllKeys(memberProfiles, 'data', 'dungeons', 'player_classes'))
             values[`dungeons_${dungeonClass}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'player_classes', dungeonClass, 'experience');
 
+        let scKills = 0;
+
+        for(const sc of constants.sea_creatures){
+            if(constants.mob_mounts.hasOwnProperty(sc.id)){
+                for(const mount of constants.mob_mounts[sc.id])
+                    scKills += getMax(memberProfiles, 'data', 'stats', `kills_${mount}`);
+
+                continue;
+            }
+
+            scKills += getMax(memberProfiles, 'data', 'stats', `kills_${sc.id}`);
+        }
+
+        values[`total_sea_creatures_killed`] = scKills;
+        values[`total_fishing_actions`] = getMax(memberProfiles, 'data', 'stats', `items_fished`) + scKills;
+
         const multi = redisClient.pipeline();
 
         for(const key in values){
