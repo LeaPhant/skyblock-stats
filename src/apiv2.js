@@ -132,6 +132,59 @@ module.exports = (app, db) => {
         res.json(leaderboards);
     });
 
+    app.all('/api/v2/gleaderboard/:lbName', cors(), async (req, res) => {
+        const count = Math.min(100, req.query.count || 20)
+
+        let page, startIndex, endIndex;
+
+        page = Math.max(1, req.query.page || 1);
+
+        const lb = constants.leaderboard(`lb_${req.params.lbName}`);
+
+        const lbCount = await redisClient.zcount(`glb_${lb.key}`, "-Infinity", "+Infinity");
+
+        if(lbCount == 0){
+            res.status(404).json({ error: "Leaderboard not found." });
+            return;
+        }
+
+        const output = { 
+            positions: []
+        };
+
+        const maxPage = Math.floor(lbCount / count) + (lbCount % count == 0 ? 0 : 1);
+
+        page = Math.min(page, maxPage);
+
+        output.page = page;
+
+        startIndex = (page - 1) * count;
+        endIndex = startIndex - 1 + count;
+
+        console.log(startIndex, endIndex);
+
+        const results = lb.sortedBy > 0 ?
+            await redisClient.zrange(`glb_${lb.key}`, startIndex, endIndex, 'WITHSCORES') :
+            await redisClient.zrevrange(`glb_${lb.key}`, startIndex, endIndex, 'WITHSCORES');
+
+        for(let i = 0; i < results.length; i += 2){
+            const lbPosition = {
+                rank: i / 2 + startIndex + 1,
+                amount: lb.format(results[i + 1]),
+                raw: results[i + 1],
+                id: results[i],
+                name: (await db.collection('guilds').findOne({ gid: results[i] })).name
+            };
+
+            if('self' in output && output.self.rank == lbPosition.rank)
+                output.self = lbPosition;
+
+            output.positions.push(lbPosition);
+        }
+
+        res.json(output);
+    });
+
     app.all('/api/v2/leaderboard/:lbName', cors(), async (req, res) => {
         const count = Math.min(100, req.query.count || 20)
 
