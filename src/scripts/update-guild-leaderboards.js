@@ -7,8 +7,6 @@ async function main(){
     const Redis = require("ioredis");
     const redisClient = new Redis();
 
-    const helper = require('./../helper');
-    const lib = require('./../lib');
     const constants = require('./../constants');
     const credentials = require('./../../credentials.json');
 
@@ -93,6 +91,8 @@ async function main(){
             }catch(e){
                 console.error(e);
             }
+            
+            await new Promise(r => setTimeout(r, 300));
 
             bar.tick();
         }
