@@ -393,6 +393,7 @@ module.exports = (app, db) => {
                 output.profiles[singleProfile.profile_id] = {
                     profile_id: singleProfile.profile_id,
                     cute_name: singleProfile.cute_name,
+                    game_mode: singleProfile.game_mode,
                     current: Math.max(...allProfiles.map(a => a.members[profile.uuid].last_save)) == userProfile.last_save,
                     last_save: userProfile.last_save,
                     raw: userProfile,
