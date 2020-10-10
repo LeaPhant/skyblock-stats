@@ -81,6 +81,8 @@ module.exports = (app, db) => {
             return;
         }
 
+        const modeName = req.query.mode != null ? `${req.query.mode}_` : '';
+
         const { uuid } = userObject;
 
         if(req.cacheOnly == false)
@@ -90,8 +92,8 @@ module.exports = (app, db) => {
 
         for(const lb of leaderboards){
             lb.sortedBy > 0 ?
-                getRanks.zrank(`lb_${lb.key}`, uuid)
-              : getRanks.zrevrank(`lb_${lb.key}`, uuid);
+                getRanks.zrank(`${modeName}lb_${lb.key}`, uuid)
+              : getRanks.zrevrank(`${modeName}lb_${lb.key}`, uuid);
         }
 
         const output = { 
@@ -188,11 +190,13 @@ module.exports = (app, db) => {
     app.all('/api/v2/leaderboard/:lbName', cors(), async (req, res) => {
         const count = Math.min(100, req.query.count || 20)
 
+        const modeName = req.query.mode != null ? `${req.query.mode}_` : '';
+
         let page, startIndex, endIndex;
 
         const lb = constants.leaderboard(`lb_${req.params.lbName}`);
 
-        const lbCount = await redisClient.zcount(`lb_${lb.key}`, "-Infinity", "+Infinity");
+        const lbCount = await redisClient.zcount(`${modeName}lb_${lb.key}`, "-Infinity", "+Infinity");
 
         if(lbCount == 0){
             res.status(404).json({ error: "Leaderboard not found." });
@@ -232,7 +236,7 @@ module.exports = (app, db) => {
             const getGuildScores = redisClient.pipeline();
 
             for(const member of guildMembers)
-                getGuildScores.zscore(`lb_${lb.key}`, member.uuid);
+                getGuildScores.zscore(`${modeName}lb_${lb.key}`, member.uuid);
 
             let guildScores = [];
 
@@ -303,8 +307,8 @@ module.exports = (app, db) => {
                 await lib.getProfile(db, uuid, null, { cacheOnly: false });
 
             const rank = lb.sortedBy > 0 ?
-            await redisClient.zrank(`lb_${lb.key}`, uuid) :
-            await redisClient.zrevrank(`lb_${lb.key}`, uuid);
+            await redisClient.zrank(`${modeName}lb_${lb.key}`, uuid) :
+            await redisClient.zrevrank(`${modeName}lb_${lb.key}`, uuid);
 
             if(rank == null){
                 res.status(404).json({ error: `Specified user not in Top ${credentials.lbCap.toLocaleString()} on ${lb.name} Leaderboard.` });
@@ -328,8 +332,8 @@ module.exports = (app, db) => {
         endIndex = startIndex - 1 + count;
 
         const results = lb.sortedBy > 0 ?
-            await redisClient.zrange(`lb_${lb.key}`, startIndex, endIndex, 'WITHSCORES') :
-            await redisClient.zrevrange(`lb_${lb.key}`, startIndex, endIndex, 'WITHSCORES');
+            await redisClient.zrange(`${modeName}lb_${lb.key}`, startIndex, endIndex, 'WITHSCORES') :
+            await redisClient.zrevrange(`${modeName}lb_${lb.key}`, startIndex, endIndex, 'WITHSCORES');
 
         for(let i = 0; i < results.length; i += 2){
             const lbPosition = {
