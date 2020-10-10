@@ -2316,208 +2316,227 @@ module.exports = {
 
         const hypixelProfile = await helper.getRank(uuid, db, true);
 
-        const memberProfiles = [];
+        for(const gamemode of [null, 'ironman']){
 
-        for(const singleProfile of allProfiles){
-            const userProfile = singleProfile.members[uuid];
+            const memberProfiles = [];
 
-            if(userProfile == null)
-                continue;
+            for(const singleProfile of allProfiles.filter(a => a.game_mode == gamemode)){
+                const userProfile = singleProfile.members[uuid];
 
-            userProfile.levels = await module.exports.getLevels(userProfile, hypixelProfile);
-
-            let totalSlayerXp = 0;
-
-            userProfile.slayer_xp = 0;
-
-            if(userProfile.hasOwnProperty('slayer_bosses')){
-                for(const slayer in userProfile.slayer_bosses)
-                    totalSlayerXp += userProfile.slayer_bosses[slayer].xp || 0;
-
-                userProfile.slayer_xp = totalSlayerXp;
-
-                for(const mountMob in constants.mob_mounts){
-                    const mounts = constants.mob_mounts[mountMob];
-
-                    userProfile.stats[`kills_${mountMob}`] = 0;
-                    userProfile.stats[`deaths_${mountMob}`] = 0;
-
-                    for(const mount of mounts){
-                        userProfile.stats[`kills_${mountMob}`] += userProfile.stats[`kills_${mount}`] || 0;
-                        userProfile.stats[`deaths_${mountMob}`] += userProfile.stats[`deaths_${mount}`] || 0;
-
-                        delete userProfile.stats[`kills_${mount}`];
-                        delete userProfile.stats[`deaths_${mount}`]
-                    }
-                }
-            }
-
-            userProfile.pet_score = 0;
-
-            const maxPetRarity = {};
-
-            if(Array.isArray(userProfile.pets)){
-                for(const pet of userProfile.pets){
-                    if(!helper.hasPath(pet, 'tier'))
-                        continue;
-
-                    maxPetRarity[pet.type] = Math.max(maxPetRarity[pet.type] || 0, constants.pet_value[pet.tier.toLowerCase()]);
-                }
-
-                for(const key in maxPetRarity)
-                    userProfile.pet_score += maxPetRarity[key];
-            }
-
-            memberProfiles.push({
-                profile_id: singleProfile.profile_id,
-                data: userProfile
-            });
-        }
-
-        const values = {};
-
-        values['pet_score'] = getMax(memberProfiles, 'data', 'pet_score');
-
-        values['fairy_souls'] = getMax(memberProfiles, 'data', 'fairy_souls_collected');
-        values['average_level'] = getMax(memberProfiles, 'data', 'levels', 'average_level');
-        values['total_skill_xp'] = getMax(memberProfiles, 'data', 'levels', 'total_skill_xp');
-
-        for(const skill of getAllKeys(memberProfiles, 'data', 'levels', 'levels'))
-            values[`skill_${skill}_xp`] = getMax(memberProfiles, 'data', 'levels', 'levels', skill, 'xp');
-
-        values['slayer_xp'] = getMax(memberProfiles, 'data', 'slayer_xp');
-
-        let totalSlayerBossKills = 0;
-
-        for(const slayer of getAllKeys(memberProfiles, 'data', 'slayer_bosses')){
-            for(const key of getAllKeys(memberProfiles, 'data', 'slayer_bosses', slayer)){
-                if(!key.startsWith('boss_kills_tier'))
+                if(userProfile == null)
                     continue;
 
-                const tier = key.split("_").pop();
+                userProfile.levels = await module.exports.getLevels(userProfile, hypixelProfile);
 
-                values[`${slayer}_slayer_boss_kills_tier_${tier}`] = getMax(memberProfiles, 'data', 'slayer_bosses', slayer, key);
+                let totalSlayerXp = 0;
 
-                totalSlayerBossKills += values[`${slayer}_slayer_boss_kills_tier_${tier}`];
+                userProfile.slayer_xp = 0;
+
+                if(userProfile.hasOwnProperty('slayer_bosses')){
+                    for(const slayer in userProfile.slayer_bosses)
+                        totalSlayerXp += userProfile.slayer_bosses[slayer].xp || 0;
+
+                    userProfile.slayer_xp = totalSlayerXp;
+
+                    for(const mountMob in constants.mob_mounts){
+                        const mounts = constants.mob_mounts[mountMob];
+
+                        userProfile.stats[`kills_${mountMob}`] = 0;
+                        userProfile.stats[`deaths_${mountMob}`] = 0;
+
+                        for(const mount of mounts){
+                            userProfile.stats[`kills_${mountMob}`] += userProfile.stats[`kills_${mount}`] || 0;
+                            userProfile.stats[`deaths_${mountMob}`] += userProfile.stats[`deaths_${mount}`] || 0;
+
+                            delete userProfile.stats[`kills_${mount}`];
+                            delete userProfile.stats[`deaths_${mount}`]
+                        }
+                    }
+                }
+
+                userProfile.pet_score = 0;
+
+                const maxPetRarity = {};
+
+                if(Array.isArray(userProfile.pets)){
+                    for(const pet of userProfile.pets){
+                        if(!helper.hasPath(pet, 'tier'))
+                            continue;
+
+                        maxPetRarity[pet.type] = Math.max(maxPetRarity[pet.type] || 0, constants.pet_value[pet.tier.toLowerCase()]);
+                    }
+
+                    for(const key in maxPetRarity)
+                        userProfile.pet_score += maxPetRarity[key];
+                }
+
+                memberProfiles.push({
+                    profile_id: singleProfile.profile_id,
+                    data: userProfile
+                });
             }
 
-            values[`${slayer}_slayer_xp`] = getMax(memberProfiles, 'data', 'slayer_bosses', slayer, 'xp');
-        }
-
-        if(totalSlayerBossKills > 0)
-            values['total_slayer_boss_kills'] = totalSlayerBossKills;
-
-        let totalCollectedItems = 0;
-
-        for(const item of getAllKeys(memberProfiles, 'data', 'collection')){
-            values[`collection_${item.toLowerCase()}`] = getMax(memberProfiles, 'data', 'collection', item);
-
-            totalCollectedItems += values[`collection_${item.toLowerCase()}`];
-        }
-
-        if(totalCollectedItems > 0)
-            values[`total_collected_items`] = totalCollectedItems;
-
-        let totalDragonKills = 0;
-        let totalDragonDeaths = 0;
-
-        let playerKills = 0, playerDeaths = 0;
-
-        for(const stat of getAllKeys(memberProfiles, 'data', 'stats')){
-            values[stat] = getMax(memberProfiles, 'data', 'stats', stat);
-
-            if(stat.endsWith('dragon')){
-                if(stat.startsWith('kills_'))
-                    totalDragonKills += values[stat];
-                else if(stat.startsWith('deaths_'))
-                    totalDragonDeaths += values[stat];
+            if(memberProfiles.length == 0)
                 continue;
+
+            const gamemodeName = gamemode != null ? `${gamemode}_` : '';
+
+            const values = {};
+
+            values['pet_score'] = getMax(memberProfiles, 'data', 'pet_score');
+
+            values['fairy_souls'] = getMax(memberProfiles, 'data', 'fairy_souls_collected');
+
+            if(gamemode == 'ironman'){
+                const memberProfilesSkillsApi = memberProfiles.filter(a => a.data.experience_skill_runecrafting != null);
+
+                values['average_level'] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'average_level');
+                values['total_skill_xp'] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'total_skill_xp');
+
+                for(const skill of getAllKeys(memberProfilesSkillsApi, 'data', 'levels', 'levels'))
+                    values[`skill_${skill}_xp`] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'levels', skill, 'xp');
+            }else{
+                values['average_level'] = getMax(memberProfiles, 'data', 'levels', 'average_level');
+                values['total_skill_xp'] = getMax(memberProfiles, 'data', 'levels', 'total_skill_xp');
+
+                for(const skill of getAllKeys(memberProfiles, 'data', 'levels', 'levels'))
+                    values[`skill_${skill}_xp`] = getMax(memberProfiles, 'data', 'levels', 'levels', skill, 'xp');
             }
 
-            if(stat == 'kills_player')
-                playerKills = values[stat];
-            else if(stat == 'deaths_player')
-                playerDeaths = values[stat];
-        }
+            values['slayer_xp'] = getMax(memberProfiles, 'data', 'slayer_xp');
 
-        values['total_dragon_kills'] = totalDragonKills;
-        values['total_dragon_deaths'] = totalDragonDeaths;
+            let totalSlayerBossKills = 0;
 
-        if(playerKills >= 100)
-            values['player_kills_k/d'] = playerKills / playerDeaths;
+            for(const slayer of getAllKeys(memberProfiles, 'data', 'slayer_bosses')){
+                for(const key of getAllKeys(memberProfiles, 'data', 'slayer_bosses', slayer)){
+                    if(!key.startsWith('boss_kills_tier'))
+                        continue;
 
-        values['dungeons_secrets'] = hypixelProfile.achievements.skyblock_treasure_hunter || 0;
+                    const tier = key.split("_").pop();
 
-        const dungeonStats = [
-            'times_played', 'tier_completions', 'fastest_time', 
-            'best_score', 'mobs_killed', 'most_mobs_killed', 
-            'most_healing', 'watcher_kills', 'fastest_time_s', 
-            'fastest_time_s_plus', 'most_damage_mage', 'most_damage_healer', 
-            'most_damage_tank', 'most_damage_berserk', 'most_damage_archer'
-        ];
+                    values[`${slayer}_slayer_boss_kills_tier_${tier}`] = getMax(memberProfiles, 'data', 'slayer_bosses', slayer, key);
 
-        const statOverrides = { fastest_time_s_plus: 'fastest_time_s+', tier_completions: 'completions' };
+                    totalSlayerBossKills += values[`${slayer}_slayer_boss_kills_tier_${tier}`];
+                }
 
-        const statName = stat => statOverrides.hasOwnProperty(stat) ? statOverrides[stat] : stat;
-
-        for(const dungeonType of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types')){
-            values[`dungeons_${dungeonType}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, 'experience');
-
-            for(const stat of dungeonStats)
-                for(const floor of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat))
-                    values[`dungeons_${dungeonType}_${helper.floorName(floor)}_${statName(stat)}`] = 
-                    getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat, floor);
-        }
-
-        for(const dungeonClass of getAllKeys(memberProfiles, 'data', 'dungeons', 'player_classes'))
-            values[`dungeons_${dungeonClass}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'player_classes', dungeonClass, 'experience');
-
-        let scKills = 0;
-
-        for(const sc of constants.sea_creatures){
-            if(constants.mob_mounts.hasOwnProperty(sc.id)){
-                for(const mount of constants.mob_mounts[sc.id])
-                    scKills += getMax(memberProfiles, 'data', 'stats', `kills_${mount}`);
-
-                continue;
+                values[`${slayer}_slayer_xp`] = getMax(memberProfiles, 'data', 'slayer_bosses', slayer, 'xp');
             }
 
-            scKills += getMax(memberProfiles, 'data', 'stats', `kills_${sc.id}`);
-        }
+            if(totalSlayerBossKills > 0)
+                values['total_slayer_boss_kills'] = totalSlayerBossKills;
 
-        values[`total_sea_creatures_killed`] = scKills;
-        values[`total_fishing_actions`] = getMax(memberProfiles, 'data', 'stats', `items_fished`) + scKills;
+            let totalCollectedItems = 0;
 
-        const multi = redisClient.pipeline();
+            for(const item of getAllKeys(memberProfiles, 'data', 'collection')){
+                values[`collection_${item.toLowerCase()}`] = getMax(memberProfiles, 'data', 'collection', item);
 
-        for(const key in values){
-            if(values[key] == null)
-                continue;
+                totalCollectedItems += values[`collection_${item.toLowerCase()}`];
+            }
 
-            multi.zadd(`lb_${key}`, values[key], uuid);
-        }
+            if(totalCollectedItems > 0)
+                values[`total_collected_items`] = totalCollectedItems;
 
-        for(const singleProfile of allProfiles){
-            if(helper.hasPath(singleProfile, 'banking', 'balance'))
-                multi.zadd(`lb_bank`, singleProfile.banking.balance, singleProfile.profile_id);
+            let totalDragonKills = 0;
+            let totalDragonDeaths = 0;
 
-            const minionCrafts = [];
+            let playerKills = 0, playerDeaths = 0;
 
-            for(const member in singleProfile.members)
-                if(Array.isArray(singleProfile.members[member].crafted_generators))
-                    minionCrafts.push(...singleProfile.members[member].crafted_generators);
+            for(const stat of getAllKeys(memberProfiles, 'data', 'stats')){
+                values[stat] = getMax(memberProfiles, 'data', 'stats', stat);
 
-            multi.zadd(
-                `lb_unique_minions`,
-                _.uniq(minionCrafts).length,
-                singleProfile.profile_id
-            );
-        }
+                if(stat.endsWith('dragon')){
+                    if(stat.startsWith('kills_'))
+                        totalDragonKills += values[stat];
+                    else if(stat.startsWith('deaths_'))
+                        totalDragonDeaths += values[stat];
+                    continue;
+                }
 
-        try{
-            await multi.exec();
-        }catch(e){
-            console.error(e);
+                if(stat == 'kills_player')
+                    playerKills = values[stat];
+                else if(stat == 'deaths_player')
+                    playerDeaths = values[stat];
+            }
+
+            values['total_dragon_kills'] = totalDragonKills;
+            values['total_dragon_deaths'] = totalDragonDeaths;
+
+            if(playerKills >= 100)
+                values['player_kills_k/d'] = playerKills / playerDeaths;
+
+            values['dungeons_secrets'] = hypixelProfile.achievements.skyblock_treasure_hunter || 0;
+
+            const dungeonStats = [
+                'times_played', 'tier_completions', 'fastest_time', 
+                'best_score', 'mobs_killed', 'most_mobs_killed', 
+                'most_healing', 'watcher_kills', 'fastest_time_s', 
+                'fastest_time_s_plus', 'most_damage_mage', 'most_damage_healer', 
+                'most_damage_tank', 'most_damage_berserk', 'most_damage_archer'
+            ];
+
+            const statOverrides = { fastest_time_s_plus: 'fastest_time_s+', tier_completions: 'completions' };
+
+            const statName = stat => statOverrides.hasOwnProperty(stat) ? statOverrides[stat] : stat;
+
+            for(const dungeonType of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types')){
+                values[`dungeons_${dungeonType}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, 'experience');
+
+                for(const stat of dungeonStats)
+                    for(const floor of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat))
+                        values[`dungeons_${dungeonType}_${helper.floorName(floor)}_${statName(stat)}`] = 
+                        getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat, floor);
+            }
+
+            for(const dungeonClass of getAllKeys(memberProfiles, 'data', 'dungeons', 'player_classes'))
+                values[`dungeons_${dungeonClass}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'player_classes', dungeonClass, 'experience');
+
+            let scKills = 0;
+
+            for(const sc of constants.sea_creatures){
+                if(constants.mob_mounts.hasOwnProperty(sc.id)){
+                    for(const mount of constants.mob_mounts[sc.id])
+                        scKills += getMax(memberProfiles, 'data', 'stats', `kills_${mount}`);
+
+                    continue;
+                }
+
+                scKills += getMax(memberProfiles, 'data', 'stats', `kills_${sc.id}`);
+            }
+
+            values[`total_sea_creatures_killed`] = scKills;
+            values[`total_fishing_actions`] = getMax(memberProfiles, 'data', 'stats', `items_fished`) + scKills;
+
+            const multi = redisClient.pipeline();
+
+            for(const key in values){
+                if(values[key] == null)
+                    continue;
+
+                multi.zadd(`${gamemodeName}lb_${key}`, values[key], uuid);
+            }
+
+            for(const singleProfile of allProfiles){
+                if(helper.hasPath(singleProfile, 'banking', 'balance'))
+                    multi.zadd(`${gamemodeName}lb_bank`, singleProfile.banking.balance, singleProfile.profile_id);
+
+                const minionCrafts = [];
+
+                for(const member in singleProfile.members)
+                    if(Array.isArray(singleProfile.members[member].crafted_generators))
+                        minionCrafts.push(...singleProfile.members[member].crafted_generators);
+
+                multi.zadd(
+                    `${gamemodeName}lb_unique_minions`,
+                    _.uniq(minionCrafts).length,
+                    singleProfile.profile_id
+                );
+            }
+
+            try{
+                await multi.exec();
+            }catch(e){
+                console.error(e);
+            }
         }
     },
 }
