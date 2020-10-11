@@ -1591,7 +1591,8 @@ module.exports = {
             stat.entityName = entityName;
         }
 
-        if('kills_guardian_emperor' in userProfile.stats || 'kills_skeleton_emperor' in userProfile.stats)
+        if('kills_guardian_emperor' in userProfile.stats && userProfile.stats.kills_guardian_emperor > 0 
+        || 'kills_skeleton_emperor' in userProfile.stats && userProfile.stats.kills_skeleton_emperor > 0)
             killsDeaths.push({
                 type: 'kills',
                 entityId: 'sea_emperor',
@@ -1599,7 +1600,8 @@ module.exports = {
                 amount: (userProfile.stats['kills_guardian_emperor'] || 0) + (userProfile.stats['kills_skeleton_emperor'] || 0)
             });
 
-        if('kills_chicken_deep' in userProfile.stats || 'kills_zombie_deep' in userProfile.stats)
+        if('kills_chicken_deep' in userProfile.stats && userProfile.stats.kills_chicken_deep > 0
+        || 'kills_zombie_deep' in userProfile.stats && userProfile.stats.kills_zombie_deep > 0)
             killsDeaths.push({
                 type: 'kills',
                 entityId: 'monster_of_the_deep',
@@ -2351,6 +2353,12 @@ module.exports = {
                             delete userProfile.stats[`kills_${mount}`];
                             delete userProfile.stats[`deaths_${mount}`]
                         }
+
+                        if(userProfile.stats[`kills_${mountMob}`] == 0)
+                            delete userProfile.stats[`kills_${mountMob}`];
+
+                        if(userProfile.stats[`deaths_${mountMob}`] == 0)
+                            delete userProfile.stats[`deaths_${mountMob}`];
                     }
                 }
 
