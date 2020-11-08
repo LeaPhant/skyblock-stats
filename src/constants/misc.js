@@ -819,8 +819,8 @@ module.exports = {
                 }
             ]
         }, {
-            name: 'Phantom Fisher',
-            id: 'phantom_fisher',
+            name: 'Phantom Fisherman',
+            id: 'phantom_fisherman',
             rarity: 'legendary',
             fishingLevel: 21,
             level: 160,
