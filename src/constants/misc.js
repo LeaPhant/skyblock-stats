@@ -459,6 +459,15 @@ module.exports = {
                 }
             ]
         }, {
+            name: 'Scarecrow',
+            id: 'scarecrow',
+            rarity: 'rare',
+            fishingLevel: 9,
+            level: 9,
+            requirements: [
+                'Spooky Festival'
+            ]
+        }, {
             name: 'Sea Witch',
             id: 'sea_witch',
             rarity: 'uncommon',
@@ -587,6 +596,15 @@ module.exports = {
                 }
             ]
         }, {
+            name: 'Nightmare',
+            id: 'nightmare',
+            rarity: 'rare',
+            fishingLevel: 14,
+            level: 24,
+            requirements: [
+                'Spooky Festival'
+            ]
+        }, {
             name: 'Carrot King',
             id: 'carrot_king',
             rarity: 'rare',
@@ -672,6 +690,15 @@ module.exports = {
                     rarity: 'uncommon',
                     name: 'Enchanted Prismarine Crystals'
                 }
+            ]
+        }, {
+            name: 'Werewolf',
+            id: 'werewolf',
+            rarity: 'epic',
+            fishingLevel: 17,
+            level: 50,
+            requirements: [
+                'Spooky Festival'
             ]
         }, {
             name: 'Deep Sea Protector',
@@ -776,6 +803,15 @@ module.exports = {
                 }
             ]
         }, {
+            name: 'Phantom Fisher',
+            id: 'phantom_fisher',
+            rarity: 'legendary',
+            fishingLevel: 21,
+            level: 160,
+            requirements: [
+                'Spooky Festival'
+            ]
+        }, {
             name: 'Yeti',
             id: 'yeti',
             rarity: 'legendary',
@@ -812,6 +848,15 @@ module.exports = {
                     rarity: 'legendary',
                     name: 'Hilt of True Ice'
                 }
+            ]
+        }, {
+            name: 'Grim Reaper',
+            id: 'grim_reaper',
+            rarity: 'legendary',
+            fishingLevel: 26,
+            level: 190,
+            requirements: [
+                'Spooky Festival'
             ]
         }, {
             name: 'Nurse Shark',
