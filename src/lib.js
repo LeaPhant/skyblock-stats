@@ -144,10 +144,7 @@ function getLevelByXp(xp, type = 'regular', hypixelProfile){
         xp_table = Object.assign(constants.xp_past_50, xp_table);
 
         maxLevel = Object.keys(xp_table).sort((a, b) => Number(a) - Number(b)).map(a => Number(a)).pop();
-        maxLevelCap = Math.min(maxLevelCap, hypixelProfile.achievements[constants.skills_achievements[type]]);
-
-        console.log(maxLevelCap);
-        console.log(hypixelProfile.achievements[constants.skills_achievements[type]]);
+        maxLevelCap = Math.max(maxLevelCap, hypixelProfile.achievements[constants.skills_achievements[type]]);
     }
 
     for(let x = 1; x <= maxLevelCap; x++){
@@ -1194,8 +1191,6 @@ module.exports = {
 
             for(const skill in skillLevels){
                 output.levels[skill] = getXpByLevel(skillLevels[skill], skill);
-
-                console.log(output.levels[skill]);
 
                 if(skillLevels[skill] < 0)
                     continue;
