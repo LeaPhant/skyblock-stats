@@ -970,7 +970,7 @@ module.exports = {
 
         output.talismans = talismans;
         output.weapons = all_items.filter(a => a.type != null && (a.type.endsWith('sword') || a.type.endsWith('bow')));
-        output.rods =  all_items.filter(a => a.type != null && a.type.endsWith('fishing rod'));
+        output.rods = all_items.filter(a => a.type != null && (a.type.endsWith('fishing rod') || a.type.endsWith('fishing weapon')));
 
         for(const item of all_items){
             if(!Array.isArray(item.containsItems))
