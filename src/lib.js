@@ -977,7 +977,7 @@ module.exports = {
                 continue;
 
             output.weapons.push(...item.containsItems.filter(a => a.type != null && (a.type.endsWith('sword') || a.type.endsWith('bow'))));
-            output.rods.push(...item.containsItems.filter(a => a.type != null && a.type.endsWith('fishing rod')));
+            output.rods.push(...item.containsItems.filter(a => a.type != null && (a.type.endsWith('fishing rod')|| a.type.endsWith('fishing weapon'))));
         }
 
         // Check if inventory access disabled by user
