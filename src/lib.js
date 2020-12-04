@@ -406,7 +406,7 @@ async function getItems(base64, customTextures = false, packs, cacheOnly = false
 
             let hasAnvilUses = false;
 
-            if(helper.hasPath(item, 'tag', 'ExtraAttributes', 'anvil_uses')){
+            /*if(helper.hasPath(item, 'tag', 'ExtraAttributes', 'anvil_uses')){
                 let { anvil_uses } = item.tag.ExtraAttributes;
 
                 let hot_potato_count = 0;
@@ -421,7 +421,7 @@ async function getItems(base64, customTextures = false, packs, cacheOnly = false
 
                     itemLore.push('', `§7Anvil Uses: §c${anvil_uses}`);
                 }
-            }
+            }*/
 
             if('expertise' in enchantments && helper.hasPath(item, 'tag', 'ExtraAttributes', 'expertise_kills')){
                 const { expertise } = enchantments;
