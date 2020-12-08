@@ -108,7 +108,7 @@ function getXpByLevel(level, type){
     return output;
 }
 
-function getLevelByXp(xp, type = 'regular', hypixelProfile){
+function getLevelByXp(xp, type = 'regular', levelCap, personalCap){
     let xp_table;
 
     switch(type){
@@ -140,11 +140,14 @@ function getLevelByXp(xp, type = 'regular', hypixelProfile){
     let maxLevel = Object.keys(xp_table).sort((a, b) => Number(a) - Number(b)).map(a => Number(a)).pop();
     let maxLevelCap = maxLevel;
 
-    if(constants.skills_cap[type] > maxLevel && type in constants.skills_achievements){
+    if(levelCap > maxLevel){
+        console.log('higher than 50');
         xp_table = Object.assign(constants.xp_past_50, xp_table);
 
         maxLevel = Object.keys(xp_table).sort((a, b) => Number(a) - Number(b)).map(a => Number(a)).pop();
-        maxLevelCap = Math.max(maxLevelCap, hypixelProfile.achievements[constants.skills_achievements[type]]);
+        console.log('new max level', maxLevel);
+        maxLevelCap = personalCap;
+        console.log('personal cap is', maxLevelCap);
     }
 
     for(let x = 1; x <= maxLevelCap; x++){
@@ -1150,18 +1153,22 @@ module.exports = {
         || helper.hasPath(userProfile, 'experience_skill_runecrafting')){
             let average_level_no_progress = 0;
 
-            skillLevels = {
-                taming: getLevelByXp(userProfile.experience_skill_taming || 0, 'taming', hypixelProfile),
-                farming: getLevelByXp(userProfile.experience_skill_farming || 0, 'farming', hypixelProfile),
-                mining: getLevelByXp(userProfile.experience_skill_mining || 0, 'mining', hypixelProfile),
-                combat: getLevelByXp(userProfile.experience_skill_combat || 0, 'combat', hypixelProfile),
-                foraging: getLevelByXp(userProfile.experience_skill_foraging || 0, 'foraging', hypixelProfile),
-                fishing: getLevelByXp(userProfile.experience_skill_fishing || 0, 'fishing', hypixelProfile),
-                enchanting: getLevelByXp(userProfile.experience_skill_enchanting || 0, 'enchanting', hypixelProfile),
-                alchemy: getLevelByXp(userProfile.experience_skill_alchemy || 0, 'alchemy', hypixelProfile),
-                carpentry: getLevelByXp(userProfile.experience_skill_carpentry || 0, 'carpentry', hypixelProfile),
-                runecrafting: getLevelByXp(userProfile.experience_skill_runecrafting || 0, 'runecrafting'),
-            };
+            const levelCaps = Object.assign({}, constants.skills_cap);
+            const skillLevels = {};
+
+            for(const skill in levelCaps){
+                let levelCap = levelCaps[skill];
+                let personalCap = levelCap;
+
+                if(skill == 'farming'){
+                    if(helper.hasPath(userProfile, 'jacob2', 'perks', 'farming_level_cap'))
+                        personalCap = 50 + (userProfile['jacob2'].perks.farming_level_cap || 0);
+                    else
+                        personalCap = 50;
+                }
+
+                skillLevels[skill] = getLevelByXp(userProfile[`experience_skill_${skill}`] || 0, skill, levelCap, personalCap);
+            }
 
             for(let skill in skillLevels){
                 if(skill != 'runecrafting' && skill != 'carpentry'){
@@ -1200,8 +1207,8 @@ module.exports = {
                     continue;
 
                 skillsAmount++;
-                average_level += skillLevels[skill];
 
+                average_level += output.levels[skill].level;
                 totalSkillXp += output.levels[skill].xp;
             }
 

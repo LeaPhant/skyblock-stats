@@ -73,7 +73,7 @@ module.exports = {
         combat: 50,
         foraging: 50,
         fishing: 50,
-        enchanting: 50,
+        enchanting: 60,
         alchemy: 50,
         carpentry: 50,
         runecrafting: 25
