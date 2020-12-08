@@ -162,11 +162,11 @@ module.exports = {
                                 { _id: doc._id }
                             );
 
-                            module.exports.resolveUsernameOrUuid(doc.uuid, db).catch(console.error);
+                            module.exports.resolveUsernameOrUuid(doc.uuid, db).catch(() => {});
                         }
                     }
                 }catch(e){
-                    console.error(e);
+                    
                 }
             }).catch(async err => {
                 if(user)
@@ -176,8 +176,6 @@ module.exports = {
                         { uuid: user.uuid },
                         { $set: { date: +new Date() } }
                     );
-
-                console.error(err);
             });
 
             if(!user){

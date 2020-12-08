@@ -2068,7 +2068,6 @@ module.exports = {
 
                 paramPlayer = uuid;
             }catch(e){
-                console.error(e);
                 throw e;
             }
         }
