@@ -141,13 +141,10 @@ function getLevelByXp(xp, type = 'regular', levelCap, personalCap){
     let maxLevelCap = maxLevel;
 
     if(levelCap > maxLevel){
-        console.log('higher than 50');
         xp_table = Object.assign(constants.xp_past_50, xp_table);
 
         maxLevel = Object.keys(xp_table).sort((a, b) => Number(a) - Number(b)).map(a => Number(a)).pop();
-        console.log('new max level', maxLevel);
         maxLevelCap = personalCap;
-        console.log('personal cap is', maxLevelCap);
     }
 
     for(let x = 1; x <= maxLevelCap; x++){
