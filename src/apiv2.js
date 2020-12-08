@@ -389,6 +389,9 @@ module.exports = (app, db) => {
             const output = { profiles: {} };
 
             for(const singleProfile of allProfiles){
+                if(singleProfile.members[profile.uuid] == null)
+                    continue;
+
                 const userProfile = singleProfile.members[profile.uuid];
 
                 const items = await lib.getItems(userProfile, req.query.pack);
@@ -398,7 +401,8 @@ module.exports = (app, db) => {
                     profile_id: singleProfile.profile_id,
                     cute_name: singleProfile.cute_name,
                     game_mode: singleProfile.game_mode,
-                    current: Math.max(...allProfiles.map(a => a.members[profile.uuid].last_save)) == userProfile.last_save,
+                    current: Math.max(...allProfiles.map(a => a.members[profile.uuid] != null 
+                        && a.members[profile.uuid].last_save)) == userProfile.last_save,
                     last_save: userProfile.last_save,
                     raw: userProfile,
                     items,
