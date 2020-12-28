@@ -142,6 +142,7 @@ module.exports = {
         crit_damage: 50,
         bonus_attack_speed: 0,
         intelligence: 0,
+        ability_damage: 0,
         sea_creature_chance: 20,
         magic_find: 10,
         pet_luck: 0
@@ -159,6 +160,7 @@ module.exports = {
         crit_damage: 0,
         bonus_attack_speed: 0,
         intelligence: 0,
+        ability_damage: 0,
         sea_creature_chance: 0,
         magic_find: 0,
         pet_luck: 0

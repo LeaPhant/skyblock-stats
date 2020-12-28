@@ -1277,7 +1277,7 @@ module.exports = {
             if(levels[skill].level == 0)
                 continue;
 
-            const skillBonus = getBonusStat(levels[skill].level || levels[skill], `${skill}_skill`, 50, 1);
+            const skillBonus = getBonusStat(levels[skill].level || levels[skill], `${skill}_skill`, levels[skill].maxLevel, 1);
 
             output.skill_bonus[skill] = Object.assign({}, skillBonus);
 
