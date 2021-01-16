@@ -3,6 +3,14 @@ module.exports = {
 
     collection_data: [
         {
+            type: 'mining',
+            skyblockId: 'MITHRIL_ORE',
+            name: 'Mithril',
+            id: 138,
+            damage: 0,
+            maxTier: 9
+        },
+        {
             type: 'farming',
             skyblockId: 'WHEAT',
             name: 'Wheat',
