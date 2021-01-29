@@ -69,7 +69,7 @@ module.exports = {
     skills_cap: {
         taming: 50,
         farming: 60,
-        mining: 50,
+        mining: 60,
         combat: 50,
         foraging: 50,
         fishing: 50,
