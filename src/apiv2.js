@@ -212,6 +212,9 @@ module.exports = (app, db) => {
         if(req.query.find || req.query.guild)
             uuid = (await helper.resolveUsernameOrUuid(req.query.guild || req.query.find, db, true)).uuid;
 
+        if(uuid && req.cacheOnly == false)
+            await lib.getProfile(db, uuid, null, { cacheOnly: false, waitForLb: true });
+
         if(req.query.guild){
             page = Math.max(1, req.query.page || 1);
             
