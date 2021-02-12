@@ -116,7 +116,7 @@ module.exports = (app, db) => {
         const getAmounts = redisClient.pipeline();
 
         for(const position of positions)
-            getAmounts.zscore(`lb_${position.leaderboard.key}`, uuid);
+            getAmounts.zscore(`${modeName}lb_${position.leaderboard.key}`, uuid);
         
         for(const [index, result] of (await getAmounts.exec()).entries()){
             const lb = constants.leaderboard(`lb_${positions[index].leaderboard.key}`);
