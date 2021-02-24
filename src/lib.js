@@ -2402,12 +2402,16 @@ module.exports = {
 
                 values['average_level'] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'average_level');
                 values['total_skill_xp'] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'total_skill_xp');
+                
+                values['average_level'] += values['total_skill_xp'] / 1000000000000000;
 
                 for(const skill of getAllKeys(memberProfilesSkillsApi, 'data', 'levels', 'levels'))
                     values[`skill_${skill}_xp`] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'levels', skill, 'xp');
             }else{
                 values['average_level'] = getMax(memberProfiles, 'data', 'levels', 'average_level');
                 values['total_skill_xp'] = getMax(memberProfiles, 'data', 'levels', 'total_skill_xp');
+                
+                values['average_level'] += values['total_skill_xp'] / 1000000000000000;
 
                 for(const skill of getAllKeys(memberProfiles, 'data', 'levels', 'levels'))
                     values[`skill_${skill}_xp`] = getMax(memberProfiles, 'data', 'levels', 'levels', skill, 'xp');
