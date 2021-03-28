@@ -2077,38 +2077,38 @@ module.exports = {
             uuid: paramPlayer
         };
 
-        let allSkyBlockProfiles = [];
+        let allSkyBlockProfiles = [], profileObject = { last_update: 0};
 
-        let profileObject = await db
-        .collection('profileStore')
-        .findOne({ uuid: paramPlayer });
+        if(!credentials.cachingDisabled){
+            let profileObject = await db
+            .collection('profileStore')
+            .findOne({ uuid: paramPlayer });
 
-        let lastCachedSave = 0;
+            let lastCachedSave = 0;
 
-        if(profileObject){
-            const profileData = db
-            .collection('profileCache')
-            .find({ profile_id: { $in: Object.keys(profileObject.profiles) } });
+            if(profileObject){
+                const profileData = db
+                .collection('profileCache')
+                .find({ profile_id: { $in: Object.keys(profileObject.profiles) } });
 
-            for await(const doc of profileData){
-                if(!helper.hasPath(doc, 'members', paramPlayer))
-                    continue;
+                for await(const doc of profileData){
+                    if(!helper.hasPath(doc, 'members', paramPlayer))
+                        continue;
 
-                Object.assign(doc, profileObject.profiles[doc.profile_id]);
+                    Object.assign(doc, profileObject.profiles[doc.profile_id]);
 
-                allSkyBlockProfiles.push(doc);
+                    allSkyBlockProfiles.push(doc);
 
-                lastCachedSave = Math.max(lastCachedSave, doc.members[paramPlayer].last_save || 0);
+                    lastCachedSave = Math.max(lastCachedSave, doc.members[paramPlayer].last_save || 0);
+                }
             }
-        }else{
-            profileObject = { last_update: 0 };
         }
 
         let response = null;
 
         if(!options.cacheOnly &&
         (Date.now() - lastCachedSave > 190 * 1000 && Date.now() - lastCachedSave < 300 * 1000
-        || Date.now() - profileObject.last_update >= 300 * 1000)){
+        || Date.now() - profileObject.last_update >= 300 * 1000 || credentials.cachingDisabled)){
             try{
                 response = await retry(async () => {
                     return await Hypixel.get('skyblock/profiles', {
@@ -2212,7 +2212,7 @@ module.exports = {
             if(!userProfile)
                 continue;
 
-            if(response && response.request.fromCache !== true){
+            if(response && response.request.fromCache !== true && !credentials.cachingDisabled){
                 const insertCache = {
                     last_update: new Date(),
                     members: _profile.members
@@ -2301,14 +2301,16 @@ module.exports = {
             }else{
                 module.exports.updateLeaderboardPositions(db, paramPlayer, allSkyBlockProfiles).catch(console.error);
             }
-            
-            db
-            .collection('profileStore')
-            .updateOne(
-                { uuid: paramPlayer },
-                { $set: insertProfileStore },
-                { upsert: true }
-            ).catch(console.error);
+
+            if(!credentials.cachingDisabled){
+                db
+                .collection('profileStore')
+                .updateOne(
+                    { uuid: paramPlayer },
+                    { $set: insertProfileStore },
+                    { upsert: true }
+                ).catch(console.error);
+            }
         }
 
         return { profile: profile, allProfiles: allSkyBlockProfiles, uuid: paramPlayer };
