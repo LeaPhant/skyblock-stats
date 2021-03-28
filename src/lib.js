@@ -2077,14 +2077,12 @@ module.exports = {
             uuid: paramPlayer
         };
 
-        let allSkyBlockProfiles = [], profileObject = { last_update: 0};
+        let allSkyBlockProfiles = [], profileObject = { last_update: 0}, lastCachedSave = 0;
 
         if(!credentials.cachingDisabled){
             let profileObject = await db
             .collection('profileStore')
             .findOne({ uuid: paramPlayer });
-
-            let lastCachedSave = 0;
 
             if(profileObject){
                 const profileData = db
