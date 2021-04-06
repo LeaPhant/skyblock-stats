@@ -26,6 +26,10 @@ module.exports = {
             1: {
                 crit_chance: 0.5,
                 damage_increase: 0.04
+            },
+            51: {
+                crit_chance: 0.5,
+                damage_increase: 0.01
             }
         },
 
