@@ -4,13 +4,13 @@ const nbt = require('prismarine-nbt');
 const util = require('util');
 const mcData = require("minecraft-data")("1.8.9");
 const _ = require('lodash');
-const constants = require('./constants');
 const helper = require('./helper');
 const { getId } = helper;
 const axios = require('axios');
 const moment = require('moment');
 const { v4 } = require('uuid');
 const retry = require('async-retry');
+const constants = require('./constants');
 
 const credentials = require('./../credentials.json');
 
@@ -185,7 +185,7 @@ function getSlayerLevel(slayer, slayerName){
     const maxLevel = Math.max(...Object.keys(constants.slayer_xp[slayerName]));
 
     for(const level_name in claimed_levels){
-        const level = parseInt(level_name.split("_").pop());
+        const level = parseInt(level_name.split("_")[1]);
 
         if(level > currentLevel)
             currentLevel = level;
@@ -2554,23 +2554,3 @@ module.exports = {
         }
     },
 }
-
-async function init(){
-    const response = await axios('https://api.hypixel.net/resources/skyblock/collections');
-
-    if(!response.data.hasOwnProperty('collections'))
-        return;
-
-    for(const type in response.data.collections){
-        for(const itemType in response.data.collections[type].items){
-            const item = response.data.collections[type].items[itemType];
-
-            const collectionData = constants.collection_data.filter(a => a.skyblockId == itemType)[0];
-
-            collectionData.maxTier = item.maxTiers;
-            collectionData.tiers = item.tiers;
-        }
-    }
-}
-
-init();
