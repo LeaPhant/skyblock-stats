@@ -1299,7 +1299,7 @@ module.exports = {
 
                     slayers[slayerName] = {};
 
-                    if(!helper.hasPath(slayer, 'claimed_levels'))
+                    if(!helper.hasPath(slayer, 'claimed_levels') || slayerName == 'enderman')
                         continue;
 
                     slayers[slayerName].level = getSlayerLevel(slayer, slayerName);
@@ -2025,7 +2025,7 @@ module.exports = {
 
             const collectionData =  constants.collection_data.filter(a => a.skyblockId == type)[0];
 
-            if('tiers' in collectionData){
+            if(collectionData != null && 'tiers' in collectionData){
                 for(const tier of collectionData.tiers){
                     if(totalAmount >= tier.amountRequired){
                         output[type].tier = Math.max(tier.tier, output[type].tier);
