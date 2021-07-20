@@ -12,6 +12,11 @@ html{
     overflow-x: hidden;
 }
 
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button{
+    -webkit-appearance: none;
+}
+
 .grecaptcha-badge{
     visibility: hidden;
 }
