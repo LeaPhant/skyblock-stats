@@ -514,9 +514,6 @@ async function getItems(base64, customTextures = false, packs, cacheOnly = false
             if(item.type == 'hatccessory')
                 item.type = 'accessory';
 
-            if(item.type != null && item.type.startsWith('dungeon'))
-                item.Damage = 0;
-
             // fix custom maps texture
             if(item.id == 358){
                 item.id = 395;
