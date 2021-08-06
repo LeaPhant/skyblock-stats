@@ -1117,6 +1117,9 @@ twitterDescription += '. Click to view more stats!'
                     for(const slayerName in calculated.slayers){
                         const slayer = calculated.slayers[slayerName];
 
+                        if(slayer.level == null)
+                            continue;
+
                         if(slayer.level.progress >= 1 && slayer.level.currentLevel < slayer.level.maxLevel){
                             slayer.level.unclaimed = true;
 
