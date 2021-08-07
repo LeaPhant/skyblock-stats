@@ -179,6 +179,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
                 inventoryItemIcon.className = 'piece-icon item-icon icon-' + item.id + '_' + item.Damage;
 
+                if(item.Damage != 0)
+                    inventoryItemIcon.className += ' icon-' + item.id + '_0';
+
                 if(item.texture_path){
                     inventoryItemIcon.className += ' custom-icon';
                     inventoryItemIcon.style.backgroundImage = 'url("' +  item.texture_path + '")';
