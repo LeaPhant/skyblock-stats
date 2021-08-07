@@ -297,6 +297,9 @@ document.addEventListener('DOMContentLoaded', function(){
             itemIcon.removeAttribute('style');
             itemIcon.classList.remove('custom-icon');
             itemIcon.className = 'stats-piece-icon item-icon icon-' + item.id + '_' + item.Damage;
+
+            if(item.Damage != 0)
+                itemIcon.className += ' icon-' + item.id + '_0';
         }
 
         /* broken sometimes
@@ -363,6 +366,9 @@ document.addEventListener('DOMContentLoaded', function(){
                     let enchantedClass = isEnchanted(backpackItem) ? 'is-enchanted' : '';
 
                     inventoryItemIcon.className = 'piece-icon item-icon ' + enchantedClass + ' icon-' + backpackItem.id + '_' + backpackItem.Damage;
+
+                    if(backpackItem.Damage != 0)
+                        inventoryItemIcon.className += ' icon-' + backpackItem.id + '_0';
 
                     if(backpackItem.texture_path){
                         inventoryItemIcon.className += ' custom-icon';
