@@ -1665,7 +1665,7 @@ module.exports = {
         const weightSkills = ['enchanting', 'taming', 'alchemy', 'mining', 'farming', 'foraging', 'combat', 'fishing'];
         const weightSlayers = ['zombie', 'spider', 'wolf', 'enderman'];
 
-        output.lilyweight = lily.getWeightRaw(
+        const lilyWeightArgs = [
             weightSkills.map(a => getLevelByXp(userProfile[`experience_skill_${a}`] || 0, a, 60, 60).level),
             weightSkills.map(a => userProfile[`experience_skill_${a}`] || 0),
             helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'catacombs', 'tier_completions') 
@@ -1675,19 +1675,11 @@ module.exports = {
             helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'catacombs', 'experience')
             ? userProfile.dungeons.dungeon_types.catacombs.experience : 0,
             weightSlayers.map(a => helper.hasPath(userProfile, 'slayer_bosses', a, 'xp') ? userProfile.slayer_bosses[a].xp : 0)
-        );
+        ];
 
-        console.log('calculating weight based on',
-            weightSkills.map(a => getLevelByXp(userProfile[`experience_skill_${a}`] || 0, a, 60, 60).level),
-            weightSkills.map(a => userProfile[`experience_skill_${a}`] || 0),
-            helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'catacombs', 'tier_completions') 
-            ? userProfile.dungeons.dungeon_types.catacombs.tier_completions : {},
-            helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'master_catacombs', 'tier_completions') ? 
-            userProfile.dungeons.dungeon_types.master_catacombs.tier_completions : {},
-            helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'catacombs', 'experience') ? 
-            userProfile.dungeons.dungeon_types.catacombs.experience : 0,
-            weightSlayers.map(a => helper.hasPath(userProfile, 'slayer_bosses', a, 'xp') ? userProfile.slayer_bosses[a].xp : 0)
-        );
+        output.lilyweight = lily.getWeightRaw(...lilyWeightArgs);
+
+        console.log('calculating weight based on', lilyWeightArgs);
 
         if(helper.hasPath(profile, 'banking', 'balance'))
             output.bank = profile.banking.balance;
