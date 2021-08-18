@@ -10,6 +10,7 @@ const axios = require('axios');
 const moment = require('moment');
 const { v4 } = require('uuid');
 const retry = require('async-retry');
+const lily = require('lilyweight')("");
 const constants = require('./constants');
 
 const credentials = require('./../credentials.json');
@@ -1660,6 +1661,33 @@ module.exports = {
                 text: (Date.now() - last_updated) < 7 * 60 * 1000 ? 'currently online' : `last played ${moment(last_updated).fromNow()}`
             };
         }
+
+        const weightSkills = ['enchanting', 'taming', 'alchemy', 'mining', 'farming', 'foraging', 'combat', 'fishing'];
+        const weightSlayers = ['zombie', 'spider', 'wolf', 'enderman'];
+
+        output.lilyweight = lily.getWeightRaw(
+            weightSkills.map(a => getLevelByXp(userProfile[`experience_skill_${a}`] || 0, a, 60, 60).level),
+            weightSkills.map(a => userProfile[`experience_skill_${a}`] || 0),
+            helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'catacombs', 'tier_completions') 
+            ? userProfile.dungeons.dungeon_types.catacombs.tier_completions : {},
+            helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'master_catacombs', 'tier_completions')
+            ? userProfile.dungeons.dungeon_types.master_catacombs.tier_completions : {},
+            helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'catacombs', 'experience')
+            ? userProfile.dungeons.dungeon_types.catacombs.experience : 0,
+            weightSlayers.map(a => helper.hasPath(userProfile, 'slayer_bosses', a, 'xp') ? userProfile.slayer_bosses[a].xp : 0)
+        );
+
+        console.log('calculating weight based on',
+            weightSkills.map(a => getLevelByXp(userProfile[`experience_skill_${a}`] || 0, a, 60, 60).level),
+            weightSkills.map(a => userProfile[`experience_skill_${a}`] || 0),
+            helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'catacombs', 'tier_completions') 
+            ? userProfile.dungeons.dungeon_types.catacombs.tier_completions : {},
+            helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'master_catacombs', 'tier_completions') ? 
+            userProfile.dungeons.dungeon_types.master_catacombs.tier_completions : {},
+            helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'catacombs', 'experience') ? 
+            userProfile.dungeons.dungeon_types.catacombs.experience : 0,
+            weightSlayers.map(a => helper.hasPath(userProfile, 'slayer_bosses', a, 'xp') ? userProfile.slayer_bosses[a].xp : 0)
+        );
 
         if(helper.hasPath(profile, 'banking', 'balance'))
             output.bank = profile.banking.balance;

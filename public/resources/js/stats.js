@@ -1,10 +1,8 @@
 document.addEventListener('DOMContentLoaded', function(){
     let userAgent = window.navigator.userAgent;
-    let tippyInstance;
 
-    tippy('*[data-tippy-content]:not(.interactive-tooltip)', {
-        trigger: 'mouseenter click'
-    });
+    tippy('*[data-tippy-content]:not(.interactive-tooltip)', { allowHTML: true });
+    tippy('.interactive-tooltip', { interactive: true, allowHTML: true });
 
     const playerModel = document.getElementById("player_model");
 
@@ -32,19 +30,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
     	skinViewer.animations.add(skinview3d.IdleAnimation);
     }
-
-    tippyInstance = tippy('.interactive-tooltip', {
-        trigger: 'mouseenter click',
-        interactive: true,
-        appendTo: () => document.body,
-        onTrigger(instance, event){
-            if(event.type == 'click')
-                dimmer.classList.add('show-dimmer');
-        },
-        onHide(){
-            dimmer.classList.remove('show-dimmer');
-        }
-    });
 
     const all_items = items.armor.concat(items.inventory, items.enderchest, items.talisman_bag, items.fishing_bag, items.quiver, items.potion_bag, items.wardrobe_inventory);
 
@@ -462,8 +447,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
         if(window.innerWidth > 1570 && oldWidth <= 1570)
             document.getElementById("skin_display").appendChild(skinViewer.domElement);
-
-        tippy('*[data-tippy-content]');
 
         if(skinViewer){
             if(playerModel.offsetWidth / playerModel.offsetHeight < 0.6)

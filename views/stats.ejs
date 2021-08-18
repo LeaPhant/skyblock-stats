@@ -593,13 +593,13 @@ twitterDescription += '. Click to view more stats!'
                     <% } %>
                     <div class="additional-stat"><span data-tippy-content="Last updated on <%= moment(calculated.last_updated.unix).format('D MMMM YYYY HH:mm') %>"><span class="stat-name">Last Updated: </span><span class="stat-value"><%= calculated.last_updated.text %></span></span></div>
                     <div class="additional-stat"><span data-tippy-content="Joined on <%= moment(calculated.first_join.unix).format('D MMMM YYYY HH:mm') %>"><span class="stat-name">Joined: </span><span class="stat-value"><%= calculated.first_join.text %></span></span></div>
-                    <div data-tippy-content="<span class='stat-name'>Purse Balance: </span><span class='stat-value'><%= Math.round(calculated.purse).toLocaleString() %> Coins</span><br><br>
+                    <div data-tippy-content="<span class='stat-name'>Purse Balance: </span><span class='stat-value'><%= Math.round(calculated.purse).toLocaleString() %> Coins</span><% if(extra.cookie != null) { %><br><br>
                         <span class='stat-name'>Booster Cookie Sell Price: </span><span class='stat-value'><%= Math.round(extra.cookie.sellPrice).toLocaleString() %> Coins</span>
-                        <span class='stat-name'>Booster Cookie USD Price: </span><span class='stat-value'>$2.75</span>" class="additional-stat"><span class="stat-name">Purse: </span><span class="stat-value">$<%= (calculated.purse / extra.cookie.sellPrice * 2.75).toFixed(2) %></span></div>
+                        <span class='stat-name'>Booster Cookie USD Price: </span><span class='stat-value'>$2.75</span><% } %>" class="additional-stat"><span class="stat-name">Purse: </span><span class="stat-value"><%= extra.cookie != null ? '$' + (calculated.purse / extra.cookie.sellPrice * 2.75).toFixed(2) : calculated.purse.toLocaleString() %></span></div>
                     <% if('bank' in calculated){ %>
-                        <div data-tippy-content="<span class='stat-name'>Bank Balance: </span><span class='stat-value'><%= Math.round(calculated.bank).toLocaleString() %> Coins</span><br><br>
+                        <div data-tippy-content="<span class='stat-name'>Bank Balance: </span><span class='stat-value'><%= Math.round(calculated.bank).toLocaleString() %> Coins</span><% if(extra.cookie != null) { %><br><br><br><br>
                         <span class='stat-name'>Booster Cookie Sell Price: </span><span class='stat-value'><%= Math.round(extra.cookie.sellPrice).toLocaleString() %> Coins</span>
-                        <span class='stat-name'>Booster Cookie USD Price: </span><span class='stat-value'>$2.75</span>" class="additional-stat"><span class="stat-name">Bank Account: </span><span class="stat-value">$<%= (calculated.bank / extra.cookie.sellPrice * 2.75).toFixed(2) %></span></div>
+                        <span class='stat-name'>Booster Cookie USD Price: </span><span class='stat-value'>$2.75</span><% } %>" class="additional-stat"><span class="stat-name">Bank Account: </span><span class="stat-value"><%= extra.cookie != null ? '$' + (calculated.bank / extra.cookie.sellPrice * 2.75).toFixed(2) : calculated.bank.toLocaleString() %></span></div>
                     <% } %>
                     <% if('levels' in calculated){ %>
                         <div class="additional-stat"><span data-tippy-content="
@@ -610,6 +610,21 @@ twitterDescription += '. Click to view more stats!'
                         <% if('runecrafting' in calculated.levels){ %><span class='stat-name'>Average Level without progress: </span><span class='stat-value'><%= calculated.average_level_no_progress.toFixed(2) %></span>
                         <div class='tippy-explanation'>Average skill level without including partial level progress.</div><% } %>
                         "><span class="stat-name">Average Skill Level: </span><span class="stat-value"><%= Math.floor(calculated.average_level * 10) / 10 %></span></span></div>
+                        <div class="additional-stat"><span class="interactive-tooltip" data-tippy-content="
+                        <strong>Skill Weight</strong><br>
+                        <span class='stat-name'>Base Weight: </span><span class='stat-value'><%= calculated.lilyweight.skill.base.toFixed(2) %><br>
+                        <span class='stat-name'>Overflow Weight: </span><span class='stat-value'><%= calculated.lilyweight.skill.overflow.toFixed(2) %><br><br>
+                        <strong>Catacombs Weight</strong><br>
+                        <span class='stat-name'>Regular Completions: </span><span class='stat-value'><%= calculated.lilyweight.catacombs.completion.base.toFixed(2) %><br>
+                        <span class='stat-name'>Master Completions: </span><span class='stat-value'><%= calculated.lilyweight.catacombs.completion.master.toFixed(2) %><br>
+                        <span class='stat-name'>Experience: </span><span class='stat-value'><%= calculated.lilyweight.catacombs.experience.toFixed(2) %><br><br>
+                        <strong>Slayer Weight</strong><br>
+                        <span class='stat-name'>Total: </span><span class='stat-value'><%= calculated.lilyweight.slayer.toFixed(2) %><br>
+                        <div class='tippy-explanation'>Weight algorithm made by LappySheep, join her <a rel='nofollow' href='https://discord.gg/kXfBmF4'>Weight Discord Server</a> for more detailed calculations.<br><br>
+                        Thanks to Desco for porting the calculator to JavaScript, the source code can be found on <a href='https://github.com/Antonio32A/lilyweight' rel='nofollow'>GitHub</a>.</div>
+                        "><span class="stat-name">Lily Weight: </span><span class="stat-value"><%= calculated.lilyweight.total.toFixed(2) %></span>
+
+                        </div>
                         <div class="additional-stat">
                             <span class="stat-name">Fairy Souls: </span><span class="stat-value"><%= calculated.fairy_souls.collected %> / <%= calculated.fairy_souls.total %></span>
                         </div>
