@@ -407,7 +407,42 @@ module.exports = {
             head: "/head/a94ae433b301c7fb7c68cba625b0bd36b0b14190f20e34a7c8ee0d9de06d53b9",
             type: "fishing",
             emoji: "🦈"
-        }
+        },
+        "MITHRIL_GOLEM": {
+            head: "/head/c1b2dfe8ed5dffc5b1687bc1c249c39de2d8a6c3d90305c95f6d1a1a330a0b1",
+            type: "mining",
+            emoji: "🗿"
+        },
+        "GRANDMA_WOLF": {
+            head: "/head/4e794274c1bb197ad306540286a7aa952974f5661bccf2b725424f6ed79c7884",
+            type: "combat",
+            emoji: "👵"
+        },
+        "RAT": {
+            head: "/head/a8abb471db0ab78703011979dc8b40798a941f3a4dec3ec61cbeec2af8cffe8",
+            type: "combat",
+            emoji: "🐀"
+        },
+        "BAL": {
+            head: "/head/c469ba2047122e0a2de3c7437ad3dd5d31f1ac2d27abde9f8841e1d92a8c5b75",
+            type: "combat",
+            emoji: "🔥"
+        },
+        "SCATHA": {
+            head: "/head/df03ad96092f3f789902436709cdf69de6b727c121b3c2daef9ffa1ccaed186c",
+            type: "mining",
+            emoji: "🪱"
+        },
+        "GOLDEN_DRAGON": {
+            head: "/head/2e9f9b1fc014166cb46a093e5349b2bf6edd201b680d62e48dbf3af9b0459116",
+            type: "combat",
+            emoji: "🐉"
+        },
+        "AMMONITE": {
+            head: "/head/a074a7bd976fe6aba1624161793be547d54c835cf422243a851ba09d1e650553",
+            type: "fishing",
+            emoji: "🐌"
+        },
     },
 
     pet_value: {
@@ -415,8 +450,15 @@ module.exports = {
         "uncommon": 2,
         "rare": 3,
         "epic": 4,
-        "legendary": 5
+        "legendary": 5,
+        "mythic": 6
     },
+
+    pet_rarity_boost_items: [
+        'PET_ITEM_TIER_BOOST', 
+        'PET_ITEM_VAMPIRE_FANG', 
+        'PET_ITEM_TOY_JERRY'
+    ],
 
     pet_rewards: {
         0: {
