@@ -444,7 +444,7 @@ module.exports = {
             emoji: "🐌"
         },
         "ARMADILLO": {
-            head: "/head/a074a7bd976fe6aba1624161793be547d54c835cf422243a851ba09d1e650553",
+            head: "/head/c1eb6df4736ae24dd12a3d00f91e6e3aa7ade6bbefb0978afef2f0f92461018f",
             type: "mining",
             emoji: "🐢"
         },
