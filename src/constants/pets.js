@@ -4,7 +4,8 @@ module.exports = {
         uncommon: 6,
         rare: 11,
         epic: 16,
-        legendary: 20
+        legendary: 20,
+        mythic: 20
     },
 
     pet_levels: [
