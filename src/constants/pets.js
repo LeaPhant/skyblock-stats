@@ -443,6 +443,11 @@ module.exports = {
             type: "fishing",
             emoji: "🐌"
         },
+        "ARMADILLO": {
+            head: "/head/a074a7bd976fe6aba1624161793be547d54c835cf422243a851ba09d1e650553",
+            type: "mining",
+            emoji: "🐢"
+        },
     },
 
     pet_value: {
