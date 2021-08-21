@@ -234,6 +234,8 @@ module.exports = {
                 options['name'] = `Kills Tarantula Broodfather Tier ${tier}`;
             else if(lbName.startsWith('wolf_slayer'))
                 options['name'] = `Kills Sven Packmaster Tier ${tier}`;
+            else if(lbName.startsWith('enderman_slayer'))
+                options['name'] = `Kills Voidgloom Seraph Tier ${tier}`;
         }
 
         if(lbName.startsWith('kills_') || lbName.startsWith('deaths_')){
