@@ -2354,19 +2354,18 @@ module.exports = {
 
                 userProfile.levels = await module.exports.getLevels(userProfile, hypixelProfile);
 
+                userProfile.gemstone_powder = 0;
+                userProfile.mithril_powder = 0;
+
+                userProfile.gemstone_powder += helper.getPath(userProfile, 'mining_core', 'powder_spent_gemstone') || 0;
+                userProfile.gemstone_powder += helper.getPath(userProfile, 'mining_core', 'powder_gemstone') || 0;
+
+                userProfile.mithril_powder += helper.getPath(userProfile, 'mining_core', 'powder_spent_mithril') || 0;
+                userProfile.mithril_powder += helper.getPath(userProfile, 'mining_core', 'powder_mithril') || 0;
+
                 let totalSlayerXp = 0;
 
                 userProfile.slayer_xp = 0;
-
-                const mithPowderSpent = helper.getPath(userProfile, 'mining_core', 'powder_spent_mithril');
-                const mithPowder = (mithPowderSpent || 0) + helper.getPath(userProfile, 'mining_core', 'powder_mithril');
-
-                values['total_mithril_powder'] = Math.max(values['total_mithril_powder'] || 0, mithPowder);
-
-                const gemPowderSpent = helper.getPath(userProfile, 'mining_core', 'powder_spent_gemstone');
-                const gemPowder = (gemPowderSpent || 0) + helper.getPath(userProfile, 'mining_core', 'powder_gemstone');
-
-                values['total_gemstone_powder'] = Math.max(values['total_gemstone_powder'] || 0, gemPowder);
 
                 if(userProfile.hasOwnProperty('slayer_bosses')){
                     for(const slayer in userProfile.slayer_bosses)
@@ -2424,6 +2423,9 @@ module.exports = {
             values['pet_score'] = getMax(memberProfiles, 'data', 'pet_score');
 
             values['fairy_souls'] = getMax(memberProfiles, 'data', 'fairy_souls_collected');
+
+            values['total_mithril_powder'] = getMax(memberProfiles, 'data', 'mithril_powder');
+            values['total_gemstone_powder'] = getMax(memberProfiles, 'data', 'gemstone_powder');
 
             if(gamemode == 'ironman'){
                 const memberProfilesSkillsApi = memberProfiles.filter(a => a.data.experience_skill_runecrafting != null);
