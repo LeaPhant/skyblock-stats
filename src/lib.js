@@ -2447,6 +2447,8 @@ module.exports = {
 
             values['slayer_xp'] = getMax(memberProfiles, 'data', 'slayer_xp');
 
+            values['total_nucleus_completions'] = getMax(memberProfiles, 'data', 'mining_core', 'jade_crystal', 'total_placed');
+
             let totalSlayerBossKills = 0;
 
             for(const slayer of getAllKeys(memberProfiles, 'data', 'slayer_bosses')){
