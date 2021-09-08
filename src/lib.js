@@ -119,6 +119,9 @@ function getLevelByXp(xp, type = 'regular', levelCap, personalCap){
         case 'runecrafting':
             xp_table = constants.runecrafting_xp;
             break;
+        case 'social':
+            xp_table = constants.social_xp;
+            break;
         case 'dungeon':
             xp_table = constants.dungeon_xp;
             break;
