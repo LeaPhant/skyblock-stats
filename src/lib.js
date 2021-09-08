@@ -1665,9 +1665,6 @@ module.exports = {
             };
         }
 
-        const weightSkills = ['enchanting', 'taming', 'alchemy', 'mining', 'farming', 'foraging', 'combat', 'fishing'];
-        const weightSlayers = ['zombie', 'spider', 'wolf', 'enderman'];
-
         const lilyWeightArgs = [
             weightSkills.map(a => getLevelByXp(userProfile[`experience_skill_${a}`] || 0, a, 60, 60).level),
             weightSkills.map(a => userProfile[`experience_skill_${a}`] || 0),
@@ -2468,7 +2465,7 @@ module.exports = {
 
             values['total_nucleus_completions'] = getMax(memberProfiles, 'data', 'mining_core', 'crystals', 'jade_crystal', 'total_placed');
 
-            values['total_lily_weight'] = getMax(memberProfiles, 'data', 'lilyweight', 'total');
+            values['lily_weight_total'] = getMax(memberProfiles, 'data', 'lilyweight', 'total');
             values['lily_skill_weight'] = getMax(memberProfiles, 'data', 'lilyweight', 'skill', 'base');
             values['lily_slayer_weight'] = getMax(memberProfiles, 'data', 'lilyweight', 'slayer');
 
