@@ -2343,6 +2343,9 @@ module.exports = {
 
             const memberProfiles = [];
 
+            const gamemodeName = gamemode != null ? `${gamemode}_` : '';
+            const values = {};
+
             for(const singleProfile of (gamemode == null ? allProfiles : allProfiles.filter(a => a.game_mode == gamemode))){
                 const userProfile = singleProfile.members[uuid];
 
@@ -2387,6 +2390,16 @@ module.exports = {
 
                 const maxPetRarity = {};
 
+                const mithPowderSpent = helper.getPath(userProfile, 'mining_core', 'powder_spent_mithril');
+                const mithPowder = (mithPowderSpent || 0) + helper.getPath(userProfile, 'mining_core', 'powder_mithril');
+
+                values[`${gamemodeName}total_mithril_powder`] = Math.max(values[`${gamemodeName}total_mithril_powder`] || 0, mithPowder);
+
+                const gemPowderSpent = helper.getPath(userProfile, 'mining_core', 'powder_spent_gemstone');
+                const gemPowder = (gemPowderSpent || 0) + helper.getPath(userProfile, 'mining_core', 'powder_gemstone');
+
+                values[`${gamemodeName}total_gemstone_powder`] = Math.max(values[`${gamemodeName}total_gemstone_powder`] || 0, gemPowder);
+
                 if(Array.isArray(userProfile.pets)){
                     for(const pet of userProfile.pets){
                         if(!helper.hasPath(pet, 'tier'))
@@ -2407,10 +2420,6 @@ module.exports = {
 
             if(memberProfiles.length == 0)
                 continue;
-
-            const gamemodeName = gamemode != null ? `${gamemode}_` : '';
-
-            const values = {};
 
             values['pet_score'] = getMax(memberProfiles, 'data', 'pet_score');
 
