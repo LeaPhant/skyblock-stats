@@ -2363,6 +2363,20 @@ module.exports = {
                 userProfile.mithril_powder += helper.getPath(userProfile, 'mining_core', 'powder_spent_mithril') || 0;
                 userProfile.mithril_powder += helper.getPath(userProfile, 'mining_core', 'powder_mithril') || 0;
 
+                const lilyWeightArgs = [
+                    weightSkills.map(a => getLevelByXp(userProfile[`experience_skill_${a}`] || 0, a, 60, 60).level),
+                    weightSkills.map(a => userProfile[`experience_skill_${a}`] || 0),
+                    helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'catacombs', 'tier_completions') 
+                    ? userProfile.dungeons.dungeon_types.catacombs.tier_completions : {},
+                    helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'master_catacombs', 'tier_completions')
+                    ? userProfile.dungeons.dungeon_types.master_catacombs.tier_completions : {},
+                    helper.hasPath(userProfile, 'dungeons', 'dungeon_types', 'catacombs', 'experience')
+                    ? userProfile.dungeons.dungeon_types.catacombs.experience : 0,
+                    weightSlayers.map(a => helper.hasPath(userProfile, 'slayer_bosses', a, 'xp') ? userProfile.slayer_bosses[a].xp : 0)
+                ];
+        
+                userProfile.lilyweight = lily.getWeightRaw(...lilyWeightArgs);
+
                 let totalSlayerXp = 0;
 
                 userProfile.slayer_xp = 0;
@@ -2450,6 +2464,10 @@ module.exports = {
             values['slayer_xp'] = getMax(memberProfiles, 'data', 'slayer_xp');
 
             values['total_nucleus_completions'] = getMax(memberProfiles, 'data', 'mining_core', 'crystals', 'jade_crystal', 'total_placed');
+
+            values['total_lily_weight'] = getMax(memberProfiles, 'data', 'lilyweight', 'total');
+            values['lily_skill_weight'] = getMax(memberProfiles, 'data', 'lilyweight', 'skill', 'base');
+            values['lily_slayer_weight'] = getMax(memberProfiles, 'data', 'lilyweight', 'slayer');
 
             let totalSlayerBossKills = 0;
 
