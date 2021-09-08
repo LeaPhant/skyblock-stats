@@ -98,6 +98,12 @@ module.exports = {
             }
         },
 
+        social_skill: {
+            1: {
+
+            }
+        },
+
         zombie_slayer: {
             1: {
                 health: 2
