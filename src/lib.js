@@ -2363,6 +2363,9 @@ module.exports = {
                 userProfile.mithril_powder += helper.getPath(userProfile, 'mining_core', 'powder_spent_mithril') || 0;
                 userProfile.mithril_powder += helper.getPath(userProfile, 'mining_core', 'powder_mithril') || 0;
 
+                const weightSkills = ['enchanting', 'taming', 'alchemy', 'mining', 'farming', 'foraging', 'combat', 'fishing'];
+                const weightSlayers = ['zombie', 'spider', 'wolf', 'enderman'];
+
                 const lilyWeightArgs = [
                     weightSkills.map(a => getLevelByXp(userProfile[`experience_skill_${a}`] || 0, a, 60, 60).level),
                     weightSkills.map(a => userProfile[`experience_skill_${a}`] || 0),
