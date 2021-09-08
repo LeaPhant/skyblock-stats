@@ -2358,6 +2358,16 @@ module.exports = {
 
                 userProfile.slayer_xp = 0;
 
+                const mithPowderSpent = helper.getPath(userProfile, 'mining_core', 'powder_spent_mithril');
+                const mithPowder = (mithPowderSpent || 0) + helper.getPath(userProfile, 'mining_core', 'powder_mithril');
+
+                values['total_mithril_powder'] = Math.max(values['total_mithril_powder'] || 0, mithPowder);
+
+                const gemPowderSpent = helper.getPath(userProfile, 'mining_core', 'powder_spent_gemstone');
+                const gemPowder = (gemPowderSpent || 0) + helper.getPath(userProfile, 'mining_core', 'powder_gemstone');
+
+                values['total_gemstone_powder'] = Math.max(values['total_gemstone_powder'] || 0, gemPowder);
+
                 if(userProfile.hasOwnProperty('slayer_bosses')){
                     for(const slayer in userProfile.slayer_bosses)
                         totalSlayerXp += userProfile.slayer_bosses[slayer].xp || 0;
@@ -2389,16 +2399,6 @@ module.exports = {
                 userProfile.pet_score = 0;
 
                 const maxPetRarity = {};
-
-                const mithPowderSpent = helper.getPath(userProfile, 'mining_core', 'powder_spent_mithril');
-                const mithPowder = (mithPowderSpent || 0) + helper.getPath(userProfile, 'mining_core', 'powder_mithril');
-
-                values['total_mithril_powder'] = Math.max(values['total_mithril_powder'] || 0, mithPowder);
-
-                const gemPowderSpent = helper.getPath(userProfile, 'mining_core', 'powder_spent_gemstone');
-                const gemPowder = (gemPowderSpent || 0) + helper.getPath(userProfile, 'mining_core', 'powder_gemstone');
-
-                values['total_gemstone_powder'] = Math.max(values['total_gemstone_powder'] || 0, gemPowder);
 
                 if(Array.isArray(userProfile.pets)){
                     for(const pet of userProfile.pets){
@@ -2447,7 +2447,7 @@ module.exports = {
 
             values['slayer_xp'] = getMax(memberProfiles, 'data', 'slayer_xp');
 
-            values['total_nucleus_completions'] = getMax(memberProfiles, 'data', 'mining_core', 'jade_crystal', 'total_placed');
+            values['total_nucleus_completions'] = getMax(memberProfiles, 'data', 'mining_core', 'crystals', 'jade_crystal', 'total_placed');
 
             let totalSlayerBossKills = 0;
 
