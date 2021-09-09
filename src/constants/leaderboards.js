@@ -176,6 +176,11 @@ const overrides = {
         mappedBy: 'profile_id'
     },
 
+    fastest_target_practice: {
+        sortedBy: 1,
+        format: raceFormat
+    },
+
     'player_kills_k/d': {
         name: 'Player K/D'
     }

@@ -2444,6 +2444,8 @@ module.exports = {
             values['total_mithril_powder'] = getMax(memberProfiles, 'data', 'mithril_powder');
             values['total_gemstone_powder'] = getMax(memberProfiles, 'data', 'gemstone_powder');
 
+            values['fastest_target_practice'] = getMax(memberProfiles, 'data', 'fastest_target_practice');
+
             if(gamemode == 'ironman'){
                 const memberProfilesSkillsApi = memberProfiles.filter(a => a.data.experience_skill_runecrafting != null);
 
