@@ -1172,7 +1172,7 @@ module.exports = {
             }
 
             for(let skill in skillLevels){
-                if(skill != 'runecrafting' && skill != 'carpentry'){
+                if(skill != 'runecrafting' && skill != 'carpentry' && skill != 'social'){
                     average_level += skillLevels[skill].level + skillLevels[skill].progress;
                     average_level_no_progress += skillLevels[skill].level;
 
