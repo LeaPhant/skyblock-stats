@@ -177,8 +177,7 @@ const overrides = {
     },
 
     fastest_target_practice: {
-        sortedBy: 1,
-        format: raceFormat
+        sortedBy: 1
     },
 
     'player_kills_k/d': {
