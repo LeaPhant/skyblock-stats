@@ -1181,7 +1181,7 @@ module.exports = {
             }
 
             output.average_level = (average_level / (Object.keys(skillLevels).length - 3));
-            output.average_level_no_progress = (average_level_no_progress / (Object.keys(skillLevels).length - 2));
+            output.average_level_no_progress = (average_level_no_progress / (Object.keys(skillLevels).length - 3));
             output.total_skill_xp = totalSkillXp;
 
             output.levels = Object.assign({}, skillLevels);
