@@ -778,6 +778,13 @@ module.exports = {
         let quiver = 'quiver' in profile ? await getItems(profile.quiver.data, customTextures, packs, cacheOnly) : [];
         let potion_bag = 'potion_bag' in profile ? await getItems(profile.potion_bag.data, customTextures, packs, cacheOnly) : [];
         let candy_bag = 'candy_inventory_contents' in profile ? await getItems(profile.candy_inventory_contents.data, customTextures, packs, cacheOnly) : [];
+        let storage = [];
+
+        if('backpack_contents' in profile){
+            for(const backpack of Object.values(profile.backpack_contents)){
+                storage.push(...await getItems(backpack.data, customTextures, packs, cacheOnly));
+            }
+        }
 
         const wardrobeColumns = wardrobe_inventory.length / 4;
 
@@ -810,8 +817,9 @@ module.exports = {
         output.fishing_bag = fishing_bag;
         output.quiver = quiver;
         output.potion_bag = potion_bag;
+        output.storage = storage;
 
-        const all_items = armor.concat(inventory, enderchest, talisman_bag, fishing_bag, quiver, potion_bag, wardrobe_inventory);
+        const all_items = armor.concat(inventory, enderchest, talisman_bag, fishing_bag, quiver, potion_bag, wardrobe_inventory, storage);
 
         for(const [index, item] of all_items.entries()){
             item.item_index = index;

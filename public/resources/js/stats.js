@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function(){
     	skinViewer.animations.add(skinview3d.IdleAnimation);
     }
 
-    const all_items = items.armor.concat(items.inventory, items.enderchest, items.talisman_bag, items.fishing_bag, items.quiver, items.potion_bag, items.wardrobe_inventory);
+    const all_items = items.armor.concat(items.inventory, items.enderchest, items.talisman_bag, items.fishing_bag, items.quiver, items.potion_bag, items.wardrobe_inventory, items.storage);
 
     let dimmer = document.querySelector("#dimmer");
 
