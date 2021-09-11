@@ -122,7 +122,7 @@ module.exports = (app, db) => {
             const lb = constants.leaderboard(`lb_${positions[index].leaderboard.key}`);
 
             positions[index]['raw'] = result[1];
-            positions[index]['amount'] = lb.format(result[1]);
+            positions[index]['amount'] = lb.format(result[1], lb.key);
         }
 
         output.positions = positions.sort((a, b) => a.rank - b.rank);
@@ -172,7 +172,7 @@ module.exports = (app, db) => {
         for(let i = 0; i < results.length; i += 2){
             const lbPosition = {
                 rank: i / 2 + startIndex + 1,
-                amount: lb.format(results[i + 1]),
+                amount: lb.format(results[i + 1], lb.key),
                 raw: results[i + 1],
                 id: results[i],
                 name: (await db.collection('guilds').findOne({ gid: results[i] })).name
@@ -276,7 +276,7 @@ module.exports = (app, db) => {
             if(selfPosition){
                 output.self = {
                     rank: selfRank + 1,
-                    amount: lb.format(selfPosition.score),
+                    amount: lb.format(selfPosition.score, lb.key),
                     raw: selfPosition.score,
                     uuid: selfPosition.uuid,
                     username: (await helper.resolveUsernameOrUuid(selfPosition.uuid, db, true)).display_name,
@@ -292,7 +292,7 @@ module.exports = (app, db) => {
 
                 const lbPosition = {
                     rank: i + 1,
-                    amount: lb.format(position.score),
+                    amount: lb.format(position.score, lb.key),
                     raw: position.score,
                     uuid: position.uuid,
                     username: (await helper.resolveUsernameOrUuid(position.uuid, db, true)).display_name
@@ -341,7 +341,7 @@ module.exports = (app, db) => {
         for(let i = 0; i < results.length; i += 2){
             const lbPosition = {
                 rank: i / 2 + startIndex + 1,
-                amount: lb.format(results[i + 1]),
+                amount: lb.format(results[i + 1], lb.key),
                 raw: results[i + 1],
                 uuid: results[i],
                 username: (await helper.resolveUsernameOrUuid(results[i], db, true)).display_name
