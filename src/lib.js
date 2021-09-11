@@ -2380,6 +2380,8 @@ module.exports = {
         
                 userProfile.lilyweight = lily.getWeightRaw(...lilyWeightArgs);
 
+                userProfile.lilyweight.skill.total = userProfile.lilyweight.skill.base + userProfile.lilyweight.skill.overflow;
+
                 let totalSlayerXp = 0;
 
                 userProfile.slayer_xp = 0;
@@ -2471,7 +2473,7 @@ module.exports = {
             values['total_nucleus_completions'] = getMax(memberProfiles, 'data', 'mining_core', 'crystals', 'jade_crystal', 'total_placed');
 
             values['lily_weight_total'] = getMax(memberProfiles, 'data', 'lilyweight', 'total');
-            values['lily_skill_weight'] = getMax(memberProfiles, 'data', 'lilyweight', 'skill', 'base');
+            values['lily_skill_weight'] = getMax(memberProfiles, 'data', 'lilyweight', 'skill', 'total');
             values['lily_slayer_weight'] = getMax(memberProfiles, 'data', 'lilyweight', 'slayer');
 
             let totalSlayerBossKills = 0;
