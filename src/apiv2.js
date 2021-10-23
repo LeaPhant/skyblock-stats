@@ -132,7 +132,7 @@ module.exports = (app, db) => {
         const ranks = await getRanks.exec();
 
         for(let i = 0; i < ranks.length; i += 2){
-            let leaderboard = leaderboards[Math.floor(i / 2)];
+            let leaderboard = { ... leaderboards[Math.floor(i / 2)] };
 
             let resultRegular = ranks[i];
             let resultIronman = ranks[i + 1];
@@ -153,7 +153,7 @@ module.exports = (app, db) => {
                 });
             }else{
                 leaderboard.name += '♲';
-                
+
                 positions.push({
                     leaderboard,
                     rank: resultIronman[1] + 1,
