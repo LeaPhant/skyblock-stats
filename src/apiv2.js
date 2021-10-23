@@ -183,7 +183,7 @@ module.exports = (app, db) => {
             const lb = constants.leaderboard(`lb_${positions[index].leaderboard.key}`);
 
             positions[index]['raw'] = result[1];
-            positions[index]['amount'] = lb.format(result[1], lb.key) + (positions[index].mode == 'ironman' ? '♲' : '');
+            positions[index]['amount'] = lb.format(result[1], lb.key) + positions[index].mode == 'ironman' ? '♲' : '';
         }
 
         output.positions = positions.sort((a, b) => a.rank - b.rank);
