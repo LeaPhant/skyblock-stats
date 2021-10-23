@@ -52,17 +52,19 @@ function replaceAll(target, search, replacement){
 function getMinMax(profiles, min, ...path){
     let output = null;
 
-    const compareValues = profiles.map(a => helper.getPath(a, ...path)).filter(a => !isNaN(a));
+    const compareValues = 
+    profiles.map(a => { return { gamemode: a.gamemode, value: helper.getPath(a, ...path) }})
+    .filter(a => !isNaN(a.value));
 
     if(compareValues.length == 0)
         return output;
 
     if(min)
-        output = Math.min(...compareValues);
+        output = compareValues.reduce((prev, obj) => { return obj.value < prev.value? obj : prev; });
     else
-        output = Math.max(...compareValues);
+        output = compareValues.reduce((prev, obj) => { return obj.value > prev.value? obj : prev; });
 
-    if(isNaN(output))
+    if(isNaN(output.value))
         return null;
 
     return output;
@@ -2440,6 +2442,7 @@ module.exports = {
 
                 memberProfiles.push({
                     profile_id: singleProfile.profile_id,
+                    gamemode: singleProfile.game_mode,
                     data: userProfile
                 });
             }
@@ -2462,7 +2465,7 @@ module.exports = {
                 values['average_level'] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'average_level');
                 values['total_skill_xp'] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'total_skill_xp');
                 
-                values['average_level'] += values['total_skill_xp'] / 1000000000000000;
+                values['average_level'] += (values['total_skill_xp']?.value ?? 0) / 1000000000000000;
 
                 for(const skill of getAllKeys(memberProfilesSkillsApi, 'data', 'levels', 'levels'))
                     values[`skill_${skill}_xp`] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'levels', skill, 'xp');
@@ -2470,7 +2473,7 @@ module.exports = {
                 values['average_level'] = getMax(memberProfiles, 'data', 'levels', 'average_level');
                 values['total_skill_xp'] = getMax(memberProfiles, 'data', 'levels', 'total_skill_xp');
                 
-                values['average_level'] += values['total_skill_xp'] / 1000000000000000;
+                values['average_level'] += (values['total_skill_xp']?.value ?? 0) / 1000000000000000;
 
                 for(const skill of getAllKeys(memberProfiles, 'data', 'levels', 'levels'))
                     values[`skill_${skill}_xp`] = getMax(memberProfiles, 'data', 'levels', 'levels', skill, 'xp');
@@ -2495,7 +2498,7 @@ module.exports = {
 
                     values[`${slayer}_slayer_boss_kills_tier_${tier}`] = getMax(memberProfiles, 'data', 'slayer_bosses', slayer, key);
 
-                    totalSlayerBossKills += values[`${slayer}_slayer_boss_kills_tier_${tier}`];
+                    totalSlayerBossKills += values[`${slayer}_slayer_boss_kills_tier_${tier}`]?.value ?? 0;
                 }
 
                 values[`${slayer}_slayer_xp`] = getMax(memberProfiles, 'data', 'slayer_bosses', slayer, 'xp');
@@ -2509,7 +2512,7 @@ module.exports = {
             for(const item of getAllKeys(memberProfiles, 'data', 'collection')){
                 values[`collection_${item.toLowerCase()}`] = getMax(memberProfiles, 'data', 'collection', item);
 
-                totalCollectedItems += values[`collection_${item.toLowerCase()}`];
+                totalCollectedItems += values[`collection_${item.toLowerCase()}`]?.value ?? 0;
             }
 
             if(totalCollectedItems > 0)
@@ -2530,23 +2533,23 @@ module.exports = {
 
                 if(stat.endsWith('dragon')){
                     if(stat.startsWith('kills_'))
-                        totalDragonKills += values[stat];
+                        totalDragonKills += values[stat]?.value ?? 0;
                     else if(stat.startsWith('deaths_'))
-                        totalDragonDeaths += values[stat];
+                        totalDragonDeaths += values[stat]?.value ?? 0;
                     continue;
                 }
 
                 if(stat == 'kills_player')
-                    playerKills = values[stat];
+                    playerKills = values[stat]?.value ?? 0;
                 else if(stat == 'deaths_player')
-                    playerDeaths = values[stat];
+                    playerDeaths = values[stat]?.value ?? 0;
             }
 
             values['total_dragon_kills'] = totalDragonKills;
             values['total_dragon_deaths'] = totalDragonDeaths;
 
             if(playerKills >= 100)
-                values['player_kills_k/d'] = playerKills / playerDeaths;
+                values['player_kills_k/d'] = { value: playerKills / playerDeaths };
 
             values['dungeons_secrets'] = hypixelProfile.achievements.skyblock_treasure_hunter || 0;
 
@@ -2584,24 +2587,38 @@ module.exports = {
                     continue;
                 }
 
-                scKills += getMax(memberProfiles, 'data', 'stats', `kills_${sc.id}`);
+                scKills += getMax(memberProfiles, 'data', 'stats', `kills_${sc.id}`)?.value || 0;
             }
 
-            values[`total_sea_creatures_killed`] = scKills;
+            values[`total_sea_creatures_killed`] = { value: scKills };
             values[`total_fishing_actions`] = getMax(memberProfiles, 'data', 'stats', `items_fished`) + scKills;
 
             const multi = redisClient.pipeline();
 
-            for(const key in values){
+            for(const key in values){                
                 if(values[key] == null)
                     continue;
 
-                multi.zadd(`${gamemodeName}lb_${key}`, values[key], uuid);
+                if(values[key].value == null)
+                    values[key] = { value: values[key] };
+
+                let member = uuid;
+
+                if(values[key].gamemode == 'ironman')
+                    member += 'i';
+
+                multi.zrem(`${gamemodeName}lb_${key}`, uuid, member);
+                multi.zadd(`${gamemodeName}lb_${key}`, values[key].value, member);
             }
 
             for(const singleProfile of allProfiles){
+                let member = singleProfile.profile_id;
+
+                if(singleProfile.game_mode == 'ironman')
+                    member += 'i';
+
                 if(helper.hasPath(singleProfile, 'banking', 'balance'))
-                    multi.zadd(`${gamemodeName}lb_bank`, singleProfile.banking.balance, singleProfile.profile_id);
+                    multi.zadd(`${gamemodeName}lb_bank`, singleProfile.banking.balance, member);
 
                 const minionCrafts = [];
 
@@ -2612,7 +2629,7 @@ module.exports = {
                 multi.zadd(
                     `${gamemodeName}lb_unique_minions`,
                     _.uniq(minionCrafts).length,
-                    singleProfile.profile_id
+                    member
                 );
             }
 
