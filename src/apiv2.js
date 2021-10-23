@@ -137,21 +137,23 @@ module.exports = (app, db) => {
             let resultRegular = ranks[i];
             let resultIronman = ranks[i + 1];
 
-            if(resultRegular[0] != null || resultRegular[1] == null || resultRegular[1] > credentials.lbCap)
+            if(resultRegular != null && (resultRegular[0] != null || resultRegular[1] == null || resultRegular[1] > credentials.lbCap))
                 resultRegular = null;
 
-            if(resultIronman[0] != null || resultIronman[1] == null || resultIronman[1] > credentials.lbCap)
+            if(resultIronman != null && (resultIronman[0] != null || resultIronman[1] == null || resultIronman[1] > credentials.lbCap))
                 resultIronman = null;
 
             if(resultRegular == null && resultIronman == null)
                 continue;
 
-            if(resultIronman == null || resultRegular[1] < resultIronman[1]){
+            if(resultIronman == null || resultRegular != null && resultRegular[1] < resultIronman[1]){
                 positions.push({
                     leaderboard,
                     rank: resultRegular[1] + 1
                 });
             }else{
+                leaderboard.name += '♲';
+                
                 positions.push({
                     leaderboard,
                     rank: resultIronman[1] + 1,
