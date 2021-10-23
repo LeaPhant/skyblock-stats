@@ -27,7 +27,7 @@ async function getUserObject(usernameOrUuid, db, cacheOnly = true){
     const userObject = await helper.resolveUsernameOrUuid(uuidTrimmed, db, true);
 
     if(isUuid && usernameOrUuid.endsWith('i')){
-        userObject.display_name += '♲';
+        userObject.display_name += ' ♲';
         userObject.uuid = uuidTrimmed;
     }
 
@@ -152,7 +152,7 @@ module.exports = (app, db) => {
                     rank: resultRegular[1] + 1
                 });
             }else{
-                leaderboard.name += '♲';
+                leaderboard.name += ' ♲';
 
                 positions.push({
                     leaderboard,
