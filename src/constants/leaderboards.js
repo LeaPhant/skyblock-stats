@@ -151,7 +151,7 @@ const overrides = {
     },
 
     first_joined: {
-        format: x => new Date(x).toISOString().replace('T', ' ').split('.')[0]
+        format: x => new Date(Number(x)).toISOString().replace('T', ' ').split('.')[0]
     }
 };
 
