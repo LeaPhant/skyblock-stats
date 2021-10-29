@@ -2545,13 +2545,13 @@ module.exports = {
                     playerDeaths = values[stat]?.value ?? 0;
             }
 
-            values['total_dragon_kills'] = { value: totalDragonKills };
-            values['total_dragon_deaths'] = { value: totalDragonDeaths };
+            values['total_dragon_kills'] = { value: totalDragonKills, gamemode };
+            values['total_dragon_deaths'] = { value: totalDragonDeaths, gamemode };
 
             if(playerKills >= 100)
-                values['player_kills_k/d'] = { value: playerKills / playerDeaths };
+                values['player_kills_k/d'] = { value: playerKills / playerDeaths, gamemode };
 
-            values['dungeons_secrets'] = { value: hypixelProfile.achievements.skyblock_treasure_hunter || 0 };
+            values['dungeons_secrets'] = { value: (hypixelProfile.achievements.skyblock_treasure_hunter || 0), gamemode };
 
             const dungeonStats = [
                 'times_played', 'tier_completions', 'fastest_time', 
@@ -2590,7 +2590,7 @@ module.exports = {
                 scKills += getMax(memberProfiles, 'data', 'stats', `kills_${sc.id}`)?.value || 0;
             }
 
-            values[`total_sea_creatures_killed`] = { value: scKills };
+            values[`total_sea_creatures_killed`] = { value: scKills, gamemode };
             values[`total_fishing_actions`] = getMax(memberProfiles, 'data', 'stats', `items_fished`) + scKills;
 
             const multi = redisClient.pipeline();
