@@ -2465,7 +2465,8 @@ module.exports = {
                 values['average_level'] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'average_level');
                 values['total_skill_xp'] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'total_skill_xp');
                 
-                values['average_level'].value += (values['total_skill_xp']?.value ?? 0) / 1000000000000000;
+                if(values['average_level']?.value != null)
+                    values['average_level'].value += (values['total_skill_xp']?.value ?? 0) / 1000000000000000;
 
                 for(const skill of getAllKeys(memberProfilesSkillsApi, 'data', 'levels', 'levels'))
                     values[`skill_${skill}_xp`] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'levels', skill, 'xp');
@@ -2473,7 +2474,8 @@ module.exports = {
                 values['average_level'] = getMax(memberProfiles, 'data', 'levels', 'average_level');
                 values['total_skill_xp'] = getMax(memberProfiles, 'data', 'levels', 'total_skill_xp');
                 
-                values['average_level'].value += (values['total_skill_xp']?.value ?? 0) / 1000000000000000;
+                if(values['average_level']?.value != null)
+                    values['average_level'].value += (values['total_skill_xp']?.value ?? 0) / 1000000000000000;
 
                 for(const skill of getAllKeys(memberProfiles, 'data', 'levels', 'levels'))
                     values[`skill_${skill}_xp`] = getMax(memberProfiles, 'data', 'levels', 'levels', skill, 'xp');
@@ -2544,6 +2546,8 @@ module.exports = {
                 else if(stat == 'deaths_player')
                     playerDeaths = values[stat]?.value ?? 0;
             }
+
+            values['first_joined'] = getMin(memberProfiles, 'data', 'first_join');
 
             values['total_dragon_kills'] = { value: totalDragonKills, gamemode };
             values['total_dragon_deaths'] = { value: totalDragonDeaths, gamemode };

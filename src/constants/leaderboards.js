@@ -148,6 +148,10 @@ const overrides = {
 
     'player_kills_k/d': {
         name: 'Player K/D'
+    },
+
+    first_joined: {
+        format: x => new Date(x).toISOString().replace('T', ' ').split('.')[0]
     }
 };
 
