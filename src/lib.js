@@ -2465,7 +2465,7 @@ module.exports = {
                 values['average_level'] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'average_level');
                 values['total_skill_xp'] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'total_skill_xp');
                 
-                values['average_level'] += (values['total_skill_xp']?.value ?? 0) / 1000000000000000;
+                values['average_level'].value += (values['total_skill_xp']?.value ?? 0) / 1000000000000000;
 
                 for(const skill of getAllKeys(memberProfilesSkillsApi, 'data', 'levels', 'levels'))
                     values[`skill_${skill}_xp`] = getMax(memberProfilesSkillsApi, 'data', 'levels', 'levels', skill, 'xp');
@@ -2473,7 +2473,7 @@ module.exports = {
                 values['average_level'] = getMax(memberProfiles, 'data', 'levels', 'average_level');
                 values['total_skill_xp'] = getMax(memberProfiles, 'data', 'levels', 'total_skill_xp');
                 
-                values['average_level'] += (values['total_skill_xp']?.value ?? 0) / 1000000000000000;
+                values['average_level'].value += (values['total_skill_xp']?.value ?? 0) / 1000000000000000;
 
                 for(const skill of getAllKeys(memberProfiles, 'data', 'levels', 'levels'))
                     values[`skill_${skill}_xp`] = getMax(memberProfiles, 'data', 'levels', 'levels', skill, 'xp');
@@ -2545,13 +2545,13 @@ module.exports = {
                     playerDeaths = values[stat]?.value ?? 0;
             }
 
-            values['total_dragon_kills'] = totalDragonKills;
-            values['total_dragon_deaths'] = totalDragonDeaths;
+            values['total_dragon_kills'] = { value: totalDragonKills };
+            values['total_dragon_deaths'] = { value: totalDragonDeaths };
 
             if(playerKills >= 100)
                 values['player_kills_k/d'] = { value: playerKills / playerDeaths };
 
-            values['dungeons_secrets'] = hypixelProfile.achievements.skyblock_treasure_hunter || 0;
+            values['dungeons_secrets'] = { value: hypixelProfile.achievements.skyblock_treasure_hunter || 0 };
 
             const dungeonStats = [
                 'times_played', 'tier_completions', 'fastest_time', 
