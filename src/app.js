@@ -42,7 +42,7 @@ async function main(){
     await mongo.connect();
     const db = mongo.db(credentials.dbName);
 
-    const CACHE_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days
+    const CACHE_DURATION = 30 * 24 * 60 * 60; // 30 days
 
     const cachePath = path.resolve(__dirname, '../cache');
 
@@ -59,7 +59,7 @@ async function main(){
     app.locals.moment = moment;
     app.use(bodyParser.urlencoded({ extended: true }));
     app.set('view engine', 'ejs');
-    app.use(express.static('public', { maxAge: CACHE_DURATION }));
+    app.use(express.static('public', { maxAge: CACHE_DURATION * 1000 }));
 
     app.use(session({
         secret: credentials.session_secret,
