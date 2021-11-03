@@ -2388,7 +2388,7 @@ module.exports = {
                     weightSlayers.map(a => helper.hasPath(userProfile, 'slayer_bosses', a, 'xp') ? userProfile.slayer_bosses[a].xp : 0)
                 ];
         
-                userProfile.lilyweight = lily.getWeightRaw(...lilyWeightArgs);
+                userProfile.lilyweight = LilyWeight.getWeightRaw(...lilyWeightArgs);
 
                 userProfile.lilyweight.skill.total = userProfile.lilyweight.skill.base + userProfile.lilyweight.skill.overflow;
 
