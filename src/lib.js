@@ -10,7 +10,7 @@ const axios = require('axios');
 const moment = require('moment');
 const { v4 } = require('uuid');
 const retry = require('async-retry');
-const lily = require('lilyweight')("");
+const LilyWeight = require('lilyweight');
 const constants = require('./constants');
 
 const credentials = require('./../credentials.json');
@@ -1690,7 +1690,7 @@ module.exports = {
             weightSlayers.map(a => helper.hasPath(userProfile, 'slayer_bosses', a, 'xp') ? userProfile.slayer_bosses[a].xp : 0)
         ];
 
-        output.lilyweight = lily.getWeightRaw(...lilyWeightArgs);
+        output.lilyweight = LilyWeight.getWeightRaw(...lilyWeightArgs);
 
         console.log('calculating weight based on', lilyWeightArgs);
 
