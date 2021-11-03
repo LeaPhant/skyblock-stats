@@ -1692,8 +1692,6 @@ module.exports = {
 
         output.lilyweight = LilyWeight.getWeightRaw(...lilyWeightArgs);
 
-        console.log('calculating weight based on', lilyWeightArgs);
-
         if(helper.hasPath(profile, 'banking', 'balance'))
             output.bank = profile.banking.balance;
 
