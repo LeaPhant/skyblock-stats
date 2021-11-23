@@ -6,6 +6,7 @@ const credentialsDefault = {
     recaptcha_site_key: "",
     recaptcha_secret_key: "",
     dbUrl: "mongodb://localhost:27017",
+    lbCap: 50000,
     dbName: "sbstats"
 };
 
