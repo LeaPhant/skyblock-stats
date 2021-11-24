@@ -6,13 +6,14 @@ const credentialsDefault = {
     recaptcha_site_key: "",
     recaptcha_secret_key: "",
     dbUrl: "mongodb://localhost:27017",
+    lbCap: 50000,
     dbName: "sbstats"
 };
 
 if(!fs.existsSync('./credentials.json'))
     fs.writeFileSync('./credentials.json', JSON.stringify(credentialsDefault, null, 4));
 
-const credentials = require('./credentials.json');
+const credentials = Object.assign(credentialsDefault, require('./credentials.json'));
 
 if(!('session_secret' in credentials))
     credentials.session_secret = randomBytes(32).toString('hex');
