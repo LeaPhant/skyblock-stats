@@ -2589,11 +2589,11 @@ module.exports = {
                     continue;
                 }
 
-                scKills += getMax(memberProfiles, 'data', 'stats', `kills_${sc.id}`)?.value || 0;
+                scKills += getMax(memberProfiles, 'data', 'stats', `kills_${sc.id}`)?.value ?? 0;
             }
 
             values[`total_sea_creatures_killed`] = { value: scKills, gamemode };
-            values[`total_fishing_actions`] = { value: getMax(memberProfiles, 'data', 'stats', `items_fished`).value + scKills, gamemode };
+            values[`total_fishing_actions`] = { value: getMax(memberProfiles, 'data', 'stats', `items_fished`)?.value ?? 0 + scKills, gamemode };
 
             const multi = redisClient.pipeline();
 
@@ -2610,7 +2610,7 @@ module.exports = {
                     member += 'i';
 
                 multi.zrem(`${gamemodeName}lb_${key}`, uuid, member);
-                multi.zadd(`${gamemodeName}lb_${key}`, values[key].value, member);
+                multi.zadd(`${gamemodeName}lb_${key}`, values[key]?.value ?? 0, member);
             }
 
             for(const singleProfile of allProfiles){
