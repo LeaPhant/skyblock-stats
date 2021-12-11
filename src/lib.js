@@ -2592,8 +2592,10 @@ module.exports = {
                 scKills += getMax(memberProfiles, 'data', 'stats', `kills_${sc.id}`)?.value ?? 0;
             }
 
+            const itemsFished = getMax(memberProfiles, 'data', 'stats', `items_fished`)?.value ?? 0;
+
             values[`total_sea_creatures_killed`] = { value: scKills, gamemode };
-            values[`total_fishing_actions`] = { value: getMax(memberProfiles, 'data', 'stats', `items_fished`)?.value ?? 0 + scKills, gamemode };
+            values[`total_fishing_actions`] = { value: itemsFished + scKills, gamemode };
 
             const multi = redisClient.pipeline();
 
