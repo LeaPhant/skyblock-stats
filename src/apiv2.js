@@ -301,17 +301,54 @@ module.exports = (app, db) => {
 
             const getGuildScores = redisClient.pipeline();
 
-            for(const member of guildMembers)
+            for(const member of guildMembers) {
                 getGuildScores.zscore(`${modeName}lb_${lb.key}`, member.uuid);
+                getGuildScores.zscore(`${modeName}lb_${lb.key}`, `${member.uuid}i`);
+            }
 
             let guildScores = [];
 
-            for(const [index, result] of (await getGuildScores.exec()).entries()){
+            const scores = await getRanks.exec();
+
+            for(let i = 0; i < scores.length; i += 2){
+                const uuid = guildMembers[i / 2].uuid.substring(0, 32);
+
+                let resultRegular = scores[i];
+                let resultIronman = scores[i + 1];
+
+                if(resultRegular != null && (resultRegular[0] != null || resultRegular[1] == null))
+                    resultRegular = null;
+
+                if(resultIronman != null && (resultIronman[0] != null || resultIronman[1] == null))
+                    resultIronman = null;
+
+                if(resultRegular == null && resultIronman == null)
+                    continue;
+
+                if(resultRegular == null 
+                    || lb.sortedBy > 0 && resultRegular > resultIronman 
+                    || lb.sortedBy < 0 && resultRegular < resultIronman){
+                    guildScores.push({
+                        uuid,
+                        score: Number(resultIronman[1]),
+                        mode: 'ironman'
+                    })
+                }else if(resultRegular == null 
+                    || lb.sortedBy > 0 && resultRegular < resultIronman 
+                    || lb.sortedBy < 0 && resultRegular > resultIronman){
+                    guildScores.push({
+                        uuid,
+                        score: Number(resultRegular[1])
+                    })
+                }
+            }
+
+            /*for(const [index, result] of (await getGuildScores.exec()).entries()){
                 if(result[1] == null)
                     continue;
 
                 guildScores.push({ uuid: guildMembers[index].uuid.substring(0, 32), score: Number(result[1]) });
-            }
+            }*/
 
             if(lb.sortedBy > 0)
                 guildScores = guildScores.sort((a, b) => a.score - b.score);
@@ -342,7 +379,7 @@ module.exports = (app, db) => {
                     amount: lb.format(selfPosition.score, lb.key),
                     raw: selfPosition.score,
                     uuid: selfPosition.uuid.substring(0, 32),
-                    username: (await getUserObject(selfPosition.uuid, db, true)).display_name,
+                    username: (await getUserObject(selfPosition.uuid, db, true)).display_name + (selfPosition.mode == 'ironman' ? ' ♲' : ''),
                     guild: guildObj.name
                 };
             }
@@ -358,7 +395,7 @@ module.exports = (app, db) => {
                     amount: lb.format(position.score, lb.key),
                     raw: position.score,
                     uuid: position.uuid.substring(0, 32),
-                    username: (await getUserObject(position.uuid, db, true)).display_name
+                    username: (await getUserObject(position.uuid, db, true)).display_name + (position.mode == 'ironman' ? ' ♲' : '')
                 };
 
                 output.positions.push(lbPosition);
