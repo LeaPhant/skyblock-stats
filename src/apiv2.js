@@ -308,7 +308,7 @@ module.exports = (app, db) => {
 
             let guildScores = [];
 
-            const scores = await getRanks.exec();
+            const scores = await getGuildScores.exec();
 
             for(let i = 0; i < scores.length; i += 2){
                 const uuid = guildMembers[i / 2].uuid.substring(0, 32);
