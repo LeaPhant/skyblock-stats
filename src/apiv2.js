@@ -333,7 +333,7 @@ module.exports = (app, db) => {
                         score: Number(resultIronman[1]),
                         mode: 'ironman'
                     })
-                }else if(resultRegular == null 
+                }else if(resultIronman == null 
                     || lb.sortedBy > 0 && resultRegular < resultIronman 
                     || lb.sortedBy < 0 && resultRegular > resultIronman){
                     guildScores.push({
