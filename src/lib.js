@@ -2358,7 +2358,7 @@ module.exports = {
             const values = {};
 
             for(const singleProfile of (gamemode == null ? allProfiles : allProfiles.filter(a => a.game_mode == gamemode))){
-                const userProfile = singleProfile.members[uuid];
+                const userProfile = _.cloneDeep(singleProfile.members[uuid]);
 
                 if(userProfile == null)
                     continue;
