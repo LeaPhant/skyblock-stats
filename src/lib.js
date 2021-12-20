@@ -1727,12 +1727,26 @@ module.exports = {
         output.bag_sizes = await module.exports.getBagSizes(output.collections);
         output.social = hypixelProfile.socials;
 
+        let sea_creatures_killed = 0;
+
+        for(const sc of constants.sea_creatures){
+            if(constants.mob_mounts.hasOwnProperty(sc.id)){
+                for(const mount of constants.mob_mounts[sc.id])
+                    sea_creatures_killed += userProfile.stats[`kills_${mount}`] || 0;
+
+                continue;
+            }
+
+            sea_creatures_killed += userProfile.stats[`kills_${sc.id}`] || 0;
+        }
+
         output.fishing = {
             total: userProfile.stats.items_fished || 0,
             treasure: userProfile.stats.items_fished_treasure || 0,
             treasure_large: userProfile.stats.items_fished_large_treasure || 0,
             shredder_fished: userProfile.stats.shredder_fished || 0,
             shredder_bait: userProfile.stats.shredder_bait || 0,
+            sea_creatures_killed
         };
 
         const misc = {};
@@ -2579,19 +2593,7 @@ module.exports = {
             for(const dungeonClass of getAllKeys(memberProfiles, 'data', 'dungeons', 'player_classes'))
                 values[`dungeons_${dungeonClass}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'player_classes', dungeonClass, 'experience');
 
-            let scKills = 0;
-
-            for(const sc of constants.sea_creatures){
-                if(constants.mob_mounts.hasOwnProperty(sc.id)){
-                    for(const mount of constants.mob_mounts[sc.id])
-                        scKills += getMax(memberProfiles, 'data', 'stats', `kills_${mount}`);
-
-                    continue;
-                }
-
-                scKills += getMax(memberProfiles, 'data', 'stats', `kills_${sc.id}`)?.value ?? 0;
-            }
-
+            const scKills = getMax(memberProfiles, 'data', 'stats', `sea_creatures_killed`)?.value ?? 0;
             const itemsFished = getMax(memberProfiles, 'data', 'stats', `items_fished`)?.value ?? 0;
 
             values[`total_sea_creatures_killed`] = { value: scKills, gamemode };
