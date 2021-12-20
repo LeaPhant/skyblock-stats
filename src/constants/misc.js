@@ -536,6 +536,16 @@ module.exports = {
                 }
             ]
         }, {
+            name: 'Oasis Rabbit',
+            id: 'oasis_rabbit',
+            rarity: 'rare',
+            fishingLevel: 10
+        }, {
+            name: 'Oasis Sheep',
+            id: 'oasis_sheep',
+            rarity: 'rare',
+            fishingLevel: 10
+        }, {
             name: 'Monster of the Deep',
             id: 'monster_of_the_deep',
             rarity: 'uncommon',
@@ -655,6 +665,11 @@ module.exports = {
                 }
             ]
         }, {
+            name: 'Water Worm',
+            id: 'water_worm',
+            rarity: 'rare',
+            fishingLevel: 15
+        }, {
             name: 'Sea Leech',
             id: 'sea_leech',
             rarity: 'rare',
@@ -680,6 +695,16 @@ module.exports = {
                     name: 'Enchanted Book (Spiked Hook 6)'
                 }
             ]
+        }, {
+            name: 'Poisoned Water Worm',
+            id: 'poisoned_water_worm',
+            rarity: 'rare',
+            fishingLevel: 17
+        }, {
+            name: 'Flaming Worm',
+            id: 'flaming_worm',
+            rarity: 'rare',
+            fishingLevel: 19
         }, {
             name: 'Guardian Defender',
             id: 'guardian_defender',
@@ -744,6 +769,16 @@ module.exports = {
                     name: 'Enchanted Iron'
                 }
             ]
+        }, {
+            name: 'Lava Blaze',
+            id: 'lava_blaze',
+            rarity: 'epic',
+            fishingLevel: 20
+        }, {
+            name: 'Lava Pigman',
+            id: 'lava_pigman',
+            rarity: 'epic',
+            fishingLevel: 22
         }, {
             name: 'Water Hydra',
             id: 'water_hydra',
@@ -829,6 +864,11 @@ module.exports = {
             requirements: [
                 'Spooky Festival'
             ]
+        }, {
+            name: 'Zombie Miner',
+            id: 'zombie_miner',
+            rarity: 'legendary',
+            fishingLevel: 24
         }, {
             name: 'Yeti',
             id: 'yeti',
