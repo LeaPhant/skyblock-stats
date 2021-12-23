@@ -2403,6 +2403,19 @@ module.exports = {
                 userProfile.lilyweight = LilyWeight.getWeightRaw(...lilyWeightArgs);
 
                 userProfile.lilyweight.skill.total = userProfile.lilyweight.skill.base + userProfile.lilyweight.skill.overflow;
+                
+                userProfile.sea_creatures_killed = 0
+
+                for(const sc of constants.sea_creatures){
+                    if(constants.mob_mounts.hasOwnProperty(sc.id)){
+                        for(const mount of constants.mob_mounts[sc.id])
+                            userProfile.sea_creatures_killed += userProfile.stats[`kills_${mount}`] || 0;
+
+                        continue;
+                    }
+
+                    userProfile.sea_creatures_killed += userProfile.stats[`kills_${sc.id}`] || 0;
+                }
 
                 let totalSlayerXp = 0;
 
@@ -2593,7 +2606,7 @@ module.exports = {
             for(const dungeonClass of getAllKeys(memberProfiles, 'data', 'dungeons', 'player_classes'))
                 values[`dungeons_${dungeonClass}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'player_classes', dungeonClass, 'experience');
 
-            const scKills = getMax(memberProfiles, 'data', 'stats', `sea_creatures_killed`)?.value ?? 0;
+            const scKills = getMax(memberProfiles, 'data', `sea_creatures_killed`)?.value ?? 0;
             const itemsFished = getMax(memberProfiles, 'data', 'stats', `items_fished`)?.value ?? 0;
 
             values[`total_sea_creatures_killed`] = { value: scKills, gamemode };
