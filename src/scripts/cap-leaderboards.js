@@ -12,7 +12,7 @@ async function main(){
     const { lbCap } = credentials;
 
     async function capLeaderboards(){
-        const keys = await redisClient.keys('lb_*');
+        const keys = await redisClient.keys('*lb_*');
 
         const multi = redisClient.pipeline();
 
