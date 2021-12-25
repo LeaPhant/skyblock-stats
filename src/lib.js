@@ -2163,8 +2163,10 @@ module.exports = {
                 if(!data.success)
                     throw "Request to Hypixel API failed. Please try again!";
 
-                if(data.profiles == null)
+                if(data.profiles == null){
+                    module.exports.clearLeaderboardPositions(db, paramPlayer).catch(console.error);
                     throw "Player has no SkyBlock profiles.";
+                }
 
                 allSkyBlockProfiles = data.profiles;
             }catch(e){
@@ -2175,8 +2177,10 @@ module.exports = {
             }
         }
 
-        if(allSkyBlockProfiles.length == 0)
+        if(allSkyBlockProfiles.length == 0){
+            module.exports.clearLeaderboardPositions(db, paramPlayer).catch(console.error);
             throw "Player has no SkyBlock profiles.";
+        }
 
         for(const profile of allSkyBlockProfiles){
             for(const member in profile.members)
@@ -2356,6 +2360,18 @@ module.exports = {
         }
 
         return { profile: profile, allProfiles: allSkyBlockProfiles, uuid: paramPlayer };
+    },
+
+    clearLeaderboardPositions: async (db, uuid) => {
+        const keys = await redisClient.keys('*lb_*');
+        const multi = redisClient.pipeline();
+
+        for(const key of keys){
+            multi.zrem(key, uuid);
+            multi.zrem(key, `${uuid}i`);
+        }
+
+        await multi.exec();
     },
 
     updateLeaderboardPositions: async (db, uuid, allProfiles) => {
