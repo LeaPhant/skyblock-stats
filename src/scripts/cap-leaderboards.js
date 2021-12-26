@@ -17,7 +17,7 @@ async function main(){
         const multi = redisClient.pipeline();
 
         for(const key of keys){
-            const lb = constants.leaderboard(key);
+            const lb = constants.leaderboard(`lb_${key.split('lb_').pop()}`);
 
             if(lb.sortedBy < 0)
                 redisClient.zremrangebyrank(key, 0, -lbCap);
