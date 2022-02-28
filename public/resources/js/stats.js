@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 break;
             default:
                 if(type in calculated.bag_sizes)
-                    inventory = inventory.slice(0, Math.max(countSlotsUsed - 1, calculated.bag_sizes[type]));
+                    inventory = inventory.slice(0, Math.max(countSlotsUsed - 1, calculated.bag_sizes[type], 8));
         }
 
         inventory.forEach(function(item, index){
