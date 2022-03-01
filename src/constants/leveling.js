@@ -1,4 +1,4 @@
-module.exports = {
+const leveling = {
     // XP required for each level of a skill
     leveling_xp: {
         1: 50,
@@ -263,3 +263,9 @@ module.exports = {
         4: 500
     }
 };
+
+for (let i = 51; i <= 99; i++) {
+    leveling.dungeon_xp[i] = 200000000;
+}
+
+module.exports = leveling
