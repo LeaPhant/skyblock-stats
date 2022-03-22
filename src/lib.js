@@ -2630,6 +2630,13 @@ module.exports = {
 
             const multi = redisClient.pipeline();
 
+            const keys = await redisClient.keys('*lb_*');
+
+            for(const key of keys){
+                multi.zrem(key, uuid);
+                multi.zrem(key, `${uuid}i`);
+            }
+
             for(const key in values){                
                 if(values[key] == null)
                     continue;
