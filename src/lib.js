@@ -2380,6 +2380,14 @@ module.exports = {
 
         const hypixelProfile = await helper.getRank(uuid, db, true);
 
+        const multi = redisClient.pipeline();
+        const keys = await redisClient.keys('*lb_*');
+
+        for(const key of keys){
+            multi.zrem(key, uuid);
+            multi.zrem(key, `${uuid}i`);
+        }
+
         for(const gamemode of [null, 'ironman']){
 
             const memberProfiles = [];
@@ -2628,15 +2636,6 @@ module.exports = {
             values[`sea_creature_kills`] = { value: scKills, gamemode };
             values[`total_fishing_actions`] = { value: itemsFished + scKills, gamemode };
 
-            const multi = redisClient.pipeline();
-
-            const keys = await redisClient.keys('*lb_*');
-
-            for(const key of keys){
-                multi.zrem(key, uuid);
-                multi.zrem(key, `${uuid}i`);
-            }
-
             for(const key in values){                
                 if(values[key] == null)
                     continue;
@@ -2674,12 +2673,12 @@ module.exports = {
                     member
                 );
             }
+        }
 
-            try{
-                await multi.exec();
-            }catch(e){
-                console.error(e);
-            }
+        try{
+            await multi.exec();
+        }catch(e){
+            console.error(e);
         }
     },
 }
