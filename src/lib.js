@@ -125,6 +125,7 @@ function getLevelByXp(xp, type = 'regular', levelCap, personalCap){
             xp_table = constants.social_xp;
             break;
         case 'dungeon':
+        case 'dungeon_class':
             xp_table = constants.dungeon_xp;
             break;
         default:
@@ -147,6 +148,10 @@ function getLevelByXp(xp, type = 'regular', levelCap, personalCap){
     let xpForNext = Infinity;
 
     let maxLevel = Object.keys(xp_table).sort((a, b) => Number(a) - Number(b)).map(a => Number(a)).pop();
+
+    if (type == 'dungeon_class')
+        maxLevel = 50;
+
     let maxLevelCap = maxLevel;
 
     if(levelCap > maxLevel){
@@ -210,6 +215,22 @@ function getSlayerLevel(slayer, slayerName){
     }
 
     return { currentLevel, xp, maxLevel, progress, xpForNext };
+}
+
+function getDungeonRankByScore(score) {
+    if (score < 100) {
+        return 'd';
+    } else if (score < 160) {
+        return 'c';
+    } else if (score < 230) {
+        return 'b';
+    } else if (score < 269.5) {
+        return 'a';
+    } else if (score < 300) {
+        return 's';
+    } else {
+        return 's_plus'
+    }
 }
 
 function getPetLevel(pet){
@@ -1252,6 +1273,138 @@ module.exports = {
         return output;
     },
 
+    getDungeons: async (userProfile, hypixelProfile) => {
+        const output = {};
+
+        const { dungeons } = userProfile;
+
+        if (dungeons == null || dungeons.dungeon_types == null)
+            return output;
+
+        const { player_classes, dungeon_journal, dungeon_types } = dungeons;
+        const { catacombs, master_catacombs } = dungeon_types;
+
+        const CATACOMBS_KEYS = [
+            'times_played', 
+            'tier_completions', 
+            'fastest_time',
+            'fastest_time_s',
+            'fastest_time_s_plus',
+            'best_score', 
+            'best_runs',
+            'mobs_killed', 
+            'most_mobs_killed', 
+            'most_damage_healer', 
+            'most_damage_mage', 
+            'most_damage_berserk', 
+            'most_damage_tank', 
+            'most_damage_archer', 
+            'most_healing', 
+            'watcher_kills',
+            'milestone_completions'
+        ];
+
+        output.catacombs = { highest_tier_completed: catacombs?.highest_tier_completed || 'None', floors: [] };
+        output.master_catacombs = { highest_tier_completed: master_catacombs?.highest_tier_completed || 'None', floors: [] };
+
+        for (let i = 0; i <= 7; i++) {
+            const floor = { floor: i };
+
+            for (const key of CATACOMBS_KEYS) {
+                floor[key] = catacombs?.[key]?.[i];
+            }
+
+            floor.best_rank = getDungeonRankByScore(floor?.best_score ?? 0);
+
+            if (floor?.times_played ?? 0 > 0)
+                output.catacombs.floors.push(floor);
+
+            // master mode has no entrance, skip before reaching floor 1
+            if (i == 0)
+                continue;
+
+            const master_floor = { floor: i };
+
+            // master mode has no times played count, skip it
+            for (const key of CATACOMBS_KEYS.slice(1)) {
+                master_floor[key] = master_catacombs?.[key]?.[i];
+            }
+
+            master_floor.best_rank = getDungeonRankByScore(master_floor?.best_score ?? 0);
+
+            if (master_floor?.tier_completions ?? 0 > 0)
+                output.master_catacombs.floors.push(master_floor);
+        }
+
+        output.collections = [];
+
+        for (const [index, boss] of Object.keys(constants.boss_collections).entries()) {
+            const collection = constants.boss_collections[boss];
+            const amount = (output.catacombs.floors[index + 1]?.tier_completions ?? 0)
+            + (output.master_catacombs.floors[index]?.tier_completions ?? 0);
+
+            let tier = 0;
+            const maxTier = collection.length;
+
+            for (const [index, required] of collection.entries()) {
+                if (amount < required) {
+                    break;
+                }
+
+                tier++;
+            }
+
+            output.collections.push({
+                amount,
+                boss,
+                floor: index + 1,
+                tier,
+                maxTier
+            });
+        }
+
+        output.level = getLevelByXp(catacombs.experience, 'dungeon');
+        output.level.maxLevel = 50;
+
+        const CLASSES = [
+            'healer',
+            'mage',
+            'berserk',
+            'archer',
+            'tank'
+        ];
+
+        output.classes = {};
+        let total_class_level = 0;
+
+        for (const key of CLASSES) {
+            output.classes[key] = getLevelByXp(player_classes?.[key]?.experience || 0, 'dungeon_class');
+            total_class_level += output.classes[key].level + output.classes[key].progress;
+        }
+
+        output.average_class_level = total_class_level / CLASSES.length;
+
+        const ESSENCES = [
+            'undead',
+            'diamond',
+            'dragon',
+            'gold',
+            'ice',
+            'wither',
+            'spider'
+        ];
+
+        output.secrets = hypixelProfile.achievements.skyblock_treasure_hunter ?? 0;
+
+        output.essence = {};
+
+        for (const key of ESSENCES) {
+            output.essence[key] = userProfile?.[`essence_${key}`] || 0;
+        }
+
+        return output;
+    },
+
     getStats: async (db, profile, allProfiles, items, cacheOnly = false) => {
         let output = {};
 
@@ -1276,6 +1429,8 @@ module.exports = {
         }
 
         output.fairy_souls = { collected: userProfile.fairy_souls_collected, total: MAX_SOULS, progress: Math.min(userProfile.fairy_souls_collected / MAX_SOULS, 1) };
+
+        output.dungeons = await module.exports.getDungeons(userProfile, hypixelProfile);
 
         const { levels, average_level, average_level_no_progress, total_skill_xp, average_level_rank } = await module.exports.getLevels(userProfile, hypixelProfile);
 

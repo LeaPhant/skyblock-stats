@@ -48,6 +48,35 @@ const skillItems = {
     runecrafting: 'icon-378_0'
 };
 
+const classItems = {
+    healer: 'icon-373_0',
+    mage: 'icon-369_0',
+    berserk: 'icon-267_0',
+    archer: 'icon-261_0',
+    tank: 'icon-299_0'
+};
+
+const bossHeads = {
+    normal: {
+        'Bonzo': '/head/12716ecbf5b8da00b05f316ec6af61e8bd02805b21eb8e440151468dc656549c',
+        'Scarf': '/head/7de7bbbdf22bfe17980d4e20687e386f11d59ee1db6f8b4762391b79a5ac532d',
+        'The Professor': '/head/9971cee8b833a62fc2a612f3503437fdf93cad692d216b8cf90bbb0538c47dd8',
+        'Thorn': '/head/8b6a72138d69fbbd2fea3fa251cabd87152e4f1c97e5f986bf685571db3cc0',
+        'Livid': '/head/c1007c5b7114abec734206d4fc613da4f3a0e99f71ff949cedadc99079135a0b',
+        'Sadan': '/head/fa06cb0c471c1c9bc169af270cd466ea701946776056e472ecdaeb49f0f4a4dc',
+        'Necron': '/head/a435164c05cea299a3f016bbbed05706ebb720dac912ce4351c2296626aecd9a'
+    },
+    diamond: {
+        'Bonzo': '/head/2ae201b06f10b5b4eb0130ecd7d59fac7e4e013bbd4f5d5d0463580fb0549a8b',
+        'Scarf': '/head/4da5ca2f6800516a63d25878eb7a713e80d63b62f9f6cab3f31097f9494b6121',
+        'The Professor': '/head/b23c3ad8c4410145095280779293cc1e7904b6fce93d70378ac5f32032ba1d86',
+        'Thorn': '/head/383a1ffadcc6ccc54905f2a79b963a339bb9e0b0bcea428252a17f01e317bec0',
+        'Livid': '/head/9268e36505f1312384eb36ed477f4c2053576c60058fd26bede24d90cb4cf7bf',
+        'Sadan': '/head/3c63c4f7f8f5b8c5fe1bac9a708e5a62ccd04970072aab5e323b1b7d4004f4a2',
+        'Necron': '/head/8b115cdc45fd84f21fba7ac0f2bc77bc3b6302be670842f6e11f66eb557f13ee'
+    }
+}
+
 const MAX_MAGIC_FIND = 2.00;
 
 const romanize = num => {
@@ -253,14 +282,14 @@ const inventorySlot = item => { %>
     </div>
 <% };
 
-const skill_component = (skill, icon, level) => { %>
-    <div class="skill xp-skill <%= level.level == level.maxLevel ? 'maxed-skill' : ''%>">
-        <div class="skill-icon"><div class="item-icon <%= icon %>"></div><% if(level.level == level.maxLevel){ %><div class="piece-shine"></div><% } %></div>
+const skill_component = (skill, icon, level, head) => { %>
+    <div class="skill xp-skill <%= level.level >= level.maxLevel ? 'maxed-skill' : ''%>">
+        <div class="skill-icon"><div class="item-icon <%= icon %>" <%- head != null ? `style="background-image: url(/head/${head})"` : '' %>></div><% if(level.level == level.maxLevel){ %><div class="piece-shine"></div><% } %></div>
         <div class="skill-name"><%= skill %> <span class="skill-level"><%= level.level >= 0 ? level.level : '?' %></span></div>
         <div class="skill-bar" data-skill="<%= skill %>">
             <div class="skill-progress-bar" style="width: <%= level.level == level.maxLevel ? 100 : level.progress * 100 %>%"></div>
             <% if('runecrafting' in calculated.levels){ %>
-                <div class="skill-progress-text" data-hover-text="<%= level.xpCurrent.toLocaleString() %><% if(level.xpForNext != Infinity){ %> / <%= level.xpForNext.toLocaleString() %><% } %> XP">
+                <div class="skill-progress-text" data-hover-text="<%= level.xpCurrent.toLocaleString() %><% if(level.xpForNext != Infinity){ %> / <%= helper.formatNumber(level.xpForNext) %><% } %> XP">
                     <%= helper.formatNumber(level.xpCurrent, true) %><% if(level.xpForNext != Infinity){ %> / <%= helper.formatNumber(level.xpForNext) %><% } %> XP
                 </div>
             <% } %>
@@ -283,6 +312,27 @@ const stat_component = stat => {
         <div class='tippy-explanation'><% if(stat.baseExplanation){ %><%= extraStat.explanation %><% } %></div>
         <% }} %>
         "><span class="stat-name"><%= stat.prettyName || helper.titleCase(stat.name.replace(/\_/g, " ")) %> </span><span class="stat-value"><%= stats[stat.name].toLocaleString() %><%= stat.suffix || '' %></span></span></div>
+<% };
+
+const catacombs_floor = (floor, name) => { 
+    const highest_damage_class = Object.keys(classItems).sort((a, b) => (floor[`most_damage_${b}`] ?? 0) - (floor[`most_damage_${a}`] ?? 0))[0];
+    %>
+    <div class="catacombs-floor floor-<%= floor.floor %>">
+        <div class="floor-bg"></div>
+        <div class="floor-title">
+            <div class="floor-icon"></div>
+            <div class="floor-name"><%= name %></div>
+            <div class="floor-completions">x<%= (floor.tier_completions ?? 0).toLocaleString() %></div>
+        </div>
+        <div class="catacombs-most-damage">
+            <div class="class-icon"><div class="item-icon <%= classItems[highest_damage_class] %>"></div></div>
+            <span><%= helper.formatNumber(floor[`most_damage_${highest_damage_class}`] ?? 0) %> <span class="dmg">DMG</span></span>
+        </div>
+        <div class="catacombs-pb">
+            <div class="catacombs-rank"><img src="/resources/img/catacombs/<%= floor.best_rank %>.png" class="catacombs-rank-icon"></div>
+            <span><%= floor.fastest_time ? moment.duration(floor.fastest_time_s_plus ?? floor.fastest_time_s ?? floor.fastest_time, "milliseconds").format("m:ss.SSS") : '--:--' %></span>
+        </div>
+    </div>
 <% };
 
 let description = "";
@@ -605,11 +655,11 @@ twitterDescription += '. Click to view more stats!'
                         <div class="additional-stat"><span data-tippy-content="
                         <span class='stat-name'>Total Skill XP: </span><span class='stat-value'><%= Math.round(calculated.total_skill_xp).toLocaleString() %></span>
                         <div class='tippy-explanation'>Total XP gained in all skills except Carpentry and Runecrafting.</div>
-                        <span class='stat-name'>Average Level: </span><span class='stat-value'><%= calculated.average_level.toFixed(2) %></span>
+                        <span class='stat-name'>Average Level: </span><span class='stat-value'><%= (Math.floor(calculated.average_level * 100) / 100).toFixed(2) %></span>
                         <div class='tippy-explanation'>Average skill level over all skills except Carpentry and Runecrafting<% if('runecrafting' in calculated.levels){ %>, includes progress to next level<% } %>.</div>
-                        <% if('runecrafting' in calculated.levels){ %><span class='stat-name'>Average Level without progress: </span><span class='stat-value'><%= calculated.average_level_no_progress.toFixed(2) %></span>
+                        <% if('runecrafting' in calculated.levels){ %><span class='stat-name'>Average Level without progress: </span><span class='stat-value'><%= (Math.floor(calculated.average_level_no_progress * 100) / 100).toFixed(2) %></span>
                         <div class='tippy-explanation'>Average skill level without including partial level progress.</div><% } %>
-                        "><span class="stat-name">Average Skill Level: </span><span class="stat-value"><%= Math.floor(calculated.average_level * 10) / 10 %></span></span></div>
+                        "><span class="stat-name">Average Skill Level: </span><span class="stat-value"><%= Math.floor(calculated.average_level * 100) / 100 %></span></span></div>
                         <div class="additional-stat"><span class="interactive-tooltip" data-tippy-content="
                         <strong>Skill Weight</strong><br>
                         <span class='stat-name'>Base Weight: </span><span class='stat-value'><%= calculated.lilyweight.skill.base.toFixed(2) %><br>
@@ -668,6 +718,7 @@ twitterDescription += '. Click to view more stats!'
                 <% if(calculated.pets.length > 0){ %><div class="nav-item" data-target="pets">Pets</div><% } %>
                 <% if(!items.no_inventory){ %><div class="nav-item" data-target="inventory">Inventory</div><% } %>
                 <div class="nav-item" data-target="fishing">Fishing</div>
+                <div class="nav-item" data-target="dungeons">Dungeons</div>
                 <div class="nav-item" data-target="slayer">Slayer</div>
                 <% if(calculated.kills.length > 0 || calculated.deaths.length > 0){ %><div class="nav-item" data-target="kills">Kills</div><% } %>
                 <div class="nav-item" data-target="minions">Minions</div>
@@ -1091,6 +1142,73 @@ twitterDescription += '. Click to view more stats!'
                         <% } %>
                     </div>
                 <% } %>
+            </div>
+        </div>
+        <div data-stat="dungeons" class="stat-container stat-dungeons">
+            <div class="stat-anchor"></div>
+            <div class="stat-header"><span>Dungeons</span></div>
+            <div class="stat-content">
+                <div class="catacombs-level">
+                    <%= skill_component('Catacombs', 'custom-icon', calculated.dungeons.level, '964e1c3e315c8d8fffc37985b6681c5bd16a6f97ffd07199e8a05efbef103793') %>
+                    <div class="catacombs-classes">
+                        <% for (const key in calculated.dungeons.classes) {
+                            skill_component(_.capitalize(key), classItems[key], calculated.dungeons.classes[key])
+                        } %>
+                    </div>
+                </div>
+                <p class="stat-raw-values">
+                    <br>
+                    <%
+                        let highest_completion = 'None';
+
+                        if (calculated.dungeons.master_catacombs.highest_tier_completed != 'None') {
+                            highest_completion = `M${calculated.dungeons.master_catacombs.highest_tier_completed}`;
+                        } else if (calculated.dungeons.catacombs.highest_tier_completed != 'None') {
+                            const { highest_tier_completed } = calculated.dungeons.catacombs;
+                            highest_completion = highest_tier_completed == 0 ? 'Entrance' : `F${highest_tier_completed}`;
+                        }
+
+                        const average_class_level = (Math.floor(calculated.dungeons.average_class_level * 100) / 100).toFixed(2);
+                    %>
+                    <% max = average_class_level >= 50 ? 'golden-text': '' 
+                    %><span class="stat-name <%= max %>">Average Class Level: </span><span class="stat-value <%= max %>"><%= average_class_level %></span><br>
+                    <% max = highest_completion == 'M7' ? 'golden-text' : '' %><span class="stat-name <%= max %>">Highest Tier Completion: </span><span class="stat-value <%= max %>"><%= highest_completion %></span><br>
+                    <span class="stat-name">Secrets Found: </span><span class="stat-value"><%= calculated.dungeons.secrets.toLocaleString() %></span>
+                </p>
+                <% if (calculated.dungeons.catacombs.floors.length > 0) { %>
+                <div class="catacombs-floors">
+                    <% for (const floor of calculated.dungeons.catacombs.floors) {
+                        catacombs_floor(floor, floor.floor == 0 ? 'Entrance' : `F${floor.floor}`);
+                    } %>
+                </div>
+                <% } %>
+                <% if (calculated.dungeons.master_catacombs.floors.length > 0) { %>
+                <div class="catacombs-floors master-catacombs-floors">
+                    <% for (const floor of calculated.dungeons.master_catacombs.floors) {
+                        catacombs_floor(floor, `M${floor.floor}`);
+                    } %>
+                </div>
+                <% } %>
+                <p class="stat-sub-header">Boss Collections</p>
+                <div class="catacombs-boss-collections">
+                    <% for (const collection of calculated.dungeons.collections) { 
+                        const headType = collection.tier >= collection.maxTier ? 'diamond' : 'normal';
+                        %>
+                        <div class="catacombs-boss-collection">
+                            <div class="collection-icon"><div class="item-icon custom-icon" style="background-image: url('<%= bossHeads[headType][collection.boss] %>')"></div></div>
+                            <div class="collection-stats">
+                                <div class="collection-name <%= collection.tier >= collection.maxTier ? 'max-minion' : '' %>"><span class="stat-name"><%= collection.boss %> </span><span class="stat-value"><%= collection.tier %></span></div>
+                                <div class="collection-amount"><span class="stat-name">Kills: </span><span class="stat-value"><%= collection.amount.toLocaleString() %></span></div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+                <p class="stat-sub-header">Essence</p>
+                <div class="catacombs-essence">
+                    <% for (const essence in calculated.dungeons.essence) { %>
+                        <div class="essence-line"><div class="essence-icon <%= essence %>-essence"></div><span class="stat-name"><%= _.capitalize(essence) %>: </span><span class="stat-value"><%= (calculated.dungeons.essence[essence] ?? 0).toLocaleString() %></span></div>
+                    <% } %>
+                </div>
             </div>
         </div>
         <div data-stat="slayer" class="stat-container stat-slayer">

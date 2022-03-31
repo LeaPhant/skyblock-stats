@@ -559,6 +559,308 @@ html.no-webp #bg_blur{
     text-shadow: 0px 0px 3px rgba(0,0,0,0.3);
 }
 
+.catacombs-level .skill {
+    width: calc((70vw - 260px) / 1.1 - 60px);
+}
+
+.catacombs-level .skill-bar {
+    right: 15px;
+}
+
+.catacombs-classes {
+    width: calc((70vw - 260px) / 1.1 - 60px);
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+
+.catacombs-classes .skill {
+    transition: flex-grow .2s;
+    width: auto;
+    overflow: hidden;
+    width: calc((70vw - 260px) / 1.1 / 5 - 30px);
+}
+
+.catacombs-classes .skill-progress-text {
+    pointer-events: none;
+    opacity: 0;
+    white-space: nowrap;
+}
+
+.catacombs-classes .skill:hover {
+    flex-grow: 2;
+}
+
+.catacombs-classes .skill:hover .skill-progress-text {
+    opacity: 1;
+}
+
+.catacombs-floors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.catacombs-floors {
+    margin-top: 30px;
+}
+
+.catacombs-floor {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+    border-radius: 15px;
+    width: 220px;
+    height: 120px;
+    position: relative;
+    background: 
+        linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        radial-gradient(at 0% 0%, rgba(19, 171, 109, 0.4), rgba(114, 205, 76, 0.0) 60%);
+}
+
+.master-catacombs-floors .catacombs-floor {
+    background: 
+        linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        radial-gradient(at 0% 0%, rgba(255, 76, 36, 0.4), rgba(255, 76, 36, 0.0) 60%);
+}
+
+.catacombs-floor .floor-title {
+    display: flex;
+    align-items: center;
+}
+
+.catacombs-floor .floor-title .floor-completions {
+    color: rgba(200,200,200,0.7);
+    margin-left: 5px;
+    font-weight: 600;
+}
+
+.catacombs-most-damage {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.95);
+}
+
+.catacombs-most-damage .dmg {
+    font-size: 14px;
+    align-self: flex-end;
+    color: rgba(200,200,200,0.8);
+}
+
+.catacombs-most-damage .class-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.catacombs-most-damage .class-icon .item-icon {
+    transform: scale(0.25);
+    transform-origin: top left;
+}
+
+.catacombs-pb {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: rgba(255,255,255,0.95);
+}
+
+.catacombs-pb .catacombs-rank {
+    width: 32px;
+    height: 32px;
+    text-align: center;
+}
+
+.catacombs-pb .catacombs-rank-icon {
+    height: 30px;
+}
+
+.catacombs-floor .floor-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0.25;
+    background-size: auto 130%;
+    background-position: calc(100% + 10px) 10px;
+    background-repeat: no-repeat;
+}
+
+.catacombs-floor.floor-0 .floor-bg {
+    background-image: url(/resources/img/catacombs/the_watcher.png);
+    background-size: auto 50%;
+    background-position: calc(100% + 10px) 15px;
+}
+
+.catacombs-floor.floor-1 .floor-bg {
+    background-image: url(/resources/img/catacombs/bonzo.png);
+}
+
+.catacombs-floor.floor-2 .floor-bg {
+    background-image: url(/resources/img/catacombs/scarf.png);
+}
+
+.catacombs-floor.floor-3 .floor-bg {
+    background-image: url(/resources/img/catacombs/the_professor.png);
+}
+
+.catacombs-floor.floor-4 .floor-bg {
+    background-image: url(/resources/img/catacombs/thorn.png);
+    background-size: auto 100%;
+    background-position: calc(100% + 25px) 15px;
+}
+
+.catacombs-floor.floor-5 .floor-bg {
+    background-image: url(/resources/img/catacombs/livid.png);
+}
+
+.catacombs-floor.floor-6 .floor-bg {
+    background-image: url(/resources/img/catacombs/sadan.png);
+}
+
+.catacombs-floor.floor-7 .floor-bg {
+    background-image: url(/resources/img/catacombs/necron.png);
+    background-size: auto 90%;
+    background-position: calc(100% + 25px) 15px;
+}
+
+.catacombs-essence {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.catacombs-essence .essence-icon {
+    display: inline-block;
+    vertical-align: middle;
+    background-size: 32px auto;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 32px;
+    margin-right: 4px;
+}
+
+.ice-essence {
+    background-image: url(/head/ddba642efffa13ec3730eafc5914ab68115c1f998803f74452e2e0cd26af0b8);
+}
+
+.wither-essence {
+    background-image: url(/head/c4db4adfa9bf48ff5d41707ae34ea78bd2371659fcd8cd8934749af4cce9b);
+}
+
+.spider-essence {
+    background-image: url(/head/16617131250e578333a441fdf4a5b8c62163640a9d06cd67db89031d03accf6);
+}
+
+.undead-essence {
+    background-image: url(/head/71d7c816fc8c636d7f50a93a0ba7aaeff06c96a561645e9eb1bef391655c531);
+}
+
+.diamond-essence {
+    background-image: url(/head/964f25cfff754f287a9838d8efe03998073c22df7a9d3025c425e3ed7ff52c20);
+}
+
+.dragon-essence {
+    background-image: url(/head/33ff416aa8bec1665b92701fbe68a4effff3d06ed9147454fa77712dd6079b33);
+}
+
+.gold-essence {
+    background-image: url(/head/8816606260779b23ed15f87c56c932240db745f86f683d1f4deb83a4a125fa7b);
+}
+
+.floor-title .floor-icon {
+    width: 32px;
+    height: 32px;
+    background-size: 32px auto;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.floor-title .floor-name {
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.floor-0 .floor-icon {
+    background-image: url(/head/35c3024f4d9d12ddf5959b6aea3c810f5ee85176aab1b2e7f462aa1c194c342b);
+}
+
+.floor-1 .floor-icon {
+    background-image: url(/head/726f384acdfbb7218e96efac630e9ae1a14fd2f820ab660cc68322a59b165a12);
+}
+
+.floor-2 .floor-icon {
+    background-image: url(/head/ebaf2ae74553a64587840d6e70fb27d2c0ae2f8bdfacbe56654c8db4001cdc98);
+}
+
+.floor-3 .floor-icon {
+    background-image: url(/head/5a2f67500a65f3ce79d34ec150de93df8f60ebe52e248f5e1cdb69b0726256f7);
+}
+
+.floor-4 .floor-icon {
+    background-image: url(/head/5720917cda0567442617f2721e88be9d2ffbb0b26a3f4c2fe21655814d4f4476);
+}
+
+.floor-5 .floor-icon {
+    background-image: url(/head/5720917cda0567442617f2721e88be9d2ffbb0b26a3f4c2fe21655814d4f4476);
+}
+
+.floor-6 .floor-icon {
+    background-image: url(/head/3ce69d2ddcc81c9fc2e9948c92003eb0f7ebf0e7e952e801b7f2069dcee76d85);
+}
+
+.floor-7 .floor-icon {
+    background-image: url(/head/76965e3fd619de6b0a7ce1673072520a9360378e1cb8c19d4baf0c86769d3764);
+}
+
+.master-floor-1 .floor-icon {
+    background-image: url(/head/1eb5b21af330af122b268b7aa390733bd1b699b4d0923233ecd24f81e08b9bce);
+}
+
+.master-floor-2 .floor-icon {
+    background-image: url(/head/32292e4e0fa62667256ef8da0f01982a996499f4d5d894bd058c3e6f3d2fb2d9);
+}
+
+.master-floor-3 .floor-icon {
+    background-image: url(/head/c969f6b148648aa8d027228a52fb5a3ca1ee84dc76e47851f14db029a730a8a3);
+}
+
+.master-floor-4 .floor-icon {
+    background-image: url(/head/d7b69021f9c09647dfd9b34df3deaff70cfc740f6a26f612dd47503fc34c97f0);
+}
+
+.master-floor-5 .floor-icon {
+    background-image: url(/head/d65cbce40e60e7a59a87fa8f4ecb6ccfc1514338c262614bf33739a6263f5405);
+}
+
+.master-floor-6 .floor-icon {
+    background-image: url(/head/d65cbce40e60e7a59a87fa8f4ecb6ccfc1514338c262614bf33739a6263f5405);
+}
+
+.master-floor-7 .floor-icon {
+    background-image: url(/head/d65cbce40e60e7a59a87fa8f4ecb6ccfc1514338c262614bf33739a6263f5405);
+}
+
+.catacombs-boss-collections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.catacombs-boss-collections .catacombs-boss-collection {
+    padding: 7px;
+    padding-right: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+}
+
 #skin_display{
     position: fixed;
     top: 20vh;
@@ -2806,6 +3108,18 @@ html.no-webp #error_box_wrapper{
         width: calc((1120px - 410px) / 2 - 60px);
     }
 
+    .catacombs-level .skill {
+        width: calc((1120px - 20px) - 40px);
+    }
+
+    .catacombs-classes {
+        width: calc((1120px - 20px) - 40px);
+    }
+
+    .catacombs-classes .skill {
+        width: calc((1120px - 20px) / 5 - 40px);
+    }
+
     .external-app{
         margin-left: -10px;
         margin-right: -10px;
@@ -3076,6 +3390,18 @@ html.no-webp #error_box_wrapper{
         width: calc(100vw / 3 - 85px);
     }
 
+    .catacombs-level .skill {
+        width: calc((100vw - 20px) - 40px);
+    }
+
+    .catacombs-classes {
+        width: calc((100vw - 20px) - 40px);
+    }
+
+    .catacombs-classes .skill {
+        width: calc((100vw - 20px) / 5 - 40px);
+    }
+
     .slayer-containers, .race-containers{
         overflow-x: auto;
         margin-left: -40px;
@@ -3224,6 +3550,24 @@ html.no-webp #error_box_wrapper{
         width: 100%;
         backdrop-filter: blur(15px);
     }
+
+    .catacombs-classes {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .catacombs-classes .skill {
+        width: calc((100vw - 20px) - 40px);
+    }
+
+    .catacombs-classes .skill-progress-text {
+        pointer-events: all;
+        opacity: 1;
+    }
+
+    .catacombs-classes .skill:hover {
+        flex-grow: 1;
+    }
 }
 
 @media (max-width: 580px){
@@ -3358,6 +3702,10 @@ html.no-webp #error_box_wrapper{
         position: relative;
         background-color: rgba(255, 255, 255, 0.04);
         margin: 0;
+    }
+
+    .catacombs-floor {
+        width: 100vw;
     }
 
     html{
