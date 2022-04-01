@@ -3108,18 +3108,6 @@ html.no-webp #error_box_wrapper{
         width: calc((1120px - 410px) / 2 - 60px);
     }
 
-    .catacombs-level .skill {
-        width: calc((1120px - 20px) - 40px);
-    }
-
-    .catacombs-classes {
-        width: calc((1120px - 20px) - 40px);
-    }
-
-    .catacombs-classes .skill {
-        width: calc((1120px - 20px) / 5 - 40px);
-    }
-
     .external-app{
         margin-left: -10px;
         margin-right: -10px;
@@ -3390,18 +3378,6 @@ html.no-webp #error_box_wrapper{
         width: calc(100vw / 3 - 85px);
     }
 
-    .catacombs-level .skill {
-        width: calc((100vw - 20px) - 40px);
-    }
-
-    .catacombs-classes {
-        width: calc((100vw - 20px) - 40px);
-    }
-
-    .catacombs-classes .skill {
-        width: calc((100vw - 20px) / 5 - 40px);
-    }
-
     .slayer-containers, .race-containers{
         overflow-x: auto;
         margin-left: -40px;
@@ -3506,6 +3482,18 @@ html.no-webp #error_box_wrapper{
 
     .sea-creature:last-child{
         margin-right: 40px;
+    }
+
+    .catacombs-level .skill {
+        width: calc((100vw - 20px) - 40px);
+    }
+
+    .catacombs-classes {
+        width: calc((100vw - 20px) - 40px);
+    }
+
+    .catacombs-classes .skill {
+        width: calc((100vw - 20px) / 5 - 20px);
     }
 
     .top-deaths{
