@@ -560,7 +560,7 @@ html.no-webp #bg_blur{
 }
 
 .catacombs-level .skill {
-    width: calc((70vw - 260px) / 1.1 - 60px);
+    width: 780px;
 }
 
 .catacombs-level .skill-bar {
@@ -568,7 +568,7 @@ html.no-webp #bg_blur{
 }
 
 .catacombs-classes {
-    width: calc((70vw - 260px) / 1.1 - 60px);
+    width: 780px;
     display: flex;
     margin-top: 10px;
     justify-content: space-between;
@@ -578,7 +578,7 @@ html.no-webp #bg_blur{
     transition: flex-grow .2s;
     width: auto;
     overflow: hidden;
-    width: calc((70vw - 260px) / 1.1 / 5 - 30px);
+    width: calc(780px / 5 - 20px);
 }
 
 .catacombs-classes .skill-progress-text {
