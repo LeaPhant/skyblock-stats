@@ -1148,64 +1148,72 @@ twitterDescription += '. Click to view more stats!'
             <div class="stat-anchor"></div>
             <div class="stat-header"><span>Dungeons</span></div>
             <div class="stat-content">
-                <div class="catacombs-level">
-                    <%= skill_component('Catacombs', 'custom-icon', calculated.dungeons.level, '964e1c3e315c8d8fffc37985b6681c5bd16a6f97ffd07199e8a05efbef103793') %>
-                    <div class="catacombs-classes">
-                        <% for (const key in calculated.dungeons.classes) {
-                            skill_component(_.capitalize(key), classItems[key], calculated.dungeons.classes[key])
+                <% if (calculated.dungeons.level.xp > 0) { %>
+                    <div class="catacombs-level">
+                        <%= skill_component('Catacombs', 'custom-icon', calculated.dungeons.level, '964e1c3e315c8d8fffc37985b6681c5bd16a6f97ffd07199e8a05efbef103793') %>
+                        <div class="catacombs-classes">
+                            <% for (const key in calculated.dungeons.classes) {
+                                skill_component(_.capitalize(key), classItems[key], calculated.dungeons.classes[key])
+                            } %>
+                        </div>
+                    </div>
+                    <p class="stat-raw-values">
+                        <br>
+                        <%
+                            let highest_completion = 'None';
+
+                            if (calculated.dungeons.master_catacombs.highest_tier_completed != 'None') {
+                                highest_completion = `M${calculated.dungeons.master_catacombs.highest_tier_completed}`;
+                            } else if (calculated.dungeons.catacombs.highest_tier_completed != 'None') {
+                                const { highest_tier_completed } = calculated.dungeons.catacombs;
+                                highest_completion = highest_tier_completed == 0 ? 'Entrance' : `F${highest_tier_completed}`;
+                            }
+
+                            const average_class_level = (Math.floor(calculated.dungeons.average_class_level * 100) / 100).toFixed(2);
+                        %>
+                        <% max = average_class_level >= 50 ? 'golden-text': '' 
+                        %><span class="stat-name <%= max %>">Average Class Level: </span><span class="stat-value <%= max %>"><%= average_class_level %></span><br>
+                        <% max = highest_completion == 'M7' ? 'golden-text' : '' %><span class="stat-name <%= max %>">Highest Tier Completion: </span><span class="stat-value <%= max %>"><%= highest_completion %></span><br>
+                        <span class="stat-name">Secrets Found: </span><span class="stat-value"><%= calculated.dungeons.secrets.toLocaleString() %></span>
+                    </p>
+                    <% if (calculated.dungeons.catacombs.floors.length > 0) { %>
+                    <div class="catacombs-floors">
+                        <% for (const floor of calculated.dungeons.catacombs.floors) {
+                            catacombs_floor(floor, floor.floor == 0 ? 'Entrance' : `F${floor.floor}`);
                         } %>
                     </div>
-                </div>
-                <p class="stat-raw-values">
-                    <br>
-                    <%
-                        let highest_completion = 'None';
-
-                        if (calculated.dungeons.master_catacombs.highest_tier_completed != 'None') {
-                            highest_completion = `M${calculated.dungeons.master_catacombs.highest_tier_completed}`;
-                        } else if (calculated.dungeons.catacombs.highest_tier_completed != 'None') {
-                            const { highest_tier_completed } = calculated.dungeons.catacombs;
-                            highest_completion = highest_tier_completed == 0 ? 'Entrance' : `F${highest_tier_completed}`;
-                        }
-
-                        const average_class_level = (Math.floor(calculated.dungeons.average_class_level * 100) / 100).toFixed(2);
-                    %>
-                    <% max = average_class_level >= 50 ? 'golden-text': '' 
-                    %><span class="stat-name <%= max %>">Average Class Level: </span><span class="stat-value <%= max %>"><%= average_class_level %></span><br>
-                    <% max = highest_completion == 'M7' ? 'golden-text' : '' %><span class="stat-name <%= max %>">Highest Tier Completion: </span><span class="stat-value <%= max %>"><%= highest_completion %></span><br>
-                    <span class="stat-name">Secrets Found: </span><span class="stat-value"><%= calculated.dungeons.secrets.toLocaleString() %></span>
-                </p>
-                <% if (calculated.dungeons.catacombs.floors.length > 0) { %>
-                <div class="catacombs-floors">
-                    <% for (const floor of calculated.dungeons.catacombs.floors) {
-                        catacombs_floor(floor, floor.floor == 0 ? 'Entrance' : `F${floor.floor}`);
-                    } %>
-                </div>
-                <% } %>
-                <% if (calculated.dungeons.master_catacombs.floors.length > 0) { %>
-                <div class="catacombs-floors master-catacombs-floors">
-                    <% for (const floor of calculated.dungeons.master_catacombs.floors) {
-                        catacombs_floor(floor, `M${floor.floor}`);
-                    } %>
-                </div>
-                <% } %>
-                <p class="stat-sub-header">Boss Collections</p>
-                <div class="catacombs-boss-collections">
-                    <% for (const collection of calculated.dungeons.collections) { 
-                        const headType = collection.tier >= collection.maxTier ? 'diamond' : 'normal';
-                        %>
-                        <div class="catacombs-boss-collection">
-                            <div class="collection-icon"><div class="item-icon custom-icon" style="background-image: url('<%= bossHeads[headType][collection.boss] %>')"></div></div>
-                            <div class="collection-stats">
-                                <div class="collection-name <%= collection.tier >= collection.maxTier ? 'max-minion' : '' %>"><span class="stat-name"><%= collection.boss %> </span><span class="stat-value"><%= collection.tier %></span></div>
-                                <div class="collection-amount"><span class="stat-name">Kills: </span><span class="stat-value"><%= collection.amount.toLocaleString() %></span></div>
-                            </div>
-                        </div>
                     <% } %>
-                </div>
+                    <% if (calculated.dungeons.master_catacombs.floors.length > 0) { %>
+                    <div class="catacombs-floors master-catacombs-floors">
+                        <% for (const floor of calculated.dungeons.master_catacombs.floors) {
+                            catacombs_floor(floor, `M${floor.floor}`);
+                        } %>
+                    </div>
+                    <% } %>
+                    <p class="stat-sub-header">Boss Collections</p>
+                    <div class="catacombs-boss-collections">
+                        <% for (const collection of calculated.dungeons.collections) { 
+                            const headType = collection.tier >= collection.maxTier ? 'diamond' : 'normal';
+                            %>
+                            <div class="catacombs-boss-collection">
+                                <div class="collection-icon"><div class="item-icon custom-icon" style="background-image: url('<%= bossHeads[headType][collection.boss] %>')"></div></div>
+                                <div class="collection-stats">
+                                    <div class="collection-name <%= collection.tier >= collection.maxTier ? 'max-minion' : '' %>"><span class="stat-name"><%= collection.boss %> </span><span class="stat-value"><%= collection.tier %></span></div>
+                                    <div class="collection-amount"><span class="stat-name">Kills: </span><span class="stat-value"><%= collection.amount.toLocaleString() %></span></div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } else { %>
+                    <p>
+                        <span class="grey-text">Player has never entered a Dungeon.</span>
+                    </p>
+                <% } %>
                 <p class="stat-sub-header">Essence</p>
                 <div class="catacombs-essence">
-                    <% for (const essence in calculated.dungeons.essence) { %>
+                    <% for (const essence in calculated.dungeons.essence) { 
+                        if (calculated.dungeons.essence[essence] == 0 && calculated.dungeons.level.xp == 0) continue;
+                        %>
                         <div class="essence-line"><div class="essence-icon <%= essence %>-essence"></div><span class="stat-name"><%= _.capitalize(essence) %>: </span><span class="stat-value"><%= (calculated.dungeons.essence[essence] ?? 0).toLocaleString() %></span></div>
                     <% } %>
                 </div>
