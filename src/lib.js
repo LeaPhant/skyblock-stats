@@ -1468,7 +1468,7 @@ module.exports = {
 
                     slayers[slayerName] = {};
 
-                    if(!helper.hasPath(slayer, 'claimed_levels') || slayerName == 'enderman')
+                    if(!helper.hasPath(slayer, 'claimed_levels') || constants.slayer_xp[slayerName] == null)
                         continue;
 
                     slayers[slayerName].level = getSlayerLevel(slayer, slayerName);
