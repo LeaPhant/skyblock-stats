@@ -211,6 +211,8 @@ module.exports = {
                 options['name'] = `Kills Sven Packmaster Tier ${tier}`;
             else if(lbName.startsWith('enderman_slayer'))
                 options['name'] = `Kills Voidgloom Seraph Tier ${tier}`;
+            else if(lbName.startsWith('blaze_slayer'))
+                options['name'] = `Kills Inferno Demonlord Tier ${tier}`;
         }
 
         if(lbName.startsWith('kills_') || lbName.startsWith('deaths_')){
