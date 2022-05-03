@@ -41,7 +41,7 @@ const rarity_order = ['special', 'mythic', 'legendary', 'epic', 'rare', 'uncommo
 const petTiers = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
 
 const weightSkills = ['enchanting', 'taming', 'alchemy', 'mining', 'farming', 'foraging', 'combat', 'fishing'];
-const weightSlayers = ['zombie', 'spider', 'wolf', 'enderman'];
+const weightSlayers = ['zombie', 'spider', 'wolf', 'enderman', 'blaze'];
 
 const MAX_SOULS = 209;
 
