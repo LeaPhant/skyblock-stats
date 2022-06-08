@@ -2657,7 +2657,7 @@ module.exports = {
                         b.kills = 0;
 
                         for (const id of b.id) {
-                            b.kills += userProfile?.bestiary[`kills_family_${id}`] ?? 0;
+                            b.kills += userProfile?.bestiary?.[`kills_family_${id}`] ?? 0;
                         }
 
                         b = { ...b, ...getBestiaryLevel(b) };
