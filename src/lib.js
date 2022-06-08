@@ -114,6 +114,37 @@ function getXpByLevel(level, type){
     return output;
 }
 
+function getBestiaryLevel(b) {
+    let kills = b.kills;
+    let killsLeft = 0;
+    let level = 0;
+    let nextStep;
+
+    const steps = b.boss ? constants.bestiary_boss_level : constants.bestiary_level;
+
+    while (level < (b.max ?? Infinity)) {
+        const step = Object.keys(steps).slice().reverse().find(a => a <= level + 1);
+        nextStep = steps[step];
+
+        if (kills >= nextStep) {
+            level++;
+            kills -= nextStep;
+            continue;
+        }
+
+        killsLeft = nextStep - kills;
+        break;
+    }
+
+    return {
+        level,
+        max: level == b.max,
+        killsLeft,
+        currentKills: kills,
+        nextStep
+    };
+}
+
 function getLevelByXp(xp, type = 'regular', levelCap, personalCap){
     let xp_table;
 
@@ -1790,6 +1821,42 @@ module.exports = {
         output.kills = killsDeaths.filter(a => a.type == 'kills').sort((a, b) => b.amount - a.amount);
         output.deaths = killsDeaths.filter(a => a.type == 'deaths').sort((a, b) => b.amount - a.amount);
 
+        const bestiaryEntries = [];
+
+        let totalTiers = 0;
+        let totalFamilies = 0;
+        
+        for (const area in constants.bestiary_areas) {
+            const bestiaryArea = constants.bestiary_areas[area];
+
+            for (const bestiaryEntry of bestiaryArea) {
+                let b = { ...bestiaryEntry };
+
+                b.kills = 0;
+
+                for (const id of b.id) {
+                    b.kills += userProfile?.bestiary[`kills_family_${id}`] ?? 0;
+                }
+
+                if (b.kills > 0) {
+                    totalFamilies++;
+                }
+
+                b = { ...b, ...getBestiaryLevel(b) };
+
+                totalTiers += b.level;
+
+                bestiaryEntries.push(b);
+            }
+        }
+
+        output.bestiary = {
+            level: Math.floor(totalTiers / 10),
+            tiers: totalTiers,
+            families: totalFamilies,
+            entries: bestiaryEntries
+        };
+
         const playerObject = await helper.resolveUsernameOrUuid(profile.uuid, db, cacheOnly);
 
         output.display_name = playerObject.display_name;
@@ -2578,6 +2645,28 @@ module.exports = {
                     ? userProfile.dungeons.dungeon_types.catacombs.experience : 0,
                     weightSlayers.map(a => helper.hasPath(userProfile, 'slayer_bosses', a, 'xp') ? userProfile.slayer_bosses[a].xp : 0)
                 ];
+
+                let totalTiers = 0;
+                
+                for (const area in constants.bestiary_areas) {
+                    const bestiaryArea = constants.bestiary_areas[area];
+
+                    for (const bestiaryEntry of bestiaryArea) {
+                        let b = { ...bestiaryEntry };
+
+                        b.kills = 0;
+
+                        for (const id of b.id) {
+                            b.kills += userProfile?.bestiary[`kills_family_${id}`] ?? 0;
+                        }
+
+                        b = { ...b, ...getBestiaryLevel(b) };
+
+                        totalTiers += b.level;
+                    }
+                }
+
+                userProfile.bestiary_milestone = totalTiers / 10;
         
                 userProfile.lilyweight = LilyWeight.getWeightRaw(...lilyWeightArgs);
 
@@ -2692,6 +2781,8 @@ module.exports = {
             values['lily_weight_total'] = getMax(memberProfiles, 'data', 'lilyweight', 'total');
             values['lily_skill_weight'] = getMax(memberProfiles, 'data', 'lilyweight', 'skill', 'total');
             values['lily_slayer_weight'] = getMax(memberProfiles, 'data', 'lilyweight', 'slayer');
+
+            values['bestiary_milestone'] = getMax(memberProfiles, 'data', 'bestiary_milestone');
 
             let totalSlayerBossKills = 0;
 
