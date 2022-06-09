@@ -156,7 +156,7 @@ const overrides = {
     },
 
     average_level: {
-        format: x => x >= 55 ? `${+x.toFixed(2)} (+${((x-55)*1000000).toFixed(2)}b overflow)` : x
+        format: x => x >= 55 ? `55 (+${((x-55)*1000000).toFixed(2)}b overflow)` : x
     }
 };
 
