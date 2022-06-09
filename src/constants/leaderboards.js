@@ -153,6 +153,10 @@ const overrides = {
     first_joined: {
         sortedBy: 1,
         format: x => new Date(Number(x)).toISOString().replace('T', ' ').split('.')[0]
+    },
+
+    average_level: {
+        format: x => x >= 55 ? `${x} (+${((x-55)*1000000).toFixed(2)}b overflow)` : x
     }
 };
 
