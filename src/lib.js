@@ -2868,13 +2868,14 @@ module.exports = {
 
                 for(const stat of dungeonStats) {
                     for(const floor of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat)) {
-                        const leaderboard = constants.leaderboard(stat);
+                        const lbName = `dungeons_${dungeonType}_${helper.floorName(floor)}_${statName(stat)}`;
+                        const leaderboard = constants.leaderboard(lbName);
 
                         const value = leaderboard.sortedBy > 0 
                         ? getMin(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat, floor)
                         : getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat, floor);
 
-                        values[`dungeons_${dungeonType}_${helper.floorName(floor)}_${statName(stat)}`] = value;
+                        values[lbName] = value;
                     }
                 }
             }
