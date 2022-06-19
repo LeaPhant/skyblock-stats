@@ -32,7 +32,6 @@ const Redis = require("ioredis");
 const redisClient = new Redis();
 
 const customResources = require('./custom-resources');
-const { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } = require('constants');
 
 const parseNbt = util.promisify(nbt.parse);
 
@@ -2868,9 +2867,15 @@ module.exports = {
                 values[`dungeons_${dungeonType}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, 'experience');
 
                 for(const stat of dungeonStats)
-                    for(const floor of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat))
-                        values[`dungeons_${dungeonType}_${helper.floorName(floor)}_${statName(stat)}`] = 
-                        getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat, floor);
+                    for(const floor of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat)) {
+                        const leaderboard = constants.leaderboard(stat);
+
+                        const value = leaderboard.sortedBy > 0 
+                        ? getMin(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat, floor)
+                        : getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat, floor);
+
+                        values[`dungeons_${dungeonType}_${helper.floorName(floor)}_${statName(stat)}`] = value;
+                    }
             }
 
             for(const dungeonClass of getAllKeys(memberProfiles, 'data', 'dungeons', 'player_classes'))
