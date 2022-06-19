@@ -2866,7 +2866,7 @@ module.exports = {
             for(const dungeonType of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types')){
                 values[`dungeons_${dungeonType}_xp`] = getMax(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, 'experience');
 
-                for(const stat of dungeonStats)
+                for(const stat of dungeonStats) {
                     for(const floor of getAllKeys(memberProfiles, 'data', 'dungeons', 'dungeon_types', dungeonType, stat)) {
                         const leaderboard = constants.leaderboard(stat);
 
@@ -2876,6 +2876,7 @@ module.exports = {
 
                         values[`dungeons_${dungeonType}_${helper.floorName(floor)}_${statName(stat)}`] = value;
                     }
+                }
             }
 
             for(const dungeonClass of getAllKeys(memberProfiles, 'data', 'dungeons', 'player_classes'))
@@ -2931,5 +2932,5 @@ module.exports = {
         }catch(e){
             console.error(e);
         }
-    },
+    }
 }
