@@ -259,7 +259,7 @@ module.exports = (app, db) => {
 
         const lb = constants.leaderboard(`lb_${req.params.lbName}`);
 
-        const lbCount = Math.min(await redisClient.zcount(`${modeName}lb_${lb.key}`, "-Infinity", "+Infinity"), config.lbCap ?? Infinity);
+        const lbCount = Math.min(await redisClient.zcount(`${modeName}lb_${lb.key}`, "-Infinity", "+Infinity"), credentials.lbCap ?? Infinity);
 
         if(lbCount == 0){
             res.status(404).json({ error: "Leaderboard not found." });
