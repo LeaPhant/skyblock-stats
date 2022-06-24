@@ -428,7 +428,20 @@ module.exports = (app, db) => {
                 return;
             }
 
-            output.self = { rank: rank + 1 };
+            let score;
+
+            score = await redisClient.zscore(`${modeName}lb_${lb.key}`, uuid);
+
+            if(score == null)
+                score = await redisClient.zscore(`${modeName}lb_${lb.key}`, uuid + 'i');
+
+            output.self = { 
+                rank: rank + 1, 
+                amount: lb.format(score, lb.key),
+                raw: score,
+                uuid,
+                username: (await getUserObject(uuid, db, true)).display_name
+            };
 
             page = Math.floor(rank / count) + 1;
         }else{
@@ -449,6 +462,8 @@ module.exports = (app, db) => {
             await redisClient.zrange(`${modeName}lb_${lb.key}`, startIndex, endIndex, 'WITHSCORES') :
             await redisClient.zrevrange(`${modeName}lb_${lb.key}`, startIndex, endIndex, 'WITHSCORES');
 
+        const self = await redisClient.z
+
         for(let i = 0; i < results.length; i += 2){
             const lbPosition = {
                 rank: i / 2 + startIndex + 1,
@@ -457,9 +472,6 @@ module.exports = (app, db) => {
                 uuid: results[i].substring(0, 32),
                 username: (await getUserObject(results[i], db, true)).display_name
             };
-
-            if('self' in output && output.self.rank == lbPosition.rank)
-                output.self = lbPosition;
 
             if (lbPosition.rank <= (credentials.lbCap ?? Infinity))
                 output.positions.push(lbPosition);
