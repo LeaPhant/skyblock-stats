@@ -460,7 +460,8 @@ module.exports = (app, db) => {
             if('self' in output && output.self.rank == lbPosition.rank)
                 output.self = lbPosition;
 
-            output.positions.push(lbPosition);
+            if (lbPosition.rank <= (credentials.lbCap ?? Infinity))
+                output.positions.push(lbPosition);
         }
 
         res.json(output);
