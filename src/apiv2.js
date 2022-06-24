@@ -454,6 +454,7 @@ module.exports = (app, db) => {
         page = Math.min(page, maxPage);
 
         output.page = page;
+        output.maxPage = maxPage;
 
         startIndex = (page - 1) * count;
         endIndex = startIndex - 1 + count;
