@@ -47,7 +47,7 @@
     "lodash.escaperegexp": "^4.1.2",
     "micromatch": "^4.0.2",
     "minecraft-data": "^2.54.0",
-    "moment": "^2.26.0",
+    "moment": "^2.29.4",
     "moment-duration-format": "^2.3.2",
     "moment-timezone": "^0.5.31",
     "mongodb": "^3.5.9",
