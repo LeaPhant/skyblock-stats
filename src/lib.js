@@ -2694,7 +2694,7 @@ module.exports = {
                 for (const tier of trophyTiers) {
                     userProfile.trophy_fishing[`${tier}_trophy_fish_caught`] = 0;
 
-                    for (const fish of Object.values(trophy_fish)) {
+                    for (const fish of Object.keys(trophy_fish)) {
                         if (!fish.endsWith(`_${tier}`)) {
                             continue;
                         }
@@ -2703,7 +2703,7 @@ module.exports = {
                     }
                 }
 
-                for (const fish of Object.values(trophy_fish)) {
+                for (const fish of Object.keys(trophy_fish)) {
                     if (trophyTiers.includes(fish.split('_').pop())) {
                         continue;
                     }
