@@ -2699,7 +2699,7 @@ module.exports = {
                             continue;
                         }
 
-                        userProfile.trophy_fishing[`${tier}_trophy_fish_caught`] += 0;
+                        userProfile.trophy_fishing[`${tier}_trophy_fish_caught`] += trophy_fish[fish];
                     }
                 }
 
