@@ -42,6 +42,8 @@ const petTiers = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
 const weightSkills = ['enchanting', 'taming', 'alchemy', 'mining', 'farming', 'foraging', 'combat', 'fishing'];
 const weightSlayers = ['zombie', 'spider', 'wolf', 'enderman', 'blaze'];
 
+const trophyTiers = ['bronze', 'silver', 'gold', 'diamond'];
+
 const MAX_SOULS = 209;
 
 function replaceAll(target, search, replacement){
@@ -1421,7 +1423,8 @@ module.exports = {
             'gold',
             'ice',
             'wither',
-            'spider'
+            'spider',
+            'crimson'
         ];
 
         output.secrets = hypixelProfile.achievements.skyblock_treasure_hunter ?? 0;
@@ -2684,6 +2687,30 @@ module.exports = {
                     userProfile.sea_creatures_killed += userProfile.stats[`kills_${sc.id}`] || 0;
                 }
 
+                userProfile.trophy_fishing = {};
+
+                const trophy_fish = userProfile.trophy_fish ?? {};
+
+                for (const tier of trophyTiers) {
+                    userProfile.trophy_fishing[`${tier}_trophy_fish_caught`] = 0;
+
+                    for (const fish of Object.values(trophy_fish)) {
+                        if (!type.endsWith(`_${tier}`)) {
+                            continue;
+                        }
+
+                        userProfile.trophy_fishing[`${tier}_trophy_fish_caught`] += 0;
+                    }
+                }
+
+                for (const fish of Object.values(trophy_fish)) {
+                    if (trophyTiers.includes(fish.split('_').pop())) {
+                        continue;
+                    }
+
+                    userProfile.trophy_fishing[`${fish}_caught`] = trophy_fish[fish];
+                }
+
                 let totalSlayerXp = 0;
 
                 userProfile.slayer_xp = 0;
@@ -2750,6 +2777,18 @@ module.exports = {
             values['total_gemstone_powder'] = getMax(memberProfiles, 'data', 'gemstone_powder');
 
             values['fastest_target_practice'] = getMin(memberProfiles, 'data', 'fastest_target_practice');
+
+            for(const entry of getAllKeys(memberProfiles, 'data', 'trophy_fishing')){
+                values[entry] = getMax(memberProfiles, 'data', 'trophy_fishing', entry);
+            }
+
+            for(const tier of getAllKeys(memberProfiles, 'data', 
+            'nether_island_player_data', 'kuudra_completed_tiers')){
+                const name = tier == 'none' ? 'basic' : tier;
+
+                values[`kuudra_${name}_tier_completions`] = getMax(memberProfiles, 'data', 
+                'nether_island_player_data', 'kuudra_completed_tiers');
+            }
 
             if(gamemode == 'ironman'){
                 const memberProfilesSkillsApi = memberProfiles.filter(a => a.data.experience_skill_runecrafting != null);
