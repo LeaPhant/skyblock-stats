@@ -2787,7 +2787,7 @@ module.exports = {
                 const name = tier == 'none' ? 'basic' : tier;
 
                 values[`kuudra_${name}_tier_completions`] = getMax(memberProfiles, 'data', 
-                'nether_island_player_data', 'kuudra_completed_tiers');
+                'nether_island_player_data', 'kuudra_completed_tiers', tier);
             }
 
             if(gamemode == 'ironman'){
