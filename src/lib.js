@@ -2695,7 +2695,7 @@ module.exports = {
                     userProfile.trophy_fishing[`${tier}_trophy_fish_caught`] = 0;
 
                     for (const fish of Object.values(trophy_fish)) {
-                        if (!type.endsWith(`_${tier}`)) {
+                        if (!fish.endsWith(`_${tier}`)) {
                             continue;
                         }
 
