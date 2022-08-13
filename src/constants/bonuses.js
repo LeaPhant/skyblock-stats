@@ -98,7 +98,7 @@ module.exports = {
             }
         },
 
-        social_skill: {
+        social2_skill: {
             1: {
 
             }

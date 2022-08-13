@@ -120,7 +120,7 @@ const leveling = {
         25: 19050
     },
 
-    social_xp: {
+    social2_xp: {
         1: 50,
         2: 100,
         3: 150,
