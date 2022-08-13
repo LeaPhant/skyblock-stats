@@ -165,11 +165,11 @@ const overrides = {
 
     lowest_uuid: {
         sortedBy: 1,
-        format: x => Number(x).toString(16).padStart(16, '0')
+        format: x => Number(x).toString(16).padStart(16, '0').substring(0, 12) + '…'
     },
 
     highest_uuid: {
-        format: x => Number(x).toString(16).padStart(16, '0')
+        format: x => Number(x).toString(16).padStart(16, '0').substring(0, 12) + '…'
     }
 };
 
