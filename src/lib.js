@@ -2769,10 +2769,8 @@ module.exports = {
             if(memberProfiles.length == 0)
                 continue;
 
-            const numericalUuid = parseInt(uuid.substring(0, 13), 16);
-
-            values['lowest_uuid'] = numericalUuid;
-            values['highest_uuid'] = numericalUuid;
+            values['lowest_uuid'] = 0;
+            values['highest_uuid'] = 0;
 
             values['pet_score'] = getMax(memberProfiles, 'data', 'pet_score');
 
