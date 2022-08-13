@@ -164,7 +164,12 @@ const overrides = {
     },
 
     lowest_uuid: {
-        mappedBy: 1
+        mappedBy: 1,
+        format: x => Number(x).toString(16)
+    },
+
+    highest_uuid: {
+        format: x => Number(x).toString(16)
     }
 };
 
