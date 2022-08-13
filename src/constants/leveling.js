@@ -77,7 +77,7 @@ const leveling = {
         alchemy: 50,
         carpentry: 50,
         runecrafting: 25,
-        social: 25
+        social2: 25
     },
 
     skills_achievements: {

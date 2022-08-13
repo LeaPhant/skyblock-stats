@@ -157,6 +157,14 @@ const overrides = {
 
     average_level: {
         format: x => x >= 55 ? `55 (+${((x-55)*1000000).toFixed(2)}b overflow)` : x
+    },
+
+    skill_social2_xp: {
+        name: 'Skill Social Xp'
+    },
+
+    lowest_uuid: {
+        mappedBy: 1
     }
 };
 

@@ -2769,6 +2769,9 @@ module.exports = {
             if(memberProfiles.length == 0)
                 continue;
 
+            values['lowest_uuid'] = uuid;
+            values['highest_uuid'] = uuid;
+
             values['pet_score'] = getMax(memberProfiles, 'data', 'pet_score');
 
             values['fairy_souls'] = getMax(memberProfiles, 'data', 'fairy_souls_collected');
