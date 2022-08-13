@@ -2769,7 +2769,7 @@ module.exports = {
             if(memberProfiles.length == 0)
                 continue;
 
-            const numericalUuid = parseInt(uuid.substring(0, 16), 16);
+            const numericalUuid = parseInt(uuid.substring(0, 13), 16);
 
             values['lowest_uuid'] = numericalUuid;
             values['highest_uuid'] = numericalUuid;
