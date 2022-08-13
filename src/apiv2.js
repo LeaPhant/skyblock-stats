@@ -185,7 +185,7 @@ module.exports = (app, db) => {
             const lb = constants.leaderboard(`lb_${positions[index].leaderboard.key}`);
 
             positions[index]['raw'] = result[1];
-            positions[index]['amount'] = lb.format(result[1], lb.key);
+            positions[index]['amount'] = lb.format(result[1], lb.key, uuid);
         }
 
         output.positions = positions.sort((a, b) => a.rank - b.rank);
@@ -235,9 +235,9 @@ module.exports = (app, db) => {
         for(let i = 0; i < results.length; i += 2){
             const lbPosition = {
                 rank: i / 2 + startIndex + 1,
-                amount: lb.format(results[i + 1], lb.key),
+                amount: lb.format(results[i + 1], lb.key, results[i]),
                 raw: results[i + 1],
-                id: results[i],
+                uuid: results[i],
                 name: (await db.collection('guilds').findOne({ gid: results[i] })).name
             };
 
@@ -376,7 +376,7 @@ module.exports = (app, db) => {
             if(selfPosition){
                 output.self = {
                     rank: selfRank + 1,
-                    amount: lb.format(selfPosition.score, lb.key),
+                    amount: lb.format(selfPosition.score, lb.key, selfPosition.uuid),
                     raw: selfPosition.score,
                     uuid: selfPosition.uuid.substring(0, 32),
                     username: (await getUserObject(selfPosition.uuid, db, true)).display_name + (selfPosition.mode == 'ironman' ? ' ♲' : ''),
@@ -392,7 +392,7 @@ module.exports = (app, db) => {
 
                 const lbPosition = {
                     rank: i + 1,
-                    amount: lb.format(position.score, lb.key),
+                    amount: lb.format(position.score, lb.key, selfPosition.uuid),
                     raw: position.score,
                     uuid: position.uuid.substring(0, 32),
                     username: (await getUserObject(position.uuid, db, true)).display_name + (position.mode == 'ironman' ? ' ♲' : '')
@@ -437,7 +437,7 @@ module.exports = (app, db) => {
 
             output.self = { 
                 rank: rank + 1, 
-                amount: lb.format(score, lb.key),
+                amount: lb.format(score, lb.key, uuid),
                 raw: score,
                 uuid,
                 username: (await getUserObject(uuid, db, true)).display_name
@@ -468,7 +468,7 @@ module.exports = (app, db) => {
         for(let i = 0; i < results.length; i += 2){
             const lbPosition = {
                 rank: i / 2 + startIndex + 1,
-                amount: lb.format(results[i + 1], lb.key),
+                amount: lb.format(results[i + 1], lb.key, results[i]),
                 raw: results[i + 1],
                 uuid: results[i].substring(0, 32),
                 username: (await getUserObject(results[i], db, true)).display_name
