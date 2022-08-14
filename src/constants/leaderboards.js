@@ -33,8 +33,8 @@ const skillFormat = (xp, type) => {
         case 'runecrafting':
             xp_table = leveling.runecrafting_xp;
             break;
-        case 'social':
-            xp_table = leveling.social_xp;
+        case 'social2':
+            xp_table = leveling.social2_xp;
             break;
         default:
             xp_table = {...leveling.leveling_xp, ...leveling.xp_past_50};
