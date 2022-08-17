@@ -221,12 +221,18 @@ async function main(){
         try{
             file = await fs.readFile(path.resolve(cachePath, filename));
         }catch(e){
-            file = await renderer.renderHead(`http://textures.minecraft.net/texture/${uuid}`, 6.4);
+            try{
+                file = await renderer.renderHead(`http://textures.minecraft.net/texture/${uuid}`, 6.4);
 
-            fs.writeFile(path.resolve(cachePath, filename), file, err => {
-                if(err)
-                    console.error(err);
-            });
+                fs.writeFile(path.resolve(cachePath, filename), file, err => {
+                    if(err)
+                        console.error(err);
+                });
+            }catch(e){
+                res.status(500);
+                res.send('failed to render head');
+                console.error(e);
+            }
         }
 
         res.setHeader('Cache-Control', `public, max-age=${CACHE_DURATION}`);
