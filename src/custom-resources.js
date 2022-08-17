@@ -200,7 +200,7 @@ async function init(){
                     texture.weight = parseInt(properties[property]);
 
                 if(property == 'items' || property == 'matchItems'){
-                    let item = mcData.findItemOrBlockByName(properties[property].replace('minecraft:', ''));
+                    let item = mcData.itemsByName[properties[property].replace('minecraft:', '')];
 
                     if(item)
                         texture.id = item.id;

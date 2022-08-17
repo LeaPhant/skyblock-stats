@@ -46,6 +46,27 @@ const trophyTiers = ['bronze', 'silver', 'gold', 'diamond'];
 
 const MAX_SOULS = 209;
 
+const BASE_SACK = {
+    Count: 1,
+    Damage: 3,
+    id: 397,
+    rarity: 'epic'
+};
+
+let hypixelItems = {};
+
+const hypixelItemsResponse = axios('https://api.hypixel.net/resources/skyblock/items').then(response => {
+    for (const item of response?.data?.items ?? []) {
+        hypixelItems[item.id] = item;
+    }
+});
+
+let slothpixelItems = {};
+
+const slothpixelItemsResponse = axios('https://api.slothpixel.me/api/skyblock/items').then(response => {
+    slothpixelItems = response?.data ?? {};
+});
+
 function replaceAll(target, search, replacement){
     return target.split(search).join(replacement);
 }
@@ -366,6 +387,125 @@ async function getBackpackContents(arraybuf){
     }
 
     return items;
+}
+
+async function getSacks(sacks_counts) {
+    await hypixelItemsResponse;
+    await slothpixelItemsResponse;
+
+    const sacks = [];
+
+    for (const sackId in constants.sacks) {
+        const sack = constants.sacks[sackId];
+
+        if (sack.items.filter(a => Object.keys(sacks_counts).includes(a)).length == 0) {
+            continue;
+        }
+
+        const sackItem = Object.assign({}, BASE_SACK);
+
+        sackItem.texture_path = `/head/${sack.texture}`;
+        sackItem.display_name = _.startCase(sackId.toLowerCase());
+        sackItem.tag = {
+            display: {
+                Lore: [],
+                Name: `§5${sackItem.display_name}`
+            }
+        };
+
+        if (sackId == 'GEMSTONE_SACK') {
+            let line = '';
+
+            for (const tier in constants.gem_tiers) {
+                line += constants.tier_colors[constants.gem_tiers[tier]];
+                line += _.startCase(tier.toLowerCase());
+
+                if (tier != 'PERFECT') {
+                    line += '§8 / ';
+                }
+            }
+
+            sackItem.tag.display.Lore.push(line, '');
+
+            for (const gem in constants.gem_types) {
+                let line = constants.gem_types[gem];
+                line += `${_.startCase(gem.toLowerCase())}§8: `;
+
+                for (const tier in constants.gem_tiers) {
+                    line += constants.tier_colors[constants.gem_tiers[tier]];
+                    line += (sacks_counts[`${tier}_${gem}_GEM`] ?? 0).toLocaleString();
+
+                    if (tier != 'PERFECT') {
+                        line += '§8 / ';
+                    }
+                }
+
+                sackItem.tag.display.Lore.push(line);
+            }
+        } else {
+            sackItem.containsItems = [];
+
+            for (const [index, item] of sack.items.entries()) {
+                const slothpixelItem = slothpixelItems[item];
+                const hypixelItem = hypixelItems[item];
+
+                const itemName = slothpixelItem?.name ?? hypixelItem?.name;
+                const tier = slothpixelItem?.tier ?? (hypixelItem?.tier ?? 'common').toLowerCase();
+                
+                sackItem.tag.display.Lore.push(
+                    `${constants.tier_colors[tier]}${itemName}§8: §e${(sacks_counts[item] ?? 0).toLocaleString()}`
+                )            
+
+                if (slothpixelItem == null && hypixelItem?.skin == null) {
+                    continue;
+                }
+
+                const sackContent = {
+                    Count: 1,
+                    sack_count: sacks_counts[item],
+                    Damage: slothpixelItem?.damage ?? 3,
+                    id: slothpixelItem?.item_id ?? 397,
+                    itemIndex: index,
+                    display_name: itemName,
+                    tag: {
+                        display: {
+                            Name: `§a${itemName}`,
+                            Lore: [
+                                `§8Stored: §e${(sacks_counts[item] ?? 0).toLocaleString()}`
+                            ]
+                        }
+                    }
+                };
+
+                if (hypixelItem?.glowing) {
+                    sackContent.tag.ench = [];
+                }
+
+                if (sackContent.id == 397 && slothpixelItem?.texture) {
+                    sackContent.texture_path = `/head/${slothpixelItem.texture}`;
+                }
+
+                if (sackContent.id == 397 && slothpixelItem?.texture == null && hypixelItem?.skin) {
+                    try{
+                        const json = JSON.parse(Buffer.from(hypixelItem.skin, 'base64').toString());
+                        const url = json.textures.SKIN.url;
+
+                        const texture = url.split("/").pop();
+
+                        if (texture.length == 64) {
+                            sackContent.texture_path = `/head/${texture}`;
+                        }
+                    }catch(e){ }
+                }
+
+                sackItem.containsItems.push(sackContent);
+            }
+        }
+
+        sacks.push(sackItem);
+    }
+
+    return sacks;
 }
 
 // Process items returned by API
@@ -833,6 +973,7 @@ module.exports = {
         let quiver = 'quiver' in profile ? await getItems(profile.quiver.data, customTextures, packs, cacheOnly) : [];
         let potion_bag = 'potion_bag' in profile ? await getItems(profile.potion_bag.data, customTextures, packs, cacheOnly) : [];
         let candy_bag = 'candy_inventory_contents' in profile ? await getItems(profile.candy_inventory_contents.data, customTextures, packs, cacheOnly) : [];
+        let sacks = 'sacks_counts' in profile ? await getSacks(profile.sacks_counts) : [];
         let storage = [];
 
         if('backpack_contents' in profile){
@@ -873,8 +1014,8 @@ module.exports = {
         output.quiver = quiver;
         output.potion_bag = potion_bag;
         output.storage = storage;
-
-        const all_items = armor.concat(inventory, enderchest, talisman_bag, fishing_bag, quiver, potion_bag, wardrobe_inventory, storage);
+        output.sacks = sacks;
+        const all_items = armor.concat(inventory, enderchest, talisman_bag, fishing_bag, quiver, potion_bag, wardrobe_inventory, storage, sacks);
 
         for(const [index, item] of all_items.entries()){
             item.item_index = index;
@@ -2976,4 +3117,4 @@ module.exports = {
             console.error(e);
         }
     }
-}
+};

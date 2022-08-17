@@ -51,6 +51,25 @@ module.exports = {
         "d": "mythic",
         "c": "special"
     },
+    
+    gem_types: {
+        AMBER: '§6',
+        TOPAZ: '§e',
+        SAPPHIRE: '§b',
+        AMETHYST: '§5',
+        JASPER: '§d',
+        RUBY: '§c',
+        JADE: '§a',
+        OPAL: '§f'
+    },
+
+    gem_tiers: {
+        ROUGH: 'common',
+        FLAWED: 'uncommon',
+        FINE: 'rare',
+        FLAWLESS: 'epic',
+        PERFECT: 'legendary',
+    },
 
     special_enchants: [
         'Sharpness 7',

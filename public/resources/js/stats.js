@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function(){
     	skinViewer.animations.add(skinview3d.IdleAnimation);
     }
 
-    const all_items = items.armor.concat(items.inventory, items.enderchest, items.talisman_bag, items.fishing_bag, items.quiver, items.potion_bag, items.wardrobe_inventory, items.storage);
+    const all_items = items.armor.concat(items.inventory, items.enderchest, items.talisman_bag, items.fishing_bag, items.quiver, items.potion_bag, items.wardrobe_inventory, items.storage, items.sacks);
 
     let dimmer = document.querySelector("#dimmer");
 
@@ -152,6 +152,12 @@ document.addEventListener('DOMContentLoaded', function(){
             default:
                 if(type in calculated.bag_sizes)
                     inventory = inventory.slice(0, Math.max(countSlotsUsed - 1, calculated.bag_sizes[type], 8));
+        }
+
+        if (inventory.length < countSlotsUsed) {
+            while (inventory.length < countSlotsUsed) {
+                inventory.push({});
+            }
         }
 
         inventory.forEach(function(item, index){
