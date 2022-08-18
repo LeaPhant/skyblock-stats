@@ -151,7 +151,7 @@ module.exports = {
         WINTER_SACK: {
             items: [
                 "WHITE_GIFT", "GREEN_GIFT", "RED_GIFT", "SNOW_BLOCK", "ENCHANTED_SNOW_BLOCK", "SNOW_BALL", "ICE", 
-                "ENCHANTED_ICE", "PACKED_ICE", "ENCHANTED_PACKED_ICE", "HUNK_OF_ICE", "HUNK_OF_BLUE_ICE",
+                "ENCHANTED_ICE", "PACKED_ICE", "ENCHANTED_PACKED_ICE", "ICE_HUNK", "BLUE_ICE_HUNK",
             ],
             texture: 'ab339b1cd40053defd7d3528e01fea876d41b42f9d9268461da79f5f66771236'
         }
