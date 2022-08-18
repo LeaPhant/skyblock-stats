@@ -449,7 +449,7 @@ async function getSacks(sacks_counts) {
                 const slothpixelItem = slothpixelItems[item];
                 const hypixelItem = hypixelItems[item];
 
-                const itemName = slothpixelItem?.name ?? hypixelItem?.name;
+                const itemName = slothpixelItem?.name ?? hypixelItem?.name ?? _.startCase(item.toLowerCase());
                 const tier = slothpixelItem?.tier ?? (hypixelItem?.tier ?? 'common').toLowerCase();
                 
                 sackItem.tag.display.Lore.push(
