@@ -133,6 +133,8 @@ const skillFormatDungeon = xp => {
     return `Level ${levelObj.level} + ${levelObj.xpCurrent.toLocaleString()} XP`;
 };
 
+const maxAverageLevel = 54 + 1 / 2.25;
+
 const overrides = {
     bank: {
         mappedBy: 'profile_id'
@@ -156,7 +158,7 @@ const overrides = {
     },
 
     average_level: {
-        format: x => x >= 55 ? `55 (+${((x-55)*1000000).toFixed(2)}b overflow)` : x
+        format: x => x >= maxAverageLevel ? `${maxAverageLevel.toFixed(2)} (+${((x-maxAverageLevel)*1000000).toFixed(2)}b xp)` : x
     },
 
     skill_social2_xp: {
