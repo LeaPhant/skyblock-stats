@@ -158,7 +158,7 @@ const overrides = {
     },
 
     average_level: {
-        format: x => x >= maxAverageLevel ? `${maxAverageLevel.toFixed(2)} (+${((x-maxAverageLevel)*1000000).toFixed(2)}b xp)` : x
+        format: x => x >= maxAverageLevel ? `${maxAverageLevel.toFixed(2)} (${((x-maxAverageLevel)*1000000).toFixed(2)}b xp)` : x
     },
 
     skill_social2_xp: {
