@@ -463,7 +463,7 @@ async function getSacks(sacks_counts) {
                 const sackContent = {
                     Count: 1,
                     sack_count: sacks_counts[item],
-                    Damage: slothpixelItem?.damage ?? 3,
+                    Damage: slothpixelItem?.damage ?? 0,
                     id: slothpixelItem?.item_id ?? 397,
                     itemIndex: index,
                     display_name: itemName,
