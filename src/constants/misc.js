@@ -3,6 +3,7 @@ module.exports = {
     blocked_players: [
         "20934ef9488c465180a78f861586b4cf", // Minikloon (Admin)
         "f025c1c7f55a4ea0b8d93f47d17dfe0f", // Plancke (Admin)
+        "9ca76de8b66f4711a433e86d3f236d49" // Fr0z3n (Admin)
     ],
 
     expertise_kills: [
