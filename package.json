@@ -54,7 +54,7 @@
     "progress": "^2.0.3",
     "relaxed-json": "^1.0.3",
     "remove": "^0.1.5",
-    "sharp": "^0.25.4",
+    "sharp": "^0.32.1",
     "sitemap": "^6.1.5",
     "twemoji": "^13.0.0",
     "upng-js": "^2.1.0",
